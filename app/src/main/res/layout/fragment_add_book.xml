@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.android.raj.returnintime.AddBookFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_all_sides">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/title_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_title"
+                    style="@style/text_field"
+                    android:hint="@string/text_title"
+                    android:inputType="text|textAutoCorrect" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/author_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_author"
+                    style="@style/text_field"
+                    android:hint="@string/text_author"
+                    android:inputType="text|textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/checkedout_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_checkedout"
+                    style="@style/text_field"
+                    android:hint="MM/DD/YYYY"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/return_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_return"
+                    style="@style/text_field"
+                    android:hint="MM/DD/YYYY"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                style="@style/text"
+                android:text="@string/mandatory_field" />
+
+            <Button
+                android:id="@+id/button_submit"
+                style="@style/raised_button"
+                android:text="@string/add_button" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

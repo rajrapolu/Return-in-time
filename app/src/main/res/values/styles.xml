@@ -17,4 +17,32 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="text_input">
+        <item name="android:paddingTop">@dimen/text_field_padding_top</item>
+        <item name="android:paddingBottom">@dimen/padding_all_sides</item>
+        <item name="android:labelTextSize">@dimen/label_size</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="text_field">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:paddingBottom">@dimen/padding_all_sides</item>
+    </style>
+
+    <style name="text">
+        <item name="android:paddingTop">@dimen/padding_all_sides</item>
+        <item name="android:paddingBottom">@dimen/padding_all_sides</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="raised_button" parent="TextAppearance.AppCompat.Button">
+        <item name="android:minWidth">@dimen/button_min_width</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

@@ -1,6 +1,9 @@
 package com.android.raj.returnintime;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,8 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.data.ReturnDBHelper;
 
 public class MainActivity extends AppCompatActivity {
+
+    ReturnDBHelper returnDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +36,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        returnDb = new ReturnDBHelper(this);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayDatabaseMessage();
+    }
+
+    private void displayDatabaseMessage() {
+        ReturnDBHelper returnDb = new ReturnDBHelper(this);
+
+        SQLiteDatabase db = returnDb.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ReturnContract.BookEntry.TABLE_NAME, null);
+
+        try {
+            TextView textInfo = (TextView) findViewById(R.id.text_info);
+            textInfo.setText("No. of columns inserted in to the database are: " + cursor.getCount());
+        } finally {
+            cursor.close();
+        }
     }
 
     @Override
@@ -46,8 +79,24 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_dummy) {
+            insertData();
+            displayDatabaseMessage();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertData() {
+        SQLiteDatabase db = returnDb.getWritableDatabase();
+
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_TITLE, "title");
+        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR, "author");
+        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT, "checkedout");
+        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN, "return");
+
+        long newRowId = db.insert(ReturnContract.BookEntry.TABLE_NAME, null, contentValues);
     }
 }

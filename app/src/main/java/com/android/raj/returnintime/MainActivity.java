@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 import com.android.raj.returnintime.data.ReturnDBHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,7 +52,28 @@ public class MainActivity extends AppCompatActivity {
 
         SQLiteDatabase db = returnDb.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + ReturnContract.BookEntry.TABLE_NAME, null);
+        //Cursor cursor = db.rawQuery("SELECT * FROM " + ReturnContract.BookEntry.TABLE_NAME, null);
+
+        String[] projection = {
+                BookEntry._ID,
+                BookEntry.COLUMN_BOOK_TITLE,
+                BookEntry.COLUMN_BOOK_AUTHOR,
+                BookEntry.COLUMN_BOOK_CHECKEDOUT,
+                BookEntry.COLUMN_BOOK_RETURN
+        };
+
+        String selection = BookEntry.COLUMN_BOOK_TITLE + " = ?";
+        String[] selectionArgs = { "Android" };
+
+        Cursor cursor = db.query(
+                BookEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
 
         try {
             TextView textInfo = (TextView) findViewById(R.id.text_info);
@@ -92,11 +113,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_TITLE, "title");
-        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR, "author");
-        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT, "checkedout");
-        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN, "return");
+        contentValues.put(BookEntry.COLUMN_BOOK_TITLE, "title");
+        contentValues.put(BookEntry.COLUMN_BOOK_AUTHOR, "author");
+        contentValues.put(BookEntry.COLUMN_BOOK_CHECKEDOUT, "checkedout");
+        contentValues.put(BookEntry.COLUMN_BOOK_RETURN, "return");
 
-        long newRowId = db.insert(ReturnContract.BookEntry.TABLE_NAME, null, contentValues);
+        long newRowId = db.insert(BookEntry.TABLE_NAME, null, contentValues);
     }
 }

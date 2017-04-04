@@ -64,6 +64,17 @@
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/return_to_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_return_to"
+                    style="@style/text_field"
+                    android:hint="Return To"
+                    android:inputType="text|textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
             <TextView
                 style="@style/text"
                 android:text="@string/mandatory_field" />

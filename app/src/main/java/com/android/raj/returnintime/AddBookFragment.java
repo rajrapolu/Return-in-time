@@ -4,6 +4,7 @@ package com.android.raj.returnintime;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TextInputLayout;
@@ -103,7 +104,7 @@ public class AddBookFragment extends Fragment {
     private void insertData() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        String mTitle, mAuthor, mCheckedout, mReturn;
+        String mTitle, mAuthor, mCheckedout, mReturn, mReturnTo;
 
         if (!mTextTitle.getEditText().getText().toString().isEmpty() &&
                 !mTextAuthor.getEditText().getText().toString().isEmpty() &&
@@ -115,20 +116,20 @@ public class AddBookFragment extends Fragment {
             mCheckedout = mTextCheckedout.getEditText().getText().toString();
             mReturn = mTextReturn.getEditText().getText().toString();
 
-
             ContentValues values = new ContentValues();
             values.put(BookEntry.COLUMN_BOOK_TITLE, mTitle);
             values.put(BookEntry.COLUMN_BOOK_AUTHOR, mAuthor);
             values.put(BookEntry.COLUMN_BOOK_CHECKEDOUT, mCheckedout);
             values.put(BookEntry.COLUMN_BOOK_RETURN, mReturn);
 
-            long newRowId = db.insert(ReturnContract.BookEntry.TABLE_NAME, null, values);
+            Uri uri = getContext().getContentResolver().
+                    insert(BookEntry.CONTENT_URI, values);
 
-            if (newRowId == -1) {
-                Toast.makeText(getContext(), "Error while inserting data", Toast.LENGTH_SHORT)
+            if (uri != null) {
+                Toast.makeText(getContext(), "Data inserted ", Toast.LENGTH_SHORT)
                         .show();
             } else {
-                Toast.makeText(getContext(), "Data inserted at: " + newRowId, Toast.LENGTH_SHORT)
+                Toast.makeText(getContext(), "Error while inserting data", Toast.LENGTH_SHORT)
                         .show();
             }
 

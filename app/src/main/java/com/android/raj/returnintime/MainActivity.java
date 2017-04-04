@@ -4,22 +4,28 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.raj.returnintime.data.ReturnContract;
 import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 import com.android.raj.returnintime.data.ReturnDBHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     ReturnDBHelper returnDb;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        displayDatabaseMessage();
+        //displayDatabaseMessage();
     }
 
     private void displayDatabaseMessage() {
-        ReturnDBHelper returnDb = new ReturnDBHelper(this);
-
-        SQLiteDatabase db = returnDb.getReadableDatabase();
+//        ReturnDBHelper returnDb = new ReturnDBHelper(this);
+//
+//        SQLiteDatabase db = returnDb.getReadableDatabase();
 
         //Cursor cursor = db.rawQuery("SELECT * FROM " + ReturnContract.BookEntry.TABLE_NAME, null);
 
@@ -62,28 +68,37 @@ public class MainActivity extends AppCompatActivity {
                 BookEntry.COLUMN_BOOK_RETURN
         };
 
-        String selection = BookEntry.COLUMN_BOOK_TITLE + " = ?";
-        String[] selectionArgs = { "Android" };
+//        String selection = BookEntry.COLUMN_BOOK_TITLE + " = ?";
+//        String[] selectionArgs = { "Android" };
 
-        Cursor cursor = db.query(
-                BookEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
+//        Cursor cursor = db.query(
+//                BookEntry.TABLE_NAME,
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null,
+//                null,
+//                null
+//        );
 
-        try {
-            TextView textInfo = (TextView) findViewById(R.id.text_info);
-            textInfo.setText("No. of columns inserted in to the database are: " + cursor.getCount());
-        } finally {
-            cursor.close();
-        }
+//        Log.i("uri", "displayDatabaseMessage: " + BookEntry.CONTENT_URI);
+//
+        cursor = getContentResolver().query(BookEntry.CONTENT_URI, projection, null,
+                null, null);
+
+            try {
+                TextView textInfo = (TextView) findViewById(R.id.text_info);
+                textInfo.setText("No. of columns inserted in to the database are: " + cursor.getCount());
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+
+            }
     }
 
     @Override
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -109,8 +124,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertData() {
-        SQLiteDatabase db = returnDb.getWritableDatabase();
 
+
+//        SQLiteDatabase db = returnDb.getWritableDatabase();
+//        ReturnDBHelper returnDb = new ReturnDBHelper(this);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(BookEntry.COLUMN_BOOK_TITLE, "title");
@@ -118,6 +135,10 @@ public class MainActivity extends AppCompatActivity {
         contentValues.put(BookEntry.COLUMN_BOOK_CHECKEDOUT, "checkedout");
         contentValues.put(BookEntry.COLUMN_BOOK_RETURN, "return");
 
-        long newRowId = db.insert(BookEntry.TABLE_NAME, null, contentValues);
+        Uri uri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
+
+        Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
+
+        //long newRowId = db.insert(BookEntry.TABLE_NAME, null, contentValues);
     }
 }

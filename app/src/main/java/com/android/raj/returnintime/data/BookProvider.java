@@ -82,6 +82,7 @@ public class BookProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case BOOKS:
+                Log.i(TAG, "insert: " + "yes");
                 return insertBook(uri, values);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);

@@ -10,6 +10,7 @@ import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -21,11 +22,16 @@ import android.widget.Toast;
 import com.android.raj.returnintime.data.ReturnContract;
 import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 import com.android.raj.returnintime.data.ReturnDBHelper;
+import com.android.raj.returnintime.model.Book;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     ReturnDBHelper returnDb;
     Cursor cursor;
+    List<Book> mBooks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //displayDatabaseMessage();
+        displayDatabaseMessage();
     }
 
     private void displayDatabaseMessage() {
@@ -87,14 +93,45 @@ public class MainActivity extends AppCompatActivity {
                 null, null);
 
             try {
-                TextView textInfo = (TextView) findViewById(R.id.text_info);
-                textInfo.setText("No. of columns inserted in to the database are: " + cursor.getCount());
+                //TextView textInfo = (TextView) findViewById(R.id.text_info);
+//                textInfo.setText("No. of columns inserted in to the database are: "
+//                        + cursor.getCount());
+                Toast.makeText(getApplicationContext(),
+                        "No. of columns inserted in to the database are: "
+                        + cursor.getCount(), Toast.LENGTH_SHORT).show();
+                wrapInAList(cursor);
+
+
             } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
 
             }
+    }
+
+    private void wrapInAList(Cursor cursor) {
+
+        while (cursor.moveToNext()) {
+            String title = cursor.getString(cursor.getColumnIndex(BookEntry.COLUMN_BOOK_TITLE));
+            String author = cursor.getString(cursor.getColumnIndex(BookEntry.COLUMN_BOOK_AUTHOR));
+            String checkedOutDate = cursor.getString(cursor
+                    .getColumnIndex(BookEntry.COLUMN_BOOK_CHECKEDOUT));
+            String returnDate = cursor.getString(cursor
+                    .getColumnIndex(BookEntry.COLUMN_BOOK_RETURN));
+
+            Book book = new Book(title, author, checkedOutDate, returnDate);
+            mBooks.add(book);
+
+        }
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyler_view);
+        RecyclerView.ItemDecoration divider = new DividerRecyclerView(getResources()
+                .getDrawable(R.drawable.line_divider));
+        recyclerView.addItemDecoration(divider);
+        BookAdapter bookAdapter = new BookAdapter(getApplicationContext(), mBooks);
+        recyclerView.setAdapter(bookAdapter);
+        bookAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -117,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_dummy) {
             insertData();
+            mBooks.clear();
             displayDatabaseMessage();
         }
 
@@ -140,5 +178,11 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
 
         //long newRowId = db.insert(BookEntry.TABLE_NAME, null, contentValues);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBooks.clear();
     }
 }

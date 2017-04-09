@@ -2,6 +2,7 @@ package com.android.raj.returnintime;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -9,6 +10,9 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +32,14 @@ import com.android.raj.returnintime.model.Book;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     ReturnDBHelper returnDb;
     Cursor cursor;
-    List<Book> mBooks = new ArrayList<>();
+    //List<Book> mBooks = new ArrayList<>();
+    Cursor mBooks;
+    BookAdapter bookAdapter;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +57,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        returnDb = new ReturnDBHelper(this);
+        recyclerView = (RecyclerView) findViewById(R.id.recyler_view);
+        RecyclerView.ItemDecoration divider = new DividerRecyclerView(getResources()
+                .getDrawable(R.drawable.line_divider));
+        recyclerView.addItemDecoration(divider);
+        bookAdapter = new BookAdapter(getApplicationContext());
+
+        View emptyView = findViewById(R.id.empty_view);
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        returnDb = new ReturnDBHelper(this);
+
+        getSupportLoaderManager().initLoader(0, null, this);
         displayDatabaseMessage();
     }
 
@@ -92,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
         cursor = getContentResolver().query(BookEntry.CONTENT_URI, projection, null,
                 null, null);
 
+        ImageView imageView = (ImageView) findViewById(R.id.empty_image);
+        TextView textView = (TextView) findViewById(R.id.empty_text_view);
+
+        if (cursor.getCount() == 0) {
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_books));
+            textView.setText("It is lonely out here. Add books and never miss the deadline. Cheers!");
+        } else {
+            imageView.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
+        }
+
             try {
                 //TextView textInfo = (TextView) findViewById(R.id.text_info);
 //                textInfo.setText("No. of columns inserted in to the database are: "
@@ -99,40 +128,51 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         "No. of columns inserted in to the database are: "
                         + cursor.getCount(), Toast.LENGTH_SHORT).show();
-                wrapInAList(cursor);
+                //wrapInAList(cursor);
+//
+//                mBooks = cursor;
+//                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyler_view);
+//                RecyclerView.ItemDecoration divider = new DividerRecyclerView(getResources()
+//                        .getDrawable(R.drawable.line_divider));
+//                recyclerView.addItemDecoration(divider);
+//                bookAdapter = new BookAdapter(getApplicationContext());
+                bookAdapter.swapCursor(cursor);
+                recyclerView.setAdapter(bookAdapter);
+                bookAdapter.notifyDataSetChanged();
 
 
             } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
+//                if (cursor != null) {
+//                    cursor.close();
+//                }
 
             }
     }
 
-    private void wrapInAList(Cursor cursor) {
-
-        while (cursor.moveToNext()) {
-            String title = cursor.getString(cursor.getColumnIndex(BookEntry.COLUMN_BOOK_TITLE));
-            String author = cursor.getString(cursor.getColumnIndex(BookEntry.COLUMN_BOOK_AUTHOR));
-            String checkedOutDate = cursor.getString(cursor
-                    .getColumnIndex(BookEntry.COLUMN_BOOK_CHECKEDOUT));
-            String returnDate = cursor.getString(cursor
-                    .getColumnIndex(BookEntry.COLUMN_BOOK_RETURN));
-
-            Book book = new Book(title, author, checkedOutDate, returnDate);
-            mBooks.add(book);
-
-        }
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyler_view);
-        RecyclerView.ItemDecoration divider = new DividerRecyclerView(getResources()
-                .getDrawable(R.drawable.line_divider));
-        recyclerView.addItemDecoration(divider);
-        BookAdapter bookAdapter = new BookAdapter(getApplicationContext(), mBooks);
-        recyclerView.setAdapter(bookAdapter);
-        bookAdapter.notifyDataSetChanged();
-
-    }
+//    private void wrapInAList(Cursor cursor) {
+//
+////        while (cursor.moveToNext()) {
+////            String title = cursor.getString(cursor.getColumnIndex(BookEntry.COLUMN_BOOK_TITLE));
+////            String author = cursor.getString(cursor.getColumnIndex(BookEntry.COLUMN_BOOK_AUTHOR));
+////            String checkedOutDate = cursor.getString(cursor
+////                    .getColumnIndex(BookEntry.COLUMN_BOOK_CHECKEDOUT));
+////            String returnDate = cursor.getString(cursor
+////                    .getColumnIndex(BookEntry.COLUMN_BOOK_RETURN));
+////
+////            Book book = new Book(title, author, checkedOutDate, returnDate);
+////            mBooks.add(book);
+////
+////        }
+//        mBooks = cursor;
+//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyler_view);
+//        RecyclerView.ItemDecoration divider = new DividerRecyclerView(getResources()
+//                .getDrawable(R.drawable.line_divider));
+//        recyclerView.addItemDecoration(divider);
+//        bookAdapter = new BookAdapter(getApplicationContext(), mBooks);
+//        recyclerView.setAdapter(bookAdapter);
+//        bookAdapter.notifyDataSetChanged();
+//
+//    }
 
     @Override
 
@@ -154,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_dummy) {
             insertData();
-            mBooks.clear();
+            //mBooks.clear();
+            //mBooks.close();
             displayDatabaseMessage();
         }
 
@@ -183,6 +224,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mBooks.clear();
+        //mBooks.clear();
+        //mBooks.close();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        String[] projection = {
+                BookEntry._ID,
+                BookEntry.COLUMN_BOOK_TITLE,
+                BookEntry.COLUMN_BOOK_AUTHOR,
+                BookEntry.COLUMN_BOOK_CHECKEDOUT,
+                BookEntry.COLUMN_BOOK_RETURN
+        };
+
+        return new CursorLoader(getApplicationContext(), BookEntry.CONTENT_URI,
+                projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        bookAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        bookAdapter.swapCursor(null);
     }
 }

@@ -3,26 +3,34 @@ package com.android.raj.returnintime;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.raj.returnintime.data.ReturnContract;
 import com.android.raj.returnintime.model.Book;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
+public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Book> mBooks = new ArrayList<>();
+    //private List<Book> mBooks = new ArrayList<>();
+    //private Cursor mBooks;
     boolean mContextual;
 
-    public BookAdapter(Context context, List<Book> books) {
+//    public BookAdapter(Context context, List<Book> books) {
+//        mContext = context;
+//        mBooks = books;
+//    }
+
+    public BookAdapter(Context context) {
         mContext = context;
-        mBooks = books;
     }
 
     @Override
@@ -32,14 +40,44 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         return viewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Book book = mBooks.get(position);
-        final CheckBox checkBox = holder.checkBox;
+//    @Override
+//    public void onBindViewHolder(ViewHolder holder, int position) {
+//        Log.e("the", "onBindViewHolder: " +mBooks.getCount());
+//        final CheckBox checkBox = holder.checkBox;
+//        if (mBooks.moveToPosition(position)) {
+//            //Book book = mBooks.get(position);
+//
+//
+//            holder.tvTitle.setText(mBooks.getString(mBooks
+//                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+//            holder.tvAuthor.setText(mBooks.getString(mBooks
+//                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
+//            holder.tvReturnIn.setText(mBooks.getString(mBooks
+//                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+//        }
+//
+//            if (!mContextual) {
+//                checkBox.setVisibility(View.GONE);
+//            } else {
+//                checkBox.setVisibility(View.VISIBLE);
+//                checkBox.setChecked(false);
+//            }
+//
+//    }
 
-        holder.tvTitle.setText(book.getTitle());
-        holder.tvAuthor.setText(book.getAuthor());
-        holder.tvReturnIn.setText(book.getReturnDate());
+    @Override
+    public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+        final CheckBox checkBox = holder.checkBox;
+        cursor.moveToFirst();
+        if (cursor.getCount() == 0) {
+
+        }
+        holder.tvTitle.setText(cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+        holder.tvAuthor.setText(cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
+        holder.tvReturnIn.setText(cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
 
         if (!mContextual) {
             checkBox.setVisibility(View.GONE);
@@ -47,11 +85,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             checkBox.setVisibility(View.VISIBLE);
             checkBox.setChecked(false);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mBooks.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

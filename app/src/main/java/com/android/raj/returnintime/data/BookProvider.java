@@ -57,6 +57,8 @@ public class BookProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown uri: " + uri);
         }
+
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -101,6 +103,8 @@ public class BookProvider extends ContentProvider {
             Log.e(TAG, "Failed to insert the row for " + uri);
             return null;
         }
+
+        getContext().getContentResolver().notifyChange(uri, null);
         return ContentUris.withAppendedId(uri, rowId);
     }
 
@@ -108,20 +112,28 @@ public class BookProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection,
                       @Nullable String[] selectionArgs) {
         SQLiteDatabase database = returnDBHelper.getWritableDatabase();
+        int rowsDeleted;
 
         int match = sUriMatcher.match(uri);
         switch (match) {
             case BOOKS:
-                return database.delete(ReturnContract.BookEntry.TABLE_NAME, selection,
+                rowsDeleted = database.delete(ReturnContract.BookEntry.TABLE_NAME, selection,
                         selectionArgs);
+                break;
             case BOOK_ID:
                 selection = ReturnContract.BookEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
-                return database.delete(ReturnContract.BookEntry.TABLE_NAME, selection,
+                rowsDeleted = database.delete(ReturnContract.BookEntry.TABLE_NAME, selection,
                         selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Deletion is supported " + uri);
         }
+
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDeleted;
     }
 
     @Override
@@ -159,7 +171,11 @@ public class BookProvider extends ContentProvider {
             }
         }
 
-        return database.update(ReturnContract.BookEntry.TABLE_NAME, values, selection,
+        int rowsUpdated = database.update(ReturnContract.BookEntry.TABLE_NAME, values, selection,
                 selectionArgs);
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 }

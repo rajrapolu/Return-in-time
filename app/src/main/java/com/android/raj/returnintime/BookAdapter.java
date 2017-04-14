@@ -2,6 +2,7 @@ package com.android.raj.returnintime;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -102,8 +103,12 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
                 Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
                         Long.parseLong(cursor.getString(cursor.getColumnIndex(ReturnContract.BookEntry._ID))));
 
-                Log.i("yes", "onClick: " +uri);
-                ((MainActivity) mContext).showDetailsFragment(uri);
+//                Log.i("yes", "onClick: " +uri);
+//                ((MainActivity) mContext).showDetailsFragment(uri);
+
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.setData(uri);
+                mContext.startActivity(intent);
             }
         });
     }

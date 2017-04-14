@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.model.Book;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,13 +48,38 @@ public class DetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        Uri uri = Uri.parse(getArguments().getString(MainActivity.ITEM_URI));
+        Uri uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
         Log.i(TAG, "onCreateView: " + uri);
         Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+
+        displayData(uri);
 
 
         return rootView;
 
+    }
+
+    private void displayData(Uri uri) {
+        String[] projection = {
+                ReturnContract.BookEntry._ID,
+                ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
+                ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
+                ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN
+        };
+
+        Cursor cursor = getActivity()
+                .getContentResolver().query(uri, projection, null, null, null);
+
+        cursor.moveToFirst();
+        mTitle.setText(cursor.getString(
+                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+        mAuthor.setText(cursor.getString(
+                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
+        mBorrowedValue.setText(cursor.getString(
+                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT)));
+        mReturValue.setText(cursor.getString(
+                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
     }
 
 

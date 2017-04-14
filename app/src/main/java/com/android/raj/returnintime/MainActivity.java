@@ -22,8 +22,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String ITEM_URI = "ITEM URI";
-    public static final String DETAIL_FRAGMENT = "DETAIL FRAGMENT";
+
     BookAdapter bookAdapter;
 
 
@@ -43,14 +42,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
+        getSupportLoaderManager().initLoader(0, null, this);
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        getSupportLoaderManager().initLoader(0, null, this);
     }
 
 //    @Override
@@ -86,14 +84,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //mBooks.close();
     }
 
-    public void showDetailsFragment(Uri uri) {
-//        DetailFragment detailFragment = new DetailFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ITEM_URI, uri.toString());
-//        detailFragment.setArguments(args);
-//        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
-//                detailFragment, DETAIL_FRAGMENT).commit();
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

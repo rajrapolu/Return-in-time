@@ -102,7 +102,7 @@ public class AddBookFragment extends Fragment {
     }
 
     private void insertData() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        //SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String mTitle, mAuthor, mCheckedout, mReturn, mReturnTo;
 

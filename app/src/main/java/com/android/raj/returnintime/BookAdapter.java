@@ -1,12 +1,16 @@
 package com.android.raj.returnintime;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,18 +70,23 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
 //    }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+    public void onBindViewHolder(final ViewHolder holder, final Cursor cursor, final int position) {
+        long id;
         final CheckBox checkBox = holder.checkBox;
-        cursor.moveToFirst();
-        if (cursor.getCount() == 0) {
-
-        }
+        //cursor.moveToFirst();
+//        if (cursor.getCount() == 0) {
+//
+//        }
         holder.tvTitle.setText(cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+        Log.i("check", "onBindViewHolder: " + cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
         holder.tvAuthor.setText(cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
         holder.tvReturnIn.setText(cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+        id = Long.parseLong(cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry._ID)));
 
         if (!mContextual) {
             checkBox.setVisibility(View.GONE);
@@ -85,6 +94,18 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
             checkBox.setVisibility(View.VISIBLE);
             checkBox.setChecked(false);
         }
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("yes", "onClick: " +cursor.moveToPosition(position));
+                Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
+                        Long.parseLong(cursor.getString(cursor.getColumnIndex(ReturnContract.BookEntry._ID))));
+
+                Log.i("yes", "onClick: " +uri);
+                ((MainActivity) mContext).showDetailsFragment(uri);
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

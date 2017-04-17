@@ -17,6 +17,7 @@ public class AddBookActivity extends AppCompatActivity implements AddBookFragmen
         setContentView(R.layout.activity_add_book);
 
 
+
         if (savedInstanceState == null) {
             AddBookFragment addBookFragment = new AddBookFragment();
             getSupportFragmentManager().beginTransaction()

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,17 @@ public class DetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, rootView);
+
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tool_bar);
+        toolbar.setTitle("Book Details");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
         Uri uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
         Log.i(TAG, "onCreateView: " + uri);

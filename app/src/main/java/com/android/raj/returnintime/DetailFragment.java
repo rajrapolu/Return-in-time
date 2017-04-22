@@ -1,22 +1,24 @@
 package com.android.raj.returnintime;
 
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
-import com.android.raj.returnintime.model.Book;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,23 +37,56 @@ public class DetailFragment extends Fragment {
     @BindView(R.id.detail_text_return) TextView mReturn;
     @BindView(R.id.detail_text_return_value) TextView mReturValue;
 
-
+    SendToDetailActivity sendData;
+    Uri uri;
 
     public DetailFragment() {
         // Required empty public constructor
     }
 
+    public interface SendToDetailActivity {
+        void displayEditFragment(Uri uri);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        sendData = (SendToDetailActivity) getActivity();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.e(TAG, "onCreateOptionsMenu: ");
+        inflater.inflate(R.menu.detail_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.action_edit) {
+            sendData.displayEditFragment(uri);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        setHasOptionsMenu(true);
         ButterKnife.bind(this, rootView);
 
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tool_bar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("Book Details");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +95,7 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        Uri uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
-        Log.i(TAG, "onCreateView: " + uri);
+        uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
         Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
 
         displayData(uri);
@@ -93,6 +127,7 @@ public class DetailFragment extends Fragment {
         mReturValue.setText(cursor.getString(
                 cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
     }
+
 
 
 }

@@ -35,7 +35,6 @@ public class AddBookFragment extends Fragment {
     @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
     @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
     AddBookInterface showPicker;
-
     ReturnDBHelper dbHelper;
 
 

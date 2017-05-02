@@ -22,7 +22,6 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
         if (mCursor != null && !mCursor.isClosed()) {
             mCursor.moveToPosition(position);
         }
-
         return mCursor;
     }
 

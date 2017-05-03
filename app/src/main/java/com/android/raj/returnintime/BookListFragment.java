@@ -52,6 +52,7 @@ public class BookListFragment extends Fragment implements LoaderManager.LoaderCa
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_book_list, container, false);
         ButterKnife.bind(this, rootView);
+        setHasOptionsMenu(true);
         getActivity().getSupportLoaderManager().initLoader(0, null, this);
 
         activity = (MainActivity) getContext();
@@ -127,6 +128,7 @@ public class BookListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        Log.i("yes", "onCreateOptionsMenu: " + "booklist");
         inflater.inflate(R.menu.menu_main, menu);
     }
 

@@ -21,14 +21,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddBookActivity" />
+        <activity android:name=".AddBookActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.raj.returnintime.MainActivity"/>
+        </activity>
 
         <provider
             android:name=".data.BookProvider"
             android:authorities="com.android.raj.returnintime.data"
             android:exported="false"></provider>
 
-        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".DetailActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.raj.returnintime.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

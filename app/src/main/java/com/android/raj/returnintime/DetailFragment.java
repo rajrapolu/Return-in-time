@@ -74,7 +74,7 @@ public class DetailFragment extends Fragment {
 
     private Intent createShareIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(shareIntent.FLAG_ACTIVITY_CLEAR_TASK);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         shareIntent.setType("text/plain");
         String shareData = "Checkout this book! " + "\n" + "Title: " + cursor.getString(
                 cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) + " " +
@@ -90,9 +90,29 @@ public class DetailFragment extends Fragment {
 
         if (itemId == R.id.action_edit) {
             sendData.displayEditFragment(uri);
+        } else if (itemId == R.id.action_delete) {
+            deleteItem();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteItem() {
+        String selection = ReturnContract.BookEntry._ID + " LIKE ?";
+        String[] selectionArgs = {cursor.getString
+                (cursor.getColumnIndex(ReturnContract.BookEntry._ID))};
+
+        int rowsDeleted = 0;
+
+        rowsDeleted = getContext().getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
+                selection, selectionArgs);
+
+        if (rowsDeleted > 0) {
+            Toast.makeText(getContext(), "Getting the delete feature", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        } else {
+            Toast.makeText(getContext(), "error deleting the item", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -122,9 +142,7 @@ public class DetailFragment extends Fragment {
 
         displayData(uri);
 
-
         return rootView;
-
     }
 
     private void displayData(Uri uri) {

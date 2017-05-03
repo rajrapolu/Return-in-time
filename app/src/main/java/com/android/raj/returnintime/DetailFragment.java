@@ -47,6 +47,7 @@ public class DetailFragment extends Fragment {
 
     public DetailFragment() {
         // Required empty public constructor
+        setHasOptionsMenu(true);
     }
 
     public interface SendToDetailActivity {
@@ -63,6 +64,7 @@ public class DetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.e(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.detail_menu, menu);
+        Log.i("yes", "onCreateOptionsMenu: " + "booklist");
 
         MenuItem menuItem = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
@@ -90,8 +92,10 @@ public class DetailFragment extends Fragment {
 
         if (itemId == R.id.action_edit) {
             sendData.displayEditFragment(uri);
+            return true;
         } else if (itemId == R.id.action_delete) {
             deleteItem();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -109,7 +113,11 @@ public class DetailFragment extends Fragment {
 
         if (rowsDeleted > 0) {
             Toast.makeText(getContext(), "Getting the delete feature", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+            if (getContext() instanceof MainActivity) {
+                ((MainActivity) getContext()).deleteFragment();
+            } else {
+                getActivity().finish();
+            }
         } else {
             Toast.makeText(getContext(), "error deleting the item", Toast.LENGTH_SHORT).show();
         }
@@ -124,18 +132,23 @@ public class DetailFragment extends Fragment {
         setHasOptionsMenu(true);
         ButterKnife.bind(this, rootView);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tool_bar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setTitle("Book Details");
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        if (getActivity() instanceof MainActivity) {
+            toolbar.setVisibility(View.GONE);
+            //((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        } else {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            toolbar.setTitle("Book Details");
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().finish();
+                }
+            });
+        }
 
         uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
         Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();

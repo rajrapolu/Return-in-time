@@ -67,7 +67,7 @@ public class AddBookFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tool_bar);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setTitle("Add Book");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
 

@@ -62,7 +62,8 @@ public class EditFragment extends Fragment {
         setHasOptionsMenu(true);
         ButterKnife.bind(this, rootView);
         mButton.setVisibility(View.GONE);
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tool_bar);
+
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("Edit Book");
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24px);

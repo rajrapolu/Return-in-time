@@ -2,11 +2,14 @@ package com.android.raj.returnintime;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +39,8 @@ public class DetailFragment extends Fragment {
     @BindView(R.id.detail_text_borrowed_value) TextView mBorrowedValue;
     @BindView(R.id.detail_text_return) TextView mReturn;
     @BindView(R.id.detail_text_return_value) TextView mReturValue;
+    android.support.v7.widget.ShareActionProvider mShareActionProvider;
+    Cursor cursor;
 
     SendToDetailActivity sendData;
     Uri uri;
@@ -58,8 +63,25 @@ public class DetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.e(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.detail_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
 
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        mShareActionProvider.setShareIntent(createShareIntent());
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private Intent createShareIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        shareIntent.setType("text/plain");
+        String shareData = "Checkout this book! " + "\n" + "Title: " + cursor.getString(
+                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) + " " +
+                " Author: " + cursor.getString(
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
+        return shareIntent;
     }
 
     @Override
@@ -68,9 +90,29 @@ public class DetailFragment extends Fragment {
 
         if (itemId == R.id.action_edit) {
             sendData.displayEditFragment(uri);
+        } else if (itemId == R.id.action_delete) {
+            deleteItem();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteItem() {
+        String selection = ReturnContract.BookEntry._ID + " LIKE ?";
+        String[] selectionArgs = {cursor.getString
+                (cursor.getColumnIndex(ReturnContract.BookEntry._ID))};
+
+        int rowsDeleted = 0;
+
+        rowsDeleted = getContext().getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
+                selection, selectionArgs);
+
+        if (rowsDeleted > 0) {
+            Toast.makeText(getContext(), "Getting the delete feature", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        } else {
+            Toast.makeText(getContext(), "error deleting the item", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -100,9 +142,7 @@ public class DetailFragment extends Fragment {
 
         displayData(uri);
 
-
         return rootView;
-
     }
 
     private void displayData(Uri uri) {
@@ -114,7 +154,7 @@ public class DetailFragment extends Fragment {
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN
         };
 
-        Cursor cursor = getActivity()
+        cursor = getActivity()
                 .getContentResolver().query(uri, projection, null, null, null);
 
         cursor.moveToFirst();

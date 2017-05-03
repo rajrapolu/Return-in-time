@@ -20,7 +20,7 @@ import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity /*implements LoaderManager.LoaderCallbacks<Cursor>*/ {
 
 
     BookAdapter bookAdapter;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-        getSupportLoaderManager().initLoader(0, null, this);
+        //getSupportLoaderManager().initLoader(0, null, this);
 
     }
 
@@ -85,28 +85,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        String[] projection = {
-                BookEntry._ID,
-                BookEntry.COLUMN_BOOK_TITLE,
-                BookEntry.COLUMN_BOOK_AUTHOR,
-                BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                BookEntry.COLUMN_BOOK_RETURN
-        };
-
-        return new CursorLoader(getApplicationContext(), BookEntry.CONTENT_URI,
-                projection, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        bookAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        bookAdapter.swapCursor(null);
-    }
+//    @Override
+//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+//
+//        String[] projection = {
+//                BookEntry._ID,
+//                BookEntry.COLUMN_BOOK_TITLE,
+//                BookEntry.COLUMN_BOOK_AUTHOR,
+//                BookEntry.COLUMN_BOOK_CHECKEDOUT,
+//                BookEntry.COLUMN_BOOK_RETURN
+//        };
+//
+//        return new CursorLoader(getApplicationContext(), BookEntry.CONTENT_URI,
+//                projection, null, null, null);
+//    }
+//
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+//        bookAdapter.swapCursor(data);
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<Cursor> loader) {
+//        bookAdapter.swapCursor(null);
+//    }
 }

@@ -27,4 +27,21 @@
         <item name="android:popupTheme">@style/AppTheme.PopupOverlay</item>
     </style>
 
+    <style name="falt_button" parent="Base.Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:translationZ">8dp</item>
+        <item name="android:background">@drawable/ripple</item>
+        <item name="android:gravity">bottom|end</item>
+    </style>
+
+    <style name="text_title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-regular</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
 </resources>

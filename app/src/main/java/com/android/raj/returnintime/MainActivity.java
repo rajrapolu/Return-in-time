@@ -22,10 +22,13 @@ import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
-        DetailFragment.SendToDetailActivity/*implements LoaderManager.LoaderCallbacks<Cursor>*/ {
+        DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment/*implements LoaderManager.LoaderCallbacks<Cursor>*/ {
 
 
     private static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
+    public static final String ITEM_URI = "ITEM URI";
+    public static final String EDIT_DETAIL = "EDIT DETAIL";
+    private static final String EDIT_DIALOG = "EDIT_DIALOG";
     BookAdapter bookAdapter;
     private boolean mTablet;
 
@@ -101,13 +104,18 @@ public class MainActivity extends AppCompatActivity implements
         Bundle args = new Bundle();
         args.putString(DetailActivity.ITEM_URI, uri.toString());
         detailFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().add(R.id.detail_fragment_container,
+        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
                 detailFragment, DETAIL_FRAGMENT).commit();
     }
 
     @Override
     public void displayEditFragment(Uri uri) {
+        EditDialogFragment editDialog = new EditDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(ITEM_URI, uri.toString());
+        editDialog.setArguments(args);
 
+        editDialog.show(getSupportFragmentManager(), EDIT_DIALOG);
     }
 
     public void deleteFragment() {
@@ -115,6 +123,16 @@ public class MainActivity extends AppCompatActivity implements
                 .findFragmentByTag(DETAIL_FRAGMENT);
 
         getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+    }
+
+    @Override
+    public void replaceFragment(Uri uri) {
+        DetailFragment detailFragment = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putString(ITEM_URI, uri.toString());
+        detailFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
+                detailFragment, DETAIL_FRAGMENT).commit();
     }
 
 

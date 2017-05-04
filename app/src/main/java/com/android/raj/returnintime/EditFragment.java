@@ -166,10 +166,6 @@ public class EditFragment extends Fragment {
             }
             sendDetails.replaceFragment(uri);
         }
-
-
-
-
     }
 
 }

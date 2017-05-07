@@ -5,25 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
-import com.android.raj.returnintime.model.Book;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolder> {
 
@@ -58,7 +48,7 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
 //
 //            holder.tvTitle.setText(mBooks.getString(mBooks
 //                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
-//            holder.tvAuthor.setText(mBooks.getString(mBooks
+//            holder.tvRecipient.setText(mBooks.getString(mBooks
 //                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
 //            holder.tvReturnIn.setText(mBooks.getString(mBooks
 //                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
@@ -86,8 +76,8 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
                     .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
             Log.i("check", "onBindViewHolder: " + cursor.getString(cursor
                     .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
-            holder.tvAuthor.setText(cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
+            holder.tvRecipient.setText(cursor.getString(cursor
+                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO)));
             holder.tvReturnIn.setText(cursor.getString(cursor
                     .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
             id = Long.parseLong(cursor.getString(cursor
@@ -128,7 +118,7 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tvTitle;
-        public TextView tvAuthor;
+        public TextView tvRecipient;
         public TextView tvReturnIn;
         public View mView;
         public CheckBox checkBox;
@@ -138,8 +128,8 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
 
             super(itemView);
 
-            tvTitle = (TextView) itemView.findViewById(R.id.text_title);
-            tvAuthor = (TextView) itemView.findViewById(R.id.text_author);
+            tvTitle = (TextView) itemView.findViewById(R.id.detail_text_title);
+            tvRecipient = (TextView) itemView.findViewById(R.id.text_recipient);
             tvReturnIn = (TextView) itemView.findViewById(R.id.text_return_in);
             mView = itemView;
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);

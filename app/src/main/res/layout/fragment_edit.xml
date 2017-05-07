@@ -33,11 +33,11 @@
 
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/author_text_input_layout"
+                android:id="@+id/type_text_input_layout"
                 style="@style/text_input">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edit_author"
+                    android:id="@+id/edit_type"
                     style="@style/text_field"
                     android:hint="@string/text_author"
                     android:inputType="text|textPersonName" />

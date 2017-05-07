@@ -73,7 +73,8 @@ public class BookListFragment extends Fragment implements LoaderManager.LoaderCa
         String[] projection = {
                 ReturnContract.BookEntry._ID,
                 ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
+                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN
         };
@@ -109,7 +110,8 @@ public class BookListFragment extends Fragment implements LoaderManager.LoaderCa
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_TITLE, "title");
-        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR, "author");
+        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_TYPE, "type");
+        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO, "returnto");
         contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT, "checkedout");
         contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN, "return");
 
@@ -150,7 +152,8 @@ public class BookListFragment extends Fragment implements LoaderManager.LoaderCa
         String[] projection = {
                 ReturnContract.BookEntry._ID,
                 ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
+                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN
         };

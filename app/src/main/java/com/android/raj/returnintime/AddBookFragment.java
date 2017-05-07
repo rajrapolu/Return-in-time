@@ -3,22 +3,17 @@ package com.android.raj.returnintime;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.raj.returnintime.data.ReturnContract;
 import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 import com.android.raj.returnintime.data.ReturnDBHelper;
 
@@ -31,7 +26,8 @@ import butterknife.ButterKnife;
  */
 public class AddBookFragment extends Fragment {
     @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
-    @BindView(R.id.author_text_input_layout) TextInputLayout mTextAuthor;
+    @BindView(R.id.type_text_input_layout) TextInputLayout mTextType;
+    @BindView(R.id.return_to_text_input_layout) TextInputLayout mTextReturnTo;
     @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
     @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
     AddBookInterface showPicker;
@@ -115,21 +111,24 @@ public class AddBookFragment extends Fragment {
     private void insertData() {
         //SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        String mTitle, mAuthor, mCheckedout, mReturn, mReturnTo;
+        String mTitle, mType, mReturnTo, mCheckedout, mReturn;
 
         if (!mTextTitle.getEditText().getText().toString().isEmpty() &&
-                !mTextAuthor.getEditText().getText().toString().isEmpty() &&
+                !mTextType.getEditText().getText().toString().isEmpty() &&
+                !mTextReturnTo.getEditText().getText().toString().isEmpty() &&
                 !mTextCheckedout.getEditText().getText().toString().isEmpty() &&
                 !mTextReturn.getEditText().getText().toString().isEmpty()) {
 
             mTitle = mTextTitle.getEditText().getText().toString();
-            mAuthor = mTextAuthor.getEditText().getText().toString();
+            mType = mTextType.getEditText().getText().toString();
+            mReturnTo = mTextReturnTo.getEditText().getText().toString();
             mCheckedout = mTextCheckedout.getEditText().getText().toString();
             mReturn = mTextReturn.getEditText().getText().toString();
 
             ContentValues values = new ContentValues();
             values.put(BookEntry.COLUMN_BOOK_TITLE, mTitle);
-            values.put(BookEntry.COLUMN_BOOK_AUTHOR, mAuthor);
+            values.put(BookEntry.COLUMN_BOOK_TYPE, mType);
+            values.put(BookEntry.COLUMN_BOOK_RETURN_TO, mReturnTo);
             values.put(BookEntry.COLUMN_BOOK_CHECKEDOUT, mCheckedout);
             values.put(BookEntry.COLUMN_BOOK_RETURN, mReturn);
 

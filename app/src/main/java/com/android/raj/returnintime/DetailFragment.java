@@ -34,10 +34,9 @@ public class DetailFragment extends Fragment {
 
     private static final String TAG = DetailFragment.class.getSimpleName();
     @BindView(R.id.detail_text_title) TextView mTitle;
-    @BindView(R.id.detail_text_author) TextView mAuthor;
-    @BindView(R.id.detail_text_borrowed) TextView mBorrowed;
+    @BindView(R.id.detail_text_type) TextView mType;
+    @BindView(R.id.detail_text_return_to_value) TextView mReturnToValue;
     @BindView(R.id.detail_text_borrowed_value) TextView mBorrowedValue;
-    @BindView(R.id.detail_text_return) TextView mReturn;
     @BindView(R.id.detail_text_return_value) TextView mReturValue;
     android.support.v7.widget.ShareActionProvider mShareActionProvider;
     Cursor cursor;
@@ -81,7 +80,7 @@ public class DetailFragment extends Fragment {
         String shareData = "Checkout this book! " + "\n" + "Title: " + cursor.getString(
                 cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) + " " +
                 " Author: " + cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR));
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE));
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
         return shareIntent;
     }
@@ -162,7 +161,8 @@ public class DetailFragment extends Fragment {
         String[] projection = {
                 ReturnContract.BookEntry._ID,
                 ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
+                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN
         };
@@ -173,8 +173,10 @@ public class DetailFragment extends Fragment {
         cursor.moveToFirst();
         mTitle.setText(cursor.getString(
                 cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
-        mAuthor.setText(cursor.getString(
-                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
+        mType.setText(cursor.getString(
+                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)));
+        mReturnToValue.setText(cursor.getString(
+                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO)));
         mBorrowedValue.setText(cursor.getString(
                 cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT)));
         mReturValue.setText(cursor.getString(

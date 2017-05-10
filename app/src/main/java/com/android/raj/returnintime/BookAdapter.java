@@ -99,7 +99,7 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
                             Long.parseLong(cursor.getString(cursor.getColumnIndex(ReturnContract.BookEntry._ID))));
 
                     if (((MainActivity) mContext).isTablet()) {
-                        ((MainActivity) mContext).presentDetailFragment(uri);
+                        ((BaseActivity) mContext).replaceFragment(uri);
                     } else {
                         Intent intent = new Intent(mContext, DetailActivity.class);
                         intent.setData(uri);

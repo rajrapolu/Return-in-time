@@ -75,6 +75,18 @@
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/notify_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_notify"
+                    android:focusable="false"
+                    style="@style/text_field"
+                    android:hint="Notify Date (MM/DD/YYYY)"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
+
             <TextView
                 style="@style/text"
                 android:text="@string/mandatory_field" />

@@ -38,7 +38,7 @@ public class DatePickerFragment extends DialogFragment implements
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        sendDateToText.sendDate(getArguments().getString(AddBookActivity.CHECKEDOUT_OR_RETURN),
+        sendDateToText.sendDate(getArguments().getString(AddBookActivity.OPERATION),
                 month, dayOfMonth, year);
 //        AddBookFragment addBookFragment = (AddBookFragment) getParentFragment();
 //        addBookFragment.mTextCheckedout.getEditText().setText(month + "/" + dayOfMonth + "/"

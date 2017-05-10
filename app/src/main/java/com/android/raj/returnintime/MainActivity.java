@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -21,14 +22,16 @@ import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements
-        DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment/*implements LoaderManager.LoaderCallbacks<Cursor>*/ {
+public class MainActivity extends BaseActivity/*AppCompatActivity implements
+        DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment,
+        DatePickerFragment.SendDateToText*/ {
 
 
     private static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public static final String ITEM_URI = "ITEM URI";
     public static final String EDIT_DETAIL = "EDIT DETAIL";
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
+    private static final String OPERATION = "OPERATION";
     BookAdapter bookAdapter;
     private boolean mTablet;
 
@@ -99,42 +102,57 @@ public class MainActivity extends AppCompatActivity implements
         //mBooks.close();
     }
 
-    public void presentDetailFragment(Uri uri) {
-        DetailFragment detailFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(DetailActivity.ITEM_URI, uri.toString());
-        detailFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
-                detailFragment, DETAIL_FRAGMENT).commit();
-    }
+//    public void presentDetailFragment(Uri uri) {
+//        DetailFragment detailFragment = new DetailFragment();
+//        Bundle args = new Bundle();
+//        args.putString(DetailActivity.ITEM_URI, uri.toString());
+//        detailFragment.setArguments(args);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
+//                detailFragment, DETAIL_FRAGMENT).commit();
+//    }
 
-    @Override
-    public void displayEditFragment(Uri uri) {
-        EditDialogFragment editDialog = new EditDialogFragment();
-        Bundle args = new Bundle();
-        args.putString(ITEM_URI, uri.toString());
-        editDialog.setArguments(args);
-
-        editDialog.show(getSupportFragmentManager(), EDIT_DIALOG);
-    }
-
-    public void deleteFragment() {
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentByTag(DETAIL_FRAGMENT);
-
-        getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
-    }
-
-    @Override
-    public void replaceFragment(Uri uri) {
-        DetailFragment detailFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ITEM_URI, uri.toString());
-        detailFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
-                detailFragment, DETAIL_FRAGMENT).commit();
-    }
-
+//    @Override
+//    public void displayEditFragment(Uri uri) {
+//        EditDialogFragment editDialog = new EditDialogFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ITEM_URI, uri.toString());
+//        editDialog.setArguments(args);
+//
+//        editDialog.show(getSupportFragmentManager(), EDIT_DIALOG);
+//    }
+//
+//    public void deleteFragment() {
+//        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+//                .findFragmentByTag(DETAIL_FRAGMENT);
+//
+//        getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+//    }
+//
+//    @Override
+//    public void replaceFragment(Uri uri) {
+//        DetailFragment detailFragment = new DetailFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ITEM_URI, uri.toString());
+//        detailFragment.setArguments(args);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
+//                detailFragment, DETAIL_FRAGMENT).commit();
+//    }
+//
+//    @Override
+//    public void showDatePicker(String operation) {
+//        DialogFragment dateFragment = new DatePickerFragment();
+//        Bundle args = new Bundle();
+//        args.putString(OPERATION, operation);
+//        dateFragment.setArguments(args);
+//        dateFragment.show(getSupportFragmentManager(), "datePicker");
+//    }
+//
+//    @Override
+//    public void sendDate(String operation, int month, int day, int year) {
+//        EditFragment editFragment = (EditFragment) getSupportFragmentManager()
+//                .findFragmentByTag(EDIT_DETAIL);
+//        editFragment.updateEditText(operation, month, day, year);
+//    }
 
 //    @Override
 //    public Loader<Cursor> onCreateLoader(int id, Bundle args) {

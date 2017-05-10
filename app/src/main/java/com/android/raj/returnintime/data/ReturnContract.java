@@ -33,6 +33,7 @@ public final class ReturnContract {
         public static final String COLUMN_BOOK_RETURN_TO = "bookReturnTo";
         public static final String COLUMN_BOOK_CHECKEDOUT = "bookCheckedout";
         public static final String COLUMN_BOOK_RETURN = "bookReturn";
+        public static final String COLUMN_BOOK_NOTIFY = "bookNotify";
 
     }
 

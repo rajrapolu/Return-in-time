@@ -51,6 +51,8 @@ public class DetailFragment extends Fragment {
 
     public interface SendToDetailActivity {
         void displayEditFragment(Uri uri);
+
+        void displayEditDialogFragment(Uri uri);
     }
 
     @Override
@@ -90,7 +92,11 @@ public class DetailFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.action_edit) {
-            sendData.displayEditFragment(uri);
+            if (getActivity() instanceof MainActivity) {
+                sendData.displayEditDialogFragment(uri);
+            } else {
+                sendData.displayEditFragment(uri);
+            }
             return true;
         } else if (itemId == R.id.action_delete) {
             deleteItem();

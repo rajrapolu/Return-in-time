@@ -13,10 +13,6 @@ import android.widget.FrameLayout;
 public class DetailActivity extends BaseActivity /*implements
         DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment,
         DatePickerFragment.SendDateToText*/ {
-    public static final String ITEM_URI = "ITEM URI";
-    public static final String DETAIL_FRAGMENT = "DETAIL FRAGMENT";
-    public static final String EDIT_DETAIL = "EDIT DETAIL";
-    private static final String OPERATION = "OPERATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +21,14 @@ public class DetailActivity extends BaseActivity /*implements
 
         Uri uri = getIntent().getData();
 
-        DetailFragment detailFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ITEM_URI, uri.toString());
-        detailFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().add(R.id.detail_fragment_container,
-                detailFragment, DETAIL_FRAGMENT).commit();
+        replaceFragment(uri);
+//
+//        DetailFragment detailFragment = new DetailFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ITEM_URI, uri.toString());
+//        detailFragment.setArguments(args);
+//        getSupportFragmentManager().beginTransaction().add(R.id.detail_fragment_container,
+//                detailFragment, DETAIL_FRAGMENT).commit();
     }
 //
 //    @Override

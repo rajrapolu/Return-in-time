@@ -40,7 +40,7 @@
                 android:value="com.android.raj.returnintime.MainActivity"/>
         </activity>
 
-        <receiver android:name=".NotificationPublisher" />
+        <receiver android:name=".utilities.NotificationPublisher" />
     </application>
 
 </manifest>

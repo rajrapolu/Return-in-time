@@ -155,7 +155,7 @@ public class DetailFragment extends Fragment {
             });
         }
 
-        uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
+        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
         Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
 
         displayData(uri);

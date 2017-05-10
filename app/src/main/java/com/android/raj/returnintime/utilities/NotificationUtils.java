@@ -6,14 +6,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.icu.util.Calendar;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 
 import com.android.raj.returnintime.DetailActivity;
-import com.android.raj.returnintime.NotificationPublisher;
 import com.android.raj.returnintime.R;
 
 public class NotificationUtils {
@@ -44,11 +42,6 @@ public class NotificationUtils {
                 .setDefaults(NotificationCompat.DEFAULT_SOUND)
                 .setContentIntent(pendingIntent)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-
-//        NotificationCompat.BigTextStyle bigTextSyle = new NotificationCompat.BigTextStyle();
-//        bigTextSyle.setBigContentTitle("Return this book today");
-//        bigTextSyle.bigText(mTextTitle.getEditText().getText().toString());
-//        builder.setStyle(bigTextSyle);
 
         scheduleNotification(builder.build(), NOTIFY_ID, context, calendar);
     }

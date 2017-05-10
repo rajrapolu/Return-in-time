@@ -104,7 +104,7 @@ public class EditFragment extends Fragment {
             }
         });
 
-        uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
+        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
 
         mTextCheckedout.getEditText().setClickable(true);
         mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {

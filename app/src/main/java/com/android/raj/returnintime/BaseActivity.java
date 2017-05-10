@@ -12,7 +12,7 @@ public class BaseActivity extends AppCompatActivity implements
 
     private static final String OPERATION = "OPERATION";
     private static final String EDIT_DETAIL = "EDIT_DETAIL";
-    private static final String ITEM_URI = "ITEM_URI";
+    public static final String ITEM_URI = "ITEM_URI";
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
     public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
 

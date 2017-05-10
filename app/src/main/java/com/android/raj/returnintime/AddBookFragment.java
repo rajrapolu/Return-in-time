@@ -142,8 +142,8 @@ public class AddBookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 uri = insertData();
-                NOTIFY_ID = (int) ContentUris.parseId(uri);
                 if (uri != null) {
+                    NOTIFY_ID = (int) ContentUris.parseId(uri);
                     NotificationUtils.SetUpNotification(getContext(), uri, NOTIFY_ID,
                             mTextTitle.getEditText().getText().toString(),
                             mTextReturnTo.getEditText().getText().toString(),

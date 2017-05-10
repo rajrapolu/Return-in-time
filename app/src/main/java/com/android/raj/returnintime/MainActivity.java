@@ -25,13 +25,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity/*AppCompatActivity implements
         DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment,
         DatePickerFragment.SendDateToText*/ {
-
-
-    private static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
-    public static final String ITEM_URI = "ITEM URI";
-    public static final String EDIT_DETAIL = "EDIT DETAIL";
-    private static final String EDIT_DIALOG = "EDIT_DIALOG";
-    private static final String OPERATION = "OPERATION";
     BookAdapter bookAdapter;
     private boolean mTablet;
 

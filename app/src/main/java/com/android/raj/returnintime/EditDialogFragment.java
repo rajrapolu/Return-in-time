@@ -20,19 +20,21 @@ import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EditDialogFragment extends DialogFragment {
     Uri uri;
-    @BindView(R.id.title_text_input_layout)
-    TextInputLayout mTextTitle;
+    @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
     @BindView(R.id.type_text_input_layout) TextInputLayout mTextType;
     @BindView(R.id.return_to_text_input_layout) TextInputLayout mTextReturnTo;
     @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
     @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
+    @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
     Button mSaveButton, mCancelButton;
-    String mTitle, mType, mReturnTo, mCheckedout, mReturn;
+    String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
     EditFragment.SendToDetailFragment sendDetails;
 
     @Override
@@ -66,7 +68,7 @@ public class EditDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_edit, container, false);
         ButterKnife.bind(this, view);
 
-        uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
+        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
 
         displayData(uri);
 
@@ -103,7 +105,8 @@ public class EditDialogFragment extends DialogFragment {
                     !mTextType.getEditText().getText().toString().equals(mType) ||
                     !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
                     !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                    !mTextReturn.getEditText().getText().toString().equals(mReturn)) {
+                    !mTextReturn.getEditText().getText().toString().equals(mReturn) /*||
+                    !mTextNotify.getEditText().getText().toString().equals(mNotify)*/) {
                 Log.i("yes", "onOptionsItemSelected: " + "save2");
                 ContentValues values = new ContentValues();
 
@@ -117,6 +120,8 @@ public class EditDialogFragment extends DialogFragment {
                         mTextCheckedout.getEditText().getText().toString());
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
                         mTextReturn.getEditText().getText().toString());
+//                values.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY,
+//                        mTextNotify.getEditText().getText().toString());
 
                 int rowsAffected = getContext().getContentResolver()
                         .update(uri, values, null, null);
@@ -161,12 +166,18 @@ public class EditDialogFragment extends DialogFragment {
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT));
         mReturn = cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN));
+        Log.i("tag", "displayData: " + cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
+//        mNotify = cursor.getString(cursor
+//                .getColumnIndexOrThrow(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
+
 
         mTextTitle.getEditText().setText(mTitle);
         mTextType.getEditText().setText(mType);
         mTextReturnTo.getEditText().setText(mReturnTo);
         mTextCheckedout.getEditText().setText(mCheckedout);
         mTextReturn.getEditText().setText(mReturn);
+//        mTextNotify.getEditText().setText(mNotify);
         cursor.close();
     }
 }

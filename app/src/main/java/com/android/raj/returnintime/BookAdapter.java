@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,17 @@ import android.widget.TextView;
 
 import com.android.raj.returnintime.data.ReturnContract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolder> {
 
     private Context mContext;
-    //private List<Book> mBooks = new ArrayList<>();
+    public List<String> selectedBooks = new ArrayList<>();
     //private Cursor mBooks;
     boolean mContextual;
+    private int counter;
+    Toolbar toolbar;
 
 //    public BookAdapter(Context context, List<Book> books) {
 //        mContext = context;
@@ -83,7 +89,9 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
             id = Long.parseLong(cursor.getString(cursor
                     .getColumnIndex(ReturnContract.BookEntry._ID)));
 
-            if (!mContextual) {
+        ((BaseActivity)mContext).clicked = false;
+
+            if (!((BaseActivity)mContext).mContextual) {
                 checkBox.setVisibility(View.GONE);
             } else {
                 checkBox.setVisibility(View.VISIBLE);
@@ -95,8 +103,10 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
                 public void onClick(View v) {
 
                     Log.i("yes", "onClick: " + cursor.moveToPosition(position));
+                    ((BaseActivity)mContext).clicked = true;
                     Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
-                            Long.parseLong(cursor.getString(cursor.getColumnIndex(ReturnContract.BookEntry._ID))));
+                            Long.parseLong(cursor.getString(cursor
+                                    .getColumnIndex(ReturnContract.BookEntry._ID))));
 
                     if (((MainActivity) mContext).isTablet()) {
                         ((BaseActivity) mContext).replaceFragment(uri);
@@ -113,6 +123,43 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
 
                 }
             });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ((BaseActivity)mContext).mContextual = true;
+                BookAdapter.this.notifyDataSetChanged();
+                toolbar = ((MainActivity) mContext).displayContextualMode(true);
+                toolbar.setTitle("0 Items are selected");
+                return true;
+            }
+        });
+
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkBox.isChecked()) {
+                    selectedBooks.add(cursor.getString(cursor
+                            .getColumnIndex(ReturnContract.BookEntry._ID)));
+                    counter++;
+
+                } else {
+                    selectedBooks.remove(cursor.getString(cursor
+                            .getColumnIndex(ReturnContract.BookEntry._ID)));
+                    counter--;
+                }
+                updateCounter();
+            }
+        });
+    }
+
+    //To update the counter while adding items to delete
+    private void updateCounter() {
+        if (counter == 0) {
+            toolbar.setTitle("0 Items are selected");
+        } else {
+            toolbar.setTitle(counter + " Items are selected");
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

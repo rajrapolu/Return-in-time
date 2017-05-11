@@ -114,6 +114,7 @@ public class BookListFragment extends Fragment implements LoaderManager.LoaderCa
         contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO, "returnto");
         contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT, "checkedout");
         contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN, "return");
+        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY, "notify");
 
         Uri uri = getActivity().getContentResolver()
                 .insert(ReturnContract.BookEntry.CONTENT_URI, contentValues);

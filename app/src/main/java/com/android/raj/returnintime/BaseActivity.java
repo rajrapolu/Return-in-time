@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class BaseActivity extends AppCompatActivity implements
@@ -15,6 +18,8 @@ public class BaseActivity extends AppCompatActivity implements
     public static final String ITEM_URI = "ITEM_URI";
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
     public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
+    public boolean mContextual = false;
+    boolean clicked;
 
     @Override
     public void showDatePicker(String operation) {
@@ -71,6 +76,8 @@ public class BaseActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
                 editFragment, EDIT_DETAIL).commit();
     }
+
+
 
 //    @Override
 //    public void replaceFragment(Uri uri) {

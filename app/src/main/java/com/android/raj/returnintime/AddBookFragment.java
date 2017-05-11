@@ -233,8 +233,8 @@ public class AddBookFragment extends Fragment {
             values.put(BookEntry.COLUMN_BOOK_RETURN, mReturn);
             values.put(BookEntry.COLUMN_BOOK_NOTIFY, mNotify);
 
-            Uri uri = getContext().getContentResolver().
-                    insert(BookEntry.CONTENT_URI, values);
+            Uri uri = getContext().getContentResolver()
+                    .insert(BookEntry.CONTENT_URI, values);
 
             if (uri != null) {
                 Toast.makeText(getContext(), "Data inserted ", Toast.LENGTH_SHORT)

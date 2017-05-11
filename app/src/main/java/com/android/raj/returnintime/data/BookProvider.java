@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 public class BookProvider extends ContentProvider {
 
@@ -101,6 +102,7 @@ public class BookProvider extends ContentProvider {
         }
         long rowId = database.insert(ReturnContract.BookEntry.TABLE_NAME, null, values);
         if (rowId == -1) {
+            Toast.makeText(getContext(), "Returning -1", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Failed to insert the row for " + uri);
             return null;
         }

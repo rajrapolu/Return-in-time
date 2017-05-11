@@ -27,14 +27,16 @@ public class MainActivity extends BaseActivity/*AppCompatActivity implements
         DatePickerFragment.SendDateToText*/ {
     BookAdapter bookAdapter;
     private boolean mTablet;
+    Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //displayContextualMode(false);
         ButterKnife.bind(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -62,30 +64,77 @@ public class MainActivity extends BaseActivity/*AppCompatActivity implements
         super.onStart();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        } else if (id == R.id.action_dummy) {
-//            //insertData();
-//            //displayDatabaseMessage();
+    public Toolbar displayContextualMode(boolean contexual) {
+        mContextual = contexual;
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        if (mContextual) {
+        if (clicked) {
+            deleteFragment();
+        }
+
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clearActions();
+                }
+            });
 //        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+        return toolbar;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        if (!mContextual) {
+            clearActions();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void clearActions() {
+        toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, false);
+        mContextual = false;
+        bookAdapter.notifyDataSetChanged();
+        toolbar.setNavigationIcon(null);
+        toolbar.setTitle("Return in time");
+        Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
+    }
+
+        @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+            toolbar.getMenu().setGroupVisible(R.id.detail_menu_group, false);
+            toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_contexual_delete) {
+            deleteItems();
+            Toast.makeText(getApplicationContext(), "Delete", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteItems() {
+        //for ()
+    }
 
 
     @Override

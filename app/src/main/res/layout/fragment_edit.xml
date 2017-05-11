@@ -39,7 +39,18 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_type"
                     style="@style/text_field"
-                    android:hint="@string/text_author"
+                    android:hint="Type(eg: Book, Money, Car, Bills)"
+                    android:inputType="text|textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/return_to_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_return_to"
+                    style="@style/text_field"
+                    android:hint="Recipient(eg: Name, Library)"
                     android:inputType="text|textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
@@ -51,7 +62,7 @@
                     android:id="@+id/edit_checkedout"
                     android:focusable="false"
                     style="@style/text_field"
-                    android:hint="MM/DD/YYYY"
+                    android:hint="Start Date (MM/DD/YYYY)"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
@@ -63,7 +74,19 @@
                     android:id="@+id/edit_return"
                     android:focusable="false"
                     style="@style/text_field"
-                    android:hint="MM/DD/YYYY"
+                    android:hint="End Date (MM/DD/YYYY)"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/notify_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_notify"
+                    android:focusable="false"
+                    style="@style/text_field"
+                    android:hint="Notify Date (MM/DD/YYYY)"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 

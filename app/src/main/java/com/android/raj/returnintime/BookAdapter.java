@@ -24,9 +24,9 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
     private Context mContext;
     public List<String> selectedBooks = new ArrayList<>();
     //private Cursor mBooks;
-    boolean mContextual;
-    private int counter;
+    public int counter;
     Toolbar toolbar;
+    boolean clicked;
 
 //    public BookAdapter(Context context, List<Book> books) {
 //        mContext = context;
@@ -89,8 +89,6 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
             id = Long.parseLong(cursor.getString(cursor
                     .getColumnIndex(ReturnContract.BookEntry._ID)));
 
-        ((BaseActivity)mContext).clicked = false;
-
             if (!((BaseActivity)mContext).mContextual) {
                 checkBox.setVisibility(View.GONE);
             } else {
@@ -101,19 +99,21 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!((BaseActivity)mContext).mContextual) {
 
-                    Log.i("yes", "onClick: " + cursor.moveToPosition(position));
-                    ((BaseActivity)mContext).clicked = true;
-                    Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
-                            Long.parseLong(cursor.getString(cursor
-                                    .getColumnIndex(ReturnContract.BookEntry._ID))));
+                        Log.i("yes", "onClick: " + cursor.moveToPosition(position));
+                        clicked = true;
+                        Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
+                                Long.parseLong(cursor.getString(cursor
+                                        .getColumnIndex(ReturnContract.BookEntry._ID))));
 
-                    if (((MainActivity) mContext).isTablet()) {
-                        ((BaseActivity) mContext).replaceFragment(uri);
-                    } else {
-                        Intent intent = new Intent(mContext, DetailActivity.class);
-                        intent.setData(uri);
-                        mContext.startActivity(intent);
+                        if (((MainActivity) mContext).isTablet()) {
+                            ((BaseActivity) mContext).replaceFragment(uri);
+                        } else {
+                            Intent intent = new Intent(mContext, DetailActivity.class);
+                            intent.setData(uri);
+                            mContext.startActivity(intent);
+                        }
                     }
 
 
@@ -139,14 +139,18 @@ public class BookAdapter extends RecyclerViewCursorAdapter<BookAdapter.ViewHolde
             @Override
             public void onClick(View v) {
                 if (checkBox.isChecked()) {
-                    selectedBooks.add(cursor.getString(cursor
-                            .getColumnIndex(ReturnContract.BookEntry._ID)));
-                    counter++;
+                    if (cursor.moveToPosition(holder.getAdapterPosition())) {
+                        selectedBooks.add(cursor.getString(cursor
+                                .getColumnIndex(ReturnContract.BookEntry._ID)));
+                        counter++;
+                    }
 
                 } else {
-                    selectedBooks.remove(cursor.getString(cursor
-                            .getColumnIndex(ReturnContract.BookEntry._ID)));
-                    counter--;
+                    if (cursor.moveToPosition(holder.getAdapterPosition())) {
+                        selectedBooks.remove(cursor.getString(cursor
+                                .getColumnIndex(ReturnContract.BookEntry._ID)));
+                        counter--;
+                    }
                 }
                 updateCounter();
             }

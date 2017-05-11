@@ -10,7 +10,7 @@ import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 public class ReturnDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "returns.db";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 9;
     String SQL_BOOK_STATEMENT;
 
     public ReturnDBHelper(Context context) {
@@ -38,8 +38,8 @@ public class ReturnDBHelper extends SQLiteOpenHelper {
         if (newVersion > oldVersion) {
 //            db.execSQL("ALTER TABLE " + BookEntry.TABLE_NAME + " ADD COLUMN " +
 //                    BookEntry.COLUMN_BOOK_RETURN_TO + " TEXT");
-//            db.execSQL("ALTER TABLE " + BookEntry.TABLE_NAME + " ADD COLUMN " +
-//                    BookEntry.COLUMN_BOOK_NOTIFY + " TEXT");
+            db.execSQL("ALTER TABLE " + BookEntry.TABLE_NAME + " ADD COLUMN " +
+                    BookEntry.COLUMN_BOOK_NOTIFY + " TEXT");
 
 //            db.execSQL("DELETE TABLE IF EXISTS " + BookEntry.TABLE_NAME);
 //            db.execSQL(SQL_BOOK_STATEMENT);

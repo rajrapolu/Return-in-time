@@ -19,7 +19,7 @@ public class BaseActivity extends AppCompatActivity implements
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
     public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public boolean mContextual = false;
-    boolean clicked;
+//    boolean clicked;
 
     @Override
     public void showDatePicker(String operation) {

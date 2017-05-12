@@ -35,6 +35,14 @@ public class AddBookActivity extends AppCompatActivity implements AddBookFragmen
     }
 
     @Override
+    public void stayOrLeave() {
+        AddItemDialog alertChangesDialog = new AddItemDialog();
+        alertChangesDialog.setCancelable(false);
+        alertChangesDialog.show(getSupportFragmentManager(), "STAY_OR_LEAVE");
+    }
+
+
+    @Override
     public void sendDate(String checkedoutOrReturn, int month, int day, int year) {
         AddBookFragment addBookFragment = (AddBookFragment) getSupportFragmentManager()
                 .findFragmentByTag(ADD_BOOK_FRAGMENT_TAG);

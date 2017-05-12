@@ -80,6 +80,7 @@ public class AddBookFragment extends Fragment {
 
     public interface AddBookInterface {
         void showDatePicker(String checkedoutOrReturn);
+        void stayOrLeave();
     }
 
     @Override
@@ -107,7 +108,9 @@ public class AddBookFragment extends Fragment {
                         !mTextReturnTo.getEditText().getText().toString().isEmpty() ||
                         !mTextCheckedout.getEditText().getText().toString().isEmpty() ||
                         !mTextReturn.getEditText().getText().toString().isEmpty()) {
-                    Toast.makeText(getContext(), "Are you Sure?", Toast.LENGTH_SHORT).show();
+
+                    showPicker.stayOrLeave();
+
                 } else {
                     getActivity().finish();
                 }

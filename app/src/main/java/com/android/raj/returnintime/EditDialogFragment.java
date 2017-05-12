@@ -20,18 +20,21 @@ import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EditDialogFragment extends DialogFragment {
     Uri uri;
-    @BindView(R.id.title_text_input_layout)
-    TextInputLayout mTextTitle;
-    @BindView(R.id.author_text_input_layout) TextInputLayout mTextAuthor;
+    @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
+    @BindView(R.id.type_text_input_layout) TextInputLayout mTextType;
+    @BindView(R.id.return_to_text_input_layout) TextInputLayout mTextReturnTo;
     @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
     @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
+    @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
     Button mSaveButton, mCancelButton;
-    String mTitle, mAuthor, mCheckedout, mReturn;
+    String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
     EditFragment.SendToDetailFragment sendDetails;
 
     @Override
@@ -65,7 +68,7 @@ public class EditDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_edit, container, false);
         ButterKnife.bind(this, view);
 
-        uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
+        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
 
         displayData(uri);
 
@@ -92,26 +95,33 @@ public class EditDialogFragment extends DialogFragment {
 
     private void saveEdit() {
         if (mTextTitle.getEditText().getText() != null &&
-                mTextAuthor.getEditText().getText() != null &&
+                mTextType.getEditText().getText() != null &&
+                mTextReturnTo.getEditText().getText() != null &&
                 mTextCheckedout.getEditText().getText() != null &&
                 mTextReturn.getEditText().getText() != null) {
             Log.i("yes", "onOptionsItemSelected: " + "save1");
 
             if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
-                    !mTextAuthor.getEditText().getText().toString().equals(mAuthor) ||
+                    !mTextType.getEditText().getText().toString().equals(mType) ||
+                    !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
                     !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                    !mTextReturn.getEditText().getText().toString().equals(mReturn)) {
+                    !mTextReturn.getEditText().getText().toString().equals(mReturn) /*||
+                    !mTextNotify.getEditText().getText().toString().equals(mNotify)*/) {
                 Log.i("yes", "onOptionsItemSelected: " + "save2");
                 ContentValues values = new ContentValues();
 
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
                         mTextTitle.getEditText().getText().toString());
-                values.put(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
-                        mTextAuthor.getEditText().getText().toString());
+                values.put(ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                        mTextType.getEditText().getText().toString());
+                values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
+                        mTextReturnTo.getEditText().getText().toString());
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
                         mTextCheckedout.getEditText().getText().toString());
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
                         mTextReturn.getEditText().getText().toString());
+//                values.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY,
+//                        mTextNotify.getEditText().getText().toString());
 
                 int rowsAffected = getContext().getContentResolver()
                         .update(uri, values, null, null);
@@ -136,7 +146,8 @@ public class EditDialogFragment extends DialogFragment {
         String[] projection = {
                 ReturnContract.BookEntry._ID,
                 ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
+                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN
         };
@@ -147,17 +158,26 @@ public class EditDialogFragment extends DialogFragment {
         cursor.moveToFirst();
         mTitle = cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE));
-        mAuthor = cursor.getString(cursor
-                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR));
+        mType = cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE));
+        mReturnTo = cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO));
         mCheckedout = cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT));
         mReturn = cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN));
+        Log.i("tag", "displayData: " + cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
+//        mNotify = cursor.getString(cursor
+//                .getColumnIndexOrThrow(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
+
 
         mTextTitle.getEditText().setText(mTitle);
-        mTextAuthor.getEditText().setText(mAuthor);
+        mTextType.getEditText().setText(mType);
+        mTextReturnTo.getEditText().setText(mReturnTo);
         mTextCheckedout.getEditText().setText(mCheckedout);
         mTextReturn.getEditText().setText(mReturn);
+//        mTextNotify.getEditText().setText(mNotify);
         cursor.close();
     }
 }

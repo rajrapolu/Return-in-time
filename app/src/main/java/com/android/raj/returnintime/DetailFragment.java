@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,13 +37,13 @@ public class DetailFragment extends Fragment {
 
     private static final String TAG = DetailFragment.class.getSimpleName();
     @BindView(R.id.detail_text_title) TextView mTitle;
-    @BindView(R.id.detail_text_author) TextView mAuthor;
-    @BindView(R.id.detail_text_borrowed) TextView mBorrowed;
+    @BindView(R.id.detail_text_type) TextView mType;
+    @BindView(R.id.detail_text_return_to_value) TextView mReturnToValue;
     @BindView(R.id.detail_text_borrowed_value) TextView mBorrowedValue;
-    @BindView(R.id.detail_text_return) TextView mReturn;
     @BindView(R.id.detail_text_return_value) TextView mReturValue;
     android.support.v7.widget.ShareActionProvider mShareActionProvider;
     Cursor cursor;
+    List<String> selectedItems = new ArrayList<>();
 
     SendToDetailActivity sendData;
     Uri uri;
@@ -52,6 +55,10 @@ public class DetailFragment extends Fragment {
 
     public interface SendToDetailActivity {
         void displayEditFragment(Uri uri);
+
+        void displayEditDialogFragment(Uri uri);
+
+        void showDeleteDialog(String item);
     }
 
     @Override
@@ -81,7 +88,7 @@ public class DetailFragment extends Fragment {
         String shareData = "Checkout this book! " + "\n" + "Title: " + cursor.getString(
                 cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) + " " +
                 " Author: " + cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR));
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE));
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
         return shareIntent;
     }
@@ -91,37 +98,48 @@ public class DetailFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.action_edit) {
-            sendData.displayEditFragment(uri);
+            if (getActivity() instanceof MainActivity) {
+                sendData.displayEditDialogFragment(uri);
+            } else {
+                sendData.displayEditFragment(uri);
+            }
             return true;
         } else if (itemId == R.id.action_delete) {
-            deleteItem();
+//            selectedItems.add(cursor.getString
+//                    (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
+            sendData.showDeleteDialog(cursor.getString
+                    (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
+//            sendData.showDeleteDialog(cursor.getString
+//                    (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
+            selectedItems.clear();
+            //deleteItem();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteItem() {
-        String selection = ReturnContract.BookEntry._ID + " LIKE ?";
-        String[] selectionArgs = {cursor.getString
-                (cursor.getColumnIndex(ReturnContract.BookEntry._ID))};
-
-        int rowsDeleted = 0;
-
-        rowsDeleted = getContext().getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
-                selection, selectionArgs);
-
-        if (rowsDeleted > 0) {
-            Toast.makeText(getContext(), "Getting the delete feature", Toast.LENGTH_SHORT).show();
-            if (getContext() instanceof MainActivity) {
-                ((MainActivity) getContext()).deleteFragment();
-            } else {
-                getActivity().finish();
-            }
-        } else {
-            Toast.makeText(getContext(), "error deleting the item", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void deleteItem() {
+//        String selection = ReturnContract.BookEntry._ID + " LIKE ?";
+//        String[] selectionArgs = {cursor.getString
+//                (cursor.getColumnIndex(ReturnContract.BookEntry._ID))};
+//
+//        int rowsDeleted = 0;
+//
+//        rowsDeleted = getContext().getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
+//                selection, selectionArgs);
+//
+//        if (rowsDeleted > 0) {
+//            Toast.makeText(getContext(), "Getting the delete feature", Toast.LENGTH_SHORT).show();
+//            if (getContext() instanceof MainActivity) {
+//                ((MainActivity) getContext()).deleteFragment();
+//            } else {
+//                getActivity().finish();
+//            }
+//        } else {
+//            Toast.makeText(getContext(), "error deleting the item", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -150,7 +168,7 @@ public class DetailFragment extends Fragment {
             });
         }
 
-        uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
+        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
         Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
 
         displayData(uri);
@@ -162,7 +180,8 @@ public class DetailFragment extends Fragment {
         String[] projection = {
                 ReturnContract.BookEntry._ID,
                 ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
+                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN
         };
@@ -170,15 +189,19 @@ public class DetailFragment extends Fragment {
         cursor = getActivity()
                 .getContentResolver().query(uri, projection, null, null, null);
 
-        cursor.moveToFirst();
-        mTitle.setText(cursor.getString(
-                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
-        mAuthor.setText(cursor.getString(
-                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)));
-        mBorrowedValue.setText(cursor.getString(
-                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT)));
-        mReturValue.setText(cursor.getString(
-                cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            mTitle.setText(cursor.getString(
+                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+            mType.setText(cursor.getString(
+                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)));
+            mReturnToValue.setText(cursor.getString(
+                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO)));
+            mBorrowedValue.setText(cursor.getString(
+                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT)));
+            mReturValue.setText(cursor.getString(
+                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+        }
     }
 
 

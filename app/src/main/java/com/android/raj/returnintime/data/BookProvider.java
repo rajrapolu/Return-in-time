@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 public class BookProvider extends ContentProvider {
 
@@ -95,12 +96,13 @@ public class BookProvider extends ContentProvider {
     private Uri insertBook(Uri uri, ContentValues values) {
         SQLiteDatabase database = returnDBHelper.getWritableDatabase();
         String bookTitle = values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TITLE);
-        String bookAuthor = values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR);
-        if (bookTitle == null || bookAuthor == null) {
+        String bookType = values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TYPE);
+        if (bookTitle == null || bookType == null) {
             throw new IllegalArgumentException("Book requires Title, Author");
         }
         long rowId = database.insert(ReturnContract.BookEntry.TABLE_NAME, null, values);
         if (rowId == -1) {
+            Toast.makeText(getContext(), "Returning -1", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Failed to insert the row for " + uri);
             return null;
         }
@@ -166,8 +168,8 @@ public class BookProvider extends ContentProvider {
             }
         }
 
-        if (values.containsKey(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR)) {
-            if (values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR) == null) {
+        if (values.containsKey(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)) {
+            if (values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TYPE) == null) {
                 throw new IllegalArgumentException("Author cannot be empty");
             }
         }

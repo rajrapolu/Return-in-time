@@ -10,17 +10,17 @@
     android:paddingTop="20dp">
 
     <TextView
-        android:id="@+id/text_title"
+        android:id="@+id/detail_text_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-regular"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/text_author"
+        android:id="@+id/text_recipient"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@+id/text_title"
+        android:layout_below="@+id/detail_text_title"
         android:fontFamily="sans-serif-regular"
         android:textSize="14sp" />
 
@@ -28,9 +28,9 @@
         android:id="@+id/text_return_in"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/text_author"
+        android:layout_toRightOf="@+id/text_recipient"
         android:paddingLeft="16dp"
-        android:layout_alignBaseline="@+id/text_author"
+        android:layout_alignBaseline="@+id/text_recipient"
         android:fontFamily="sans-serif-regular"
         android:textSize="14sp" />
 

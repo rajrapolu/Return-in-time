@@ -1,6 +1,5 @@
 package com.android.raj.returnintime;
 
-import android.app.DatePickerDialog;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +8,7 @@ public class AddBookActivity extends AppCompatActivity implements AddBookFragmen
         DatePickerFragment.SendDateToText {
 
     public static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
-    public static final String CHECKEDOUT_OR_RETURN = "CHECKEDOUT_OR_RETURN";
+    public static final String OPERATION = "OPERATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +29,7 @@ public class AddBookActivity extends AppCompatActivity implements AddBookFragmen
     public void showDatePicker(String checkedoutOrReturn) {
         DialogFragment dateFragment = new DatePickerFragment();
         Bundle args = new Bundle();
-        args.putString(CHECKEDOUT_OR_RETURN, checkedoutOrReturn);
+        args.putString(OPERATION, checkedoutOrReturn);
         dateFragment.setArguments(args);
         dateFragment.show(getSupportFragmentManager(), "datePicker");
     }

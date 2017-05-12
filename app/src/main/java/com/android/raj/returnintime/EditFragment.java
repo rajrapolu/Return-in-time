@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
 
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -31,21 +33,47 @@ import butterknife.ButterKnife;
  */
 public class EditFragment extends Fragment {
     @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
-    @BindView(R.id.author_text_input_layout) TextInputLayout mTextAuthor;
+    @BindView(R.id.type_text_input_layout) TextInputLayout mTextType;
+    @BindView(R.id.return_to_text_input_layout) TextInputLayout mTextReturnTo;
     @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
     @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
+    @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
     @BindView(R.id.add_button) Button mButton;
     Uri uri;
-    String mTitle, mAuthor, mCheckedout, mReturn;
+    String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
     SendToDetailFragment sendDetails;
+    Calendar calendar;
+    private static final int TIME_IN_HOURS = 6;
+    private static final int TIME_IN_MINUTES = 30;
 
     public EditFragment() {
         // Required empty public constructor
 
     }
 
+    public void updateEditText(String operation, int month, int day, int year) {
+        switch (operation) {
+            case "checkedout":
+                mTextCheckedout.getEditText().setText(month + "/" + day + "/" + year);
+                break;
+            case "return":
+                mTextReturn.getEditText().setText(month + "/" + day + "/" + year);
+                break;
+            case "notify":
+                mTextNotify.getEditText().setText(month + "/" + day + "/" + year);
+                calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
+                calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
+                break;
+
+        }
+    }
+
     public interface SendToDetailFragment {
         void replaceFragment(Uri uri);
+        void showDatePicker(String operation);
     }
 
     @Override
@@ -76,7 +104,35 @@ public class EditFragment extends Fragment {
             }
         });
 
-        uri = Uri.parse(getArguments().getString(DetailActivity.ITEM_URI));
+        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
+
+        mTextCheckedout.getEditText().setClickable(true);
+        mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDetails.showDatePicker("checkedout");
+//                DialogFragment dateFragment = new DatePickerFragment();
+//                dateFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
+        mTextReturn.getEditText().setClickable(true);
+        mTextReturn.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDetails.showDatePicker("return");
+//                DialogFragment dateFragment = new DatePickerFragment();
+//                dateFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
+        mTextNotify.getEditText().setClickable(true);
+        mTextNotify.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDetails.showDatePicker("notify");
+            }
+        });
 
         displayData(uri);
 
@@ -87,9 +143,11 @@ public class EditFragment extends Fragment {
         String[] projection = {
                 ReturnContract.BookEntry._ID,
                 ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
+                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
+                ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY
         };
 
         Cursor cursor = getActivity()
@@ -98,17 +156,23 @@ public class EditFragment extends Fragment {
         cursor.moveToFirst();
         mTitle = cursor.getString(cursor
                         .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE));
-        mAuthor = cursor.getString(cursor
-                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR));
+        mType = cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE));
+        mReturnTo = cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO));
         mCheckedout = cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT));
         mReturn = cursor.getString(cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN));
+        mNotify = cursor.getString(cursor
+                .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
 
         mTextTitle.getEditText().setText(mTitle);
-        mTextAuthor.getEditText().setText(mAuthor);
+        mTextType.getEditText().setText(mType);
+        mTextReturnTo.getEditText().setText(mReturnTo);
         mTextCheckedout.getEditText().setText(mCheckedout);
         mTextReturn.getEditText().setText(mReturn);
+        mTextNotify.getEditText().setText(mNotify);
         cursor.close();
     }
 
@@ -132,26 +196,31 @@ public class EditFragment extends Fragment {
 
     private void saveEdit() {
         if (mTextTitle.getEditText().getText() != null &&
-                mTextAuthor.getEditText().getText() != null &&
+                mTextType.getEditText().getText() != null &&
                 mTextCheckedout.getEditText().getText() != null &&
                 mTextReturn.getEditText().getText() != null) {
             Log.i("yes", "onOptionsItemSelected: " + "save1");
 
             if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
-                    !mTextAuthor.getEditText().getText().toString().equals(mAuthor) ||
+                    !mTextType.getEditText().getText().toString().equals(mType) ||
                     !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                    !mTextReturn.getEditText().getText().toString().equals(mReturn)) {
+                    !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
+                    !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
                 Log.i("yes", "onOptionsItemSelected: " + "save2");
                 ContentValues values = new ContentValues();
 
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
                         mTextTitle.getEditText().getText().toString());
-                values.put(ReturnContract.BookEntry.COLUMN_BOOK_AUTHOR,
-                        mTextAuthor.getEditText().getText().toString());
+                values.put(ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+                        mTextType.getEditText().getText().toString());
+                values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
+                        mTextReturnTo.getEditText().getText().toString());
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
                         mTextCheckedout.getEditText().getText().toString());
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
                         mTextReturn.getEditText().getText().toString());
+                values.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY,
+                        mTextNotify.getEditText().getText().toString());
 
                 int rowsAffected = getContext().getContentResolver()
                         .update(uri, values, null, null);

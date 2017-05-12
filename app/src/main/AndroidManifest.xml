@@ -39,6 +39,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.raj.returnintime.MainActivity"/>
         </activity>
+
+        <receiver android:name=".utilities.NotificationPublisher" />
     </application>
 
 </manifest>

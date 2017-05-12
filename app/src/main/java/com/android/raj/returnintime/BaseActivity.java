@@ -5,8 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.android.raj.returnintime.data.ReturnContract;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class BaseActivity extends AppCompatActivity implements
@@ -18,6 +25,7 @@ public class BaseActivity extends AppCompatActivity implements
     public static final String ITEM_URI = "ITEM_URI";
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
     public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
+    public static final String ITEM_ID = "ITEM_ID";
     public boolean mContextual = false;
 //    boolean clicked;
 
@@ -77,6 +85,16 @@ public class BaseActivity extends AppCompatActivity implements
                 editFragment, EDIT_DETAIL).commit();
     }
 
+    @Override
+    public void showDeleteDialog(String itemId) {
+        Bundle args = new Bundle();
+        args.putString(ITEM_ID, itemId);
+        //args.putString(ITEM_ID, Id);
+        DeleteDialog deleteDialog = new DeleteDialog();
+        deleteDialog.setArguments(args);
+        deleteDialog.setCancelable(false);
+        deleteDialog.show(getSupportFragmentManager(), "DELETE DIALOG");
+    }
 
 
 //    @Override

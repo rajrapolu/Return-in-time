@@ -21,9 +21,12 @@ import android.widget.Toast;
 import com.android.raj.returnintime.data.ReturnContract;
 import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity/*AppCompatActivity implements
+public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInterface /*AppCompatActivity implements
         DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment,
         DatePickerFragment.SendDateToText*/ {
     BookAdapter bookAdapter;
@@ -134,7 +137,8 @@ public class MainActivity extends BaseActivity/*AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_contexual_delete) {
             bookAdapter.counter = 0;
-            deleteItems();
+            showDeleteDialog("deleteAll");
+            //deleteItems();
             clearActions();
             Toast.makeText(getApplicationContext(), "Delete", Toast.LENGTH_SHORT).show();
             return true;
@@ -143,7 +147,35 @@ public class MainActivity extends BaseActivity/*AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteItems() {
+//    private void deleteItems() {
+//        for (String id: bookAdapter.selectedBooks) {
+//            String selection = ReturnContract.BookEntry._ID + " LIKE ?";
+//            String[] selectionArgs = {id};
+//
+//            int rowsDeleted = 0;
+//
+//            rowsDeleted = getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
+//                    selection, selectionArgs);
+//
+//            if (rowsDeleted > 0) {
+//                Toast.makeText(getApplicationContext(), "Getting the delete feature",
+//                        Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(getApplicationContext(), "error deleting the item",
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //mBooks.clear();
+        //mBooks.close();
+    }
+
+    @Override
+    public void deleteAllItems() {
         for (String id: bookAdapter.selectedBooks) {
             String selection = ReturnContract.BookEntry._ID + " LIKE ?";
             String[] selectionArgs = {id};
@@ -161,13 +193,7 @@ public class MainActivity extends BaseActivity/*AppCompatActivity implements
                         Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //mBooks.clear();
-        //mBooks.close();
+        bookAdapter.selectedBooks.clear();
     }
 
 //    public void presentDetailFragment(Uri uri) {

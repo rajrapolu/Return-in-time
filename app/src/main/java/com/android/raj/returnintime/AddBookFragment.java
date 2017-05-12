@@ -102,7 +102,15 @@ public class AddBookFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                if (!mTextTitle.getEditText().getText().toString().isEmpty() ||
+                        !mTextType.getEditText().getText().toString().isEmpty() ||
+                        !mTextReturnTo.getEditText().getText().toString().isEmpty() ||
+                        !mTextCheckedout.getEditText().getText().toString().isEmpty() ||
+                        !mTextReturn.getEditText().getText().toString().isEmpty()) {
+                    Toast.makeText(getContext(), "Are you Sure?", Toast.LENGTH_SHORT).show();
+                } else {
+                    getActivity().finish();
+                }
             }
         });
 
@@ -212,11 +220,7 @@ public class AddBookFragment extends Fragment {
 
         String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
 
-        if (!mTextTitle.getEditText().getText().toString().isEmpty() &&
-                !mTextType.getEditText().getText().toString().isEmpty() &&
-                !mTextReturnTo.getEditText().getText().toString().isEmpty() &&
-                !mTextCheckedout.getEditText().getText().toString().isEmpty() &&
-                !mTextReturn.getEditText().getText().toString().isEmpty()) {
+        if (dataAvailable()) {
 
             mTitle = mTextTitle.getEditText().getText().toString();
             mType = mTextType.getEditText().getText().toString();
@@ -251,6 +255,17 @@ public class AddBookFragment extends Fragment {
             return null;
         }
 
+    }
+
+    public boolean dataAvailable() {
+        if (!mTextTitle.getEditText().getText().toString().isEmpty() &&
+                !mTextType.getEditText().getText().toString().isEmpty() &&
+                !mTextReturnTo.getEditText().getText().toString().isEmpty() &&
+                !mTextCheckedout.getEditText().getText().toString().isEmpty() &&
+                !mTextReturn.getEditText().getText().toString().isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
 }

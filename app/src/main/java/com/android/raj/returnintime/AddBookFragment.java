@@ -46,8 +46,8 @@ public class AddBookFragment extends Fragment {
     @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
     @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
     @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
-    public static final int TIME_IN_HOURS = 16;
-    public static final int TIME_IN_MINUTES = 57;
+    public static final int TIME_IN_HOURS = 19;
+    public static final int TIME_IN_MINUTES = 07;
     AddBookInterface showPicker;
     ReturnDBHelper dbHelper;
     Uri uri;
@@ -153,16 +153,19 @@ public class AddBookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 uri = insertData();
-                if (uri != null) {
-                    NOTIFY_ID = (int) ContentUris.parseId(uri);
-                    NotificationUtils.SetUpNotification(getContext(), uri, NOTIFY_ID,
-                            mTextTitle.getEditText().getText().toString(),
-                            mTextReturnTo.getEditText().getText().toString(),
-                            calendar.getTimeInMillis());
-                    //scheduleNotification(setNotification(uri));
-                    //setNotification(uri);
-                    getActivity().finish();
+                if (!mTextNotify.getEditText().getText().toString().isEmpty()) {
+                    if (uri != null) {
+                        NOTIFY_ID = (int) ContentUris.parseId(uri);
+                        NotificationUtils.SetUpNotification(getContext(), uri, NOTIFY_ID,
+                                mTextTitle.getEditText().getText().toString(),
+                                mTextReturnTo.getEditText().getText().toString(),
+                                calendar.getTimeInMillis());
+                        //scheduleNotification(setNotification(uri));
+                        //setNotification(uri);
+
+                    }
                 }
+                getActivity().finish();
 
             }
         });
@@ -254,7 +257,7 @@ public class AddBookFragment extends Fragment {
 
             return uri;
         } else {
-            Toast.makeText(getContext(), "Please enter all the fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please enter all the mandatory fields", Toast.LENGTH_SHORT).show();
             return null;
         }
 

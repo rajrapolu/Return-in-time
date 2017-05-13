@@ -24,7 +24,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_title"
                     style="@style/text_field"
-                    android:hint="@string/text_title"
+                    android:hint= "@string/text_title"
                     android:inputType="text|textAutoCorrect" />
             </android.support.design.widget.TextInputLayout>
 
@@ -36,7 +36,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_type"
                     style="@style/text_field"
-                    android:hint="Type(eg: Book, Money, Car, Bills)"
+                    android:hint="Type(eg: Book, Money, Car, Bills) *"
                     android:inputType="text|textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
@@ -47,7 +47,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_return_to"
                     style="@style/text_field"
-                    android:hint="Recipient(eg: Name, Library)"
+                    android:hint="Recipient(eg: Name, Library) *"
                     android:inputType="text|textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
@@ -59,7 +59,7 @@
                     android:id="@+id/edit_checkedout"
                     android:focusable="false"
                     style="@style/text_field"
-                    android:hint="Start Date (MM/DD/YYYY)"
+                    android:hint="Start Date (MM/DD/YYYY) *"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
@@ -71,7 +71,7 @@
                     android:id="@+id/edit_return"
                     android:focusable="false"
                     style="@style/text_field"
-                    android:hint="End Date (MM/DD/YYYY)"
+                    android:hint="End Date (MM/DD/YYYY) *"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 

@@ -38,8 +38,8 @@ public class ReturnDBHelper extends SQLiteOpenHelper {
         if (newVersion > oldVersion) {
 //            db.execSQL("ALTER TABLE " + BookEntry.TABLE_NAME + " ADD COLUMN " +
 //                    BookEntry.COLUMN_BOOK_RETURN_TO + " TEXT");
-            db.execSQL("ALTER TABLE " + BookEntry.TABLE_NAME + " ADD COLUMN " +
-                    BookEntry.COLUMN_BOOK_NOTIFY + " TEXT");
+//            db.execSQL("ALTER TABLE " + BookEntry.TABLE_NAME + " ADD COLUMN " +
+//                    BookEntry.COLUMN_BOOK_NOTIFY + " TEXT");
 
 //            db.execSQL("DELETE TABLE IF EXISTS " + BookEntry.TABLE_NAME);
 //            db.execSQL(SQL_BOOK_STATEMENT);

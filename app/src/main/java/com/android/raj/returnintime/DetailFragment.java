@@ -41,6 +41,7 @@ public class DetailFragment extends Fragment {
     @BindView(R.id.detail_text_return_to_value) TextView mReturnToValue;
     @BindView(R.id.detail_text_borrowed_value) TextView mBorrowedValue;
     @BindView(R.id.detail_text_return_value) TextView mReturValue;
+    @BindView(R.id.detail_text_notify_value) TextView mNotifyValue;
     android.support.v7.widget.ShareActionProvider mShareActionProvider;
     Cursor cursor;
     List<String> selectedItems = new ArrayList<>();
@@ -183,24 +184,29 @@ public class DetailFragment extends Fragment {
                 ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
+                ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY
         };
 
         cursor = getActivity()
                 .getContentResolver().query(uri, projection, null, null, null);
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            mTitle.setText(cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
-            mType.setText(cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)));
-            mReturnToValue.setText(cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO)));
-            mBorrowedValue.setText(cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT)));
-            mReturValue.setText(cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                mTitle.setText(cursor.getString(
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+                mType.setText(cursor.getString(
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)));
+                mReturnToValue.setText(cursor.getString(
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO)));
+                mBorrowedValue.setText(cursor.getString(
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT)));
+                mReturValue.setText(cursor.getString(
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+                mNotifyValue.setText(cursor.getString(
+                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY)));
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.android.raj.returnintime;
 
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.utilities.NotificationUtils;
 
 import java.util.Calendar;
 
@@ -40,11 +42,12 @@ public class EditFragment extends Fragment {
     @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
     @BindView(R.id.add_button) Button mButton;
     Uri uri;
+    public int NOTIFY_ID;
     String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
     SendToDetailFragment sendDetails;
     Calendar calendar;
-    private static final int TIME_IN_HOURS = 6;
-    private static final int TIME_IN_MINUTES = 30;
+    private static final int TIME_IN_HOURS = 19;
+    private static final int TIME_IN_MINUTES = 10;
 
     public EditFragment() {
         // Required empty public constructor
@@ -100,7 +103,7 @@ public class EditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //getActivity().finish();
-                sendDetails.replaceFragment(uri);
+                    sendDetails.replaceFragment(uri);
             }
         });
 
@@ -197,15 +200,12 @@ public class EditFragment extends Fragment {
     private void saveEdit() {
         if (mTextTitle.getEditText().getText() != null &&
                 mTextType.getEditText().getText() != null &&
+                mTextReturnTo.getEditText().getText() != null &&
                 mTextCheckedout.getEditText().getText() != null &&
                 mTextReturn.getEditText().getText() != null) {
             Log.i("yes", "onOptionsItemSelected: " + "save1");
 
-            if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
-                    !mTextType.getEditText().getText().toString().equals(mType) ||
-                    !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                    !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
-                    !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
+            if (changesCheck()) {
                 Log.i("yes", "onOptionsItemSelected: " + "save2");
                 ContentValues values = new ContentValues();
 
@@ -231,10 +231,32 @@ public class EditFragment extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "Book is successfully updated",
                             Toast.LENGTH_SHORT).show();
+
+                    if (!mTextNotify.getEditText().getText().toString().isEmpty()) {
+                            NOTIFY_ID = (int) ContentUris.parseId(uri);
+                            NotificationUtils.SetUpNotification(getContext(), uri, NOTIFY_ID,
+                                    mTextTitle.getEditText().getText().toString(),
+                                    mTextReturnTo.getEditText().getText().toString(),
+                                    calendar.getTimeInMillis());
+                            //scheduleNotification(setNotification(uri));
+                            //setNotification(uri);
+                    }
                 }
             }
             sendDetails.replaceFragment(uri);
         }
+    }
+
+    private boolean changesCheck() {
+        if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
+                !mTextType.getEditText().getText().toString().equals(mType) ||
+                !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
+                !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
+                !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
+                !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
+            return true;
+        }
+        return false;
     }
 
 }

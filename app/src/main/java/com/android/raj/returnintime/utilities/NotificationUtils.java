@@ -52,7 +52,7 @@ public class NotificationUtils {
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, NOTIFY_ID);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                NOTIFY_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                NOTIFY_ID, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);

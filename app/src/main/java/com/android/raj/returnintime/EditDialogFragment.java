@@ -1,5 +1,6 @@
 package com.android.raj.returnintime;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,13 +20,18 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.utilities.NotificationUtils;
 
 import org.w3c.dom.Text;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EditDialogFragment extends DialogFragment {
+    private static final int TIME_IN_HOURS = 6;
+    private static final int TIME_IN_MINUTES = 30;
     Uri uri;
     @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
     @BindView(R.id.type_text_input_layout) TextInputLayout mTextType;
@@ -35,7 +41,10 @@ public class EditDialogFragment extends DialogFragment {
     @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
     Button mSaveButton, mCancelButton;
     String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
-    EditFragment.SendToDetailFragment sendDetails;
+    //EditFragment.SendToDetailFragment sendDetails;
+    Calendar calendar;
+    public int NOTIFY_ID;
+    SendToDetailFragment sendDetails;
 
     @Override
     public void onResume() {
@@ -48,12 +57,39 @@ public class EditDialogFragment extends DialogFragment {
         window.setGravity(Gravity.CENTER);
 
     }
+    
+    public interface SendToDetailFragment {
+
+        void showDatePicker(String operation);
+
+        void replaceFragment(Uri uri);
+    }
+
+    public void updateEditText(String operation, int month, int day, int year) {
+        switch (operation) {
+            case "checkedout":
+                mTextCheckedout.getEditText().setText(month + "/" + day + "/" + year);
+                break;
+            case "return":
+                mTextReturn.getEditText().setText(month + "/" + day + "/" + year);
+                break;
+            case "notify":
+                mTextNotify.getEditText().setText(month + "/" + day + "/" + year);
+                calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
+                calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
+                break;
+
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.i("class", "onAttach: " + getActivity());
-        sendDetails = (EditFragment.SendToDetailFragment) getActivity();
+        sendDetails = (SendToDetailFragment) getActivity();
     }
 
 //    public interface SendToDetailFragmentTablet {
@@ -90,6 +126,34 @@ public class EditDialogFragment extends DialogFragment {
             }
         });
 
+        mTextCheckedout.getEditText().setClickable(true);
+        mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDetails.showDatePicker("checkedout");
+//                DialogFragment dateFragment = new DatePickerFragment();
+//                dateFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
+        mTextReturn.getEditText().setClickable(true);
+        mTextReturn.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDetails.showDatePicker("return");
+//                DialogFragment dateFragment = new DatePickerFragment();
+//                dateFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
+        mTextNotify.getEditText().setClickable(true);
+        mTextNotify.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDetails.showDatePicker("notify");
+            }
+        });
+
         return view;
     }
 
@@ -105,8 +169,8 @@ public class EditDialogFragment extends DialogFragment {
                     !mTextType.getEditText().getText().toString().equals(mType) ||
                     !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
                     !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                    !mTextReturn.getEditText().getText().toString().equals(mReturn) /*||
-                    !mTextNotify.getEditText().getText().toString().equals(mNotify)*/) {
+                    !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
+                    !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
                 Log.i("yes", "onOptionsItemSelected: " + "save2");
                 ContentValues values = new ContentValues();
 
@@ -120,8 +184,8 @@ public class EditDialogFragment extends DialogFragment {
                         mTextCheckedout.getEditText().getText().toString());
                 values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
                         mTextReturn.getEditText().getText().toString());
-//                values.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY,
-//                        mTextNotify.getEditText().getText().toString());
+                values.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY,
+                        mTextNotify.getEditText().getText().toString());
 
                 int rowsAffected = getContext().getContentResolver()
                         .update(uri, values, null, null);
@@ -132,6 +196,16 @@ public class EditDialogFragment extends DialogFragment {
                 } else {
                     Toast.makeText(getContext(), "Book is successfully updated",
                             Toast.LENGTH_SHORT).show();
+
+                    if (!mTextNotify.getEditText().getText().toString().isEmpty()) {
+                        NOTIFY_ID = (int) ContentUris.parseId(uri);
+                        NotificationUtils.SetUpNotification(getContext(), uri, NOTIFY_ID,
+                                mTextTitle.getEditText().getText().toString(),
+                                mTextReturnTo.getEditText().getText().toString(),
+                                calendar.getTimeInMillis());
+                        //scheduleNotification(setNotification(uri));
+                        //setNotification(uri);
+                    }
                 }
             }
             sendDetails.replaceFragment(uri);
@@ -149,7 +223,8 @@ public class EditDialogFragment extends DialogFragment {
                 ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
+                ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY
         };
 
         Cursor cursor = getActivity()
@@ -168,8 +243,8 @@ public class EditDialogFragment extends DialogFragment {
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN));
         Log.i("tag", "displayData: " + cursor
                 .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
-//        mNotify = cursor.getString(cursor
-//                .getColumnIndexOrThrow(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
+        mNotify = cursor.getString(cursor
+                .getColumnIndexOrThrow(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
 
 
         mTextTitle.getEditText().setText(mTitle);
@@ -177,7 +252,7 @@ public class EditDialogFragment extends DialogFragment {
         mTextReturnTo.getEditText().setText(mReturnTo);
         mTextCheckedout.getEditText().setText(mCheckedout);
         mTextReturn.getEditText().setText(mReturn);
-//        mTextNotify.getEditText().setText(mNotify);
+        mTextNotify.getEditText().setText(mNotify);
         cursor.close();
     }
 }

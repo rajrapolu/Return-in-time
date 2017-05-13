@@ -156,7 +156,8 @@ public class BookListFragment extends Fragment implements LoaderManager.LoaderCa
                 ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
                 ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
                 ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN
+                ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
+                ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY
         };
 
         return new CursorLoader(getContext(), ReturnContract.BookEntry.CONTENT_URI,

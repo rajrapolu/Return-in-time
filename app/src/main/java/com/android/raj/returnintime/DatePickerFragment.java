@@ -15,7 +15,11 @@ public class DatePickerFragment extends DialogFragment implements
     SendDateToText sendDateToText;
 
     public interface SendDateToText {
-        void sendDate(String checkedoutOrReturn, int month, int day, int year);
+        void sendEditFragmentDate(String checkedoutOrReturn, int month, int day, int year);
+
+        void sendDateToEditDialog(String string, int month, int dayOfMonth, int year);
+
+        void sendDate(String string, int month, int dayOfMonth, int year);
     }
 
     @Override
@@ -38,8 +42,17 @@ public class DatePickerFragment extends DialogFragment implements
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        sendDateToText.sendDate(getArguments().getString(AddBookActivity.OPERATION),
-                month, dayOfMonth, year);
+
+        if (getActivity() instanceof MainActivity) {
+               sendDateToText.sendDateToEditDialog(getArguments().getString(BaseActivity.OPERATION),
+                       month, dayOfMonth, year);
+        } else if (getActivity() instanceof AddBookActivity){
+            sendDateToText.sendDate(getArguments().getString(BaseActivity.OPERATION),
+                    month, dayOfMonth, year);
+        } else {
+            sendDateToText.sendEditFragmentDate(getArguments().getString(BaseActivity.OPERATION),
+                    month, dayOfMonth, year);
+        }
 //        AddBookFragment addBookFragment = (AddBookFragment) getParentFragment();
 //        addBookFragment.mTextCheckedout.getEditText().setText(month + "/" + dayOfMonth + "/"
 //                + year);

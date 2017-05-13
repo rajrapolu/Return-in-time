@@ -18,15 +18,22 @@ import java.util.List;
 
 public class BaseActivity extends AppCompatActivity implements
         DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment,
-        DatePickerFragment.SendDateToText {
+        DatePickerFragment.SendDateToText, AddBookFragment.AddBookInterface,
+        EditDialogFragment.SendToDetailFragment {
 
-    private static final String OPERATION = "OPERATION";
+    public static final String OPERATION = "OPERATION";
     private static final String EDIT_DETAIL = "EDIT_DETAIL";
     public static final String ITEM_URI = "ITEM_URI";
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
     public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public static final String ITEM_ID = "ITEM_ID";
+    public static final String NOTIFY_ID = "NOTIFY_ID";
     public boolean mContextual = false;
+    public static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
+    public static final String TITLE_TO_SERVICE = "TITLE_NO_SERVICE";
+    public static final String RETURN_TO_SERVICE = "RETURN_TO_SERVICE";
+    public static final String TIME_TO_SERVICE = "TIME_TO_SERVICE";
+    public static final String ID_TO_SERVICE = "ID_TO_SERVICE";
 //    boolean clicked;
 
     @Override
@@ -39,10 +46,18 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void sendDate(String operation, int month, int day, int year) {
+    public void sendEditFragmentDate(String operation, int month, int day, int year) {
         EditFragment editFragment = (EditFragment) getSupportFragmentManager()
                 .findFragmentByTag(EDIT_DETAIL);
         editFragment.updateEditText(operation, month, day, year);
+    }
+
+    @Override
+    public void sendDateToEditDialog(String operation, int month, int dayOfMonth, int year) {
+        EditDialogFragment editDialog = (EditDialogFragment)
+                getSupportFragmentManager().findFragmentByTag(EDIT_DIALOG);
+
+        editDialog.updateEditText(operation, month, dayOfMonth, year);
     }
 
 
@@ -94,6 +109,27 @@ public class BaseActivity extends AppCompatActivity implements
         deleteDialog.setArguments(args);
         deleteDialog.setCancelable(false);
         deleteDialog.show(getSupportFragmentManager(), "DELETE DIALOG");
+    }
+
+    @Override
+    public void stayOrLeave() {
+        AddItemDialog alertChangesDialog = new AddItemDialog();
+        alertChangesDialog.setCancelable(false);
+        alertChangesDialog.show(getSupportFragmentManager(), "STAY_OR_LEAVE");
+    }
+
+    @Override
+    public void sendDate(String checkedoutOrReturn, int month, int day, int year) {
+        AddBookFragment addBookFragment = (AddBookFragment) getSupportFragmentManager()
+                .findFragmentByTag(ADD_BOOK_FRAGMENT_TAG);
+        addBookFragment.updateEditText(checkedoutOrReturn, month, day, year);
+    }
+
+    public void displayAddFragment() {
+        AddBookFragment addBookFragment = new AddBookFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.add_fragment_container, addBookFragment, ADD_BOOK_FRAGMENT_TAG)
+                .commit();
     }
 
 

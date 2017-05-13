@@ -2,6 +2,7 @@ package com.android.raj.returnintime;
 
 
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ContentUris;
@@ -18,6 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +28,10 @@ import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract.BookEntry;
 import com.android.raj.returnintime.data.ReturnDBHelper;
+import com.android.raj.returnintime.service.ItemService;
 import com.android.raj.returnintime.utilities.NotificationUtils;
 
+import java.security.PublicKey;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -38,6 +42,10 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class AddBookFragment extends Fragment {
+//    public static final String TITLE_TO_SERVICE = "TITLE_NO_SERVICE";
+//    public static final String RETURN_TO_SERVICE = "RETURN_TO_SERVICE";
+//    public static final String TIME_TO_SERVICE = "TIME_TO_SERVICE";
+//    public static final String ID_TO_SERVICE = "ID_TO_SERVICE";
     public int NOTIFY_ID;
     public static final String GROUP_KEY = "group_key";
     @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
@@ -46,8 +54,8 @@ public class AddBookFragment extends Fragment {
     @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
     @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
     @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
-    public static final int TIME_IN_HOURS = 16;
-    public static final int TIME_IN_MINUTES = 57;
+    public static final int TIME_IN_HOURS = 22;
+    public static final int TIME_IN_MINUTES = 23;
     AddBookInterface showPicker;
     ReturnDBHelper dbHelper;
     Uri uri;
@@ -90,7 +98,7 @@ public class AddBookFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
@@ -153,16 +161,25 @@ public class AddBookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 uri = insertData();
-                if (uri != null) {
-                    NOTIFY_ID = (int) ContentUris.parseId(uri);
-                    NotificationUtils.SetUpNotification(getContext(), uri, NOTIFY_ID,
-                            mTextTitle.getEditText().getText().toString(),
-                            mTextReturnTo.getEditText().getText().toString(),
-                            calendar.getTimeInMillis());
-                    //scheduleNotification(setNotification(uri));
-                    //setNotification(uri);
-                    getActivity().finish();
+                if (!mTextNotify.getEditText().getText().toString().isEmpty()) {
+                    if (uri != null) {
+                        NOTIFY_ID = (int) ContentUris.parseId(uri);
+                        Intent intent = new Intent(getContext(), ItemService.class);
+                        intent.setData(uri);
+                        intent.putExtra(BaseActivity.TITLE_TO_SERVICE,
+                                mTextTitle.getEditText().getText().toString());
+                        intent.putExtra(BaseActivity.RETURN_TO_SERVICE,
+                                mTextReturnTo.getEditText().getText().toString());
+                        intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
+                        intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
+                        getActivity().startService(intent);
+
+                        //scheduleNotification(setNotification(uri));
+                        //setNotification(uri);
+
+                    }
                 }
+                getActivity().finish();
 
             }
         });
@@ -254,7 +271,7 @@ public class AddBookFragment extends Fragment {
 
             return uri;
         } else {
-            Toast.makeText(getContext(), "Please enter all the fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please enter all the mandatory fields", Toast.LENGTH_SHORT).show();
             return null;
         }
 

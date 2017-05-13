@@ -2,6 +2,7 @@ package com.android.raj.returnintime.utilities;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -52,11 +53,12 @@ public class NotificationUtils {
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, NOTIFY_ID);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                NOTIFY_ID, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                NOTIFY_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar, pendingIntent);
     }
+
 }

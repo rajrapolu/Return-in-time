@@ -1,9 +1,13 @@
 package com.android.raj.returnintime;
 
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +17,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.service.ItemService;
+import com.android.raj.returnintime.utilities.NotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +63,10 @@ public class DeleteDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if (item.equals("deleteAll")) {
                             deleteInterface.deleteAllItems();
+                        } else {
+                            deleteItems(item);
                         }
-                        deleteItems(item);
+
                     }
                 });
         return alertDialog;

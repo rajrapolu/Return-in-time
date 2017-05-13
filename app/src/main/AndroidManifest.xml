@@ -40,6 +40,9 @@
                 android:value="com.android.raj.returnintime.MainActivity"/>
         </activity>
 
+        <service android:name=".service.ItemService"
+            android:exported="false" />
+
         <receiver android:name=".utilities.NotificationPublisher" />
     </application>
 

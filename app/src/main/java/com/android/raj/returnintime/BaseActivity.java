@@ -27,8 +27,13 @@ public class BaseActivity extends AppCompatActivity implements
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
     public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public static final String ITEM_ID = "ITEM_ID";
+    public static final String NOTIFY_ID = "NOTIFY_ID";
     public boolean mContextual = false;
     public static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
+    public static final String TITLE_TO_SERVICE = "TITLE_NO_SERVICE";
+    public static final String RETURN_TO_SERVICE = "RETURN_TO_SERVICE";
+    public static final String TIME_TO_SERVICE = "TIME_TO_SERVICE";
+    public static final String ID_TO_SERVICE = "ID_TO_SERVICE";
 //    boolean clicked;
 
     @Override

@@ -4,6 +4,7 @@ package com.android.raj.returnintime;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.service.ItemService;
 import com.android.raj.returnintime.utilities.NotificationUtils;
 
 import java.util.Calendar;
@@ -234,10 +236,15 @@ public class EditFragment extends Fragment {
 
                     if (!mTextNotify.getEditText().getText().toString().isEmpty()) {
                             NOTIFY_ID = (int) ContentUris.parseId(uri);
-                            NotificationUtils.SetUpNotification(getContext(), uri, NOTIFY_ID,
-                                    mTextTitle.getEditText().getText().toString(),
-                                    mTextReturnTo.getEditText().getText().toString(),
-                                    calendar.getTimeInMillis());
+                            Intent intent = new Intent(getContext(), ItemService.class);
+                            intent.setData(uri);
+                            intent.putExtra(BaseActivity.TITLE_TO_SERVICE,
+                                    mTextTitle.getEditText().getText().toString());
+                            intent.putExtra(BaseActivity.RETURN_TO_SERVICE,
+                                    mTextReturnTo.getEditText().getText().toString());
+                            intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
+                            intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
+                            getActivity().startService(intent);
                             //scheduleNotification(setNotification(uri));
                             //setNotification(uri);
                     }

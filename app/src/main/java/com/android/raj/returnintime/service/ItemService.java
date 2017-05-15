@@ -1,13 +1,13 @@
 package com.android.raj.returnintime.service;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
-import com.android.raj.returnintime.AddBookFragment;
 import com.android.raj.returnintime.BaseActivity;
-import com.android.raj.returnintime.MainActivity;
 import com.android.raj.returnintime.utilities.NotificationUtils;
 
 public class ItemService extends IntentService {
@@ -26,8 +26,7 @@ public class ItemService extends IntentService {
         long timeInMillis = intent.getExtras().getLong(BaseActivity.TIME_TO_SERVICE);
         int notifyId = intent.getExtras().getInt(BaseActivity.ID_TO_SERVICE);
 
-        NotificationUtils.SetUpNotification(getApplicationContext(), uri, notifyId,
-                title, returnTo, timeInMillis);
-
+        NotificationUtils.SetUpNotification(getApplicationContext(),
+                uri, notifyId, title, returnTo, timeInMillis);
     }
 }

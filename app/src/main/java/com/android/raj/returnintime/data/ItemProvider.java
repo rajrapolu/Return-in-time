@@ -12,9 +12,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-public class BookProvider extends ContentProvider {
+public class ItemProvider extends ContentProvider {
 
-    private static final String TAG = BookProvider.class.getSimpleName();
+    private static final String TAG = ItemProvider.class.getSimpleName();
     ReturnDBHelper returnDBHelper;
 
     public static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

@@ -30,10 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class DetailFragment extends Fragment {
 
     private static final String TAG = DetailFragment.class.getSimpleName();
@@ -43,6 +39,7 @@ public class DetailFragment extends Fragment {
     @BindView(R.id.detail_text_borrowed_value) TextView mBorrowedValue;
     @BindView(R.id.detail_text_return_value) TextView mReturValue;
     @BindView(R.id.detail_text_notify_value) TextView mNotifyValue;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     android.support.v7.widget.ShareActionProvider mShareActionProvider;
     Cursor cursor;
     List<String> selectedItems = new ArrayList<>();
@@ -57,9 +54,7 @@ public class DetailFragment extends Fragment {
 
     public interface SendToDetailActivity {
         void displayEditFragment(Uri uri);
-
         void displayEditDialogFragment(Uri uri);
-
         void showDeleteDialog(String item);
     }
 
@@ -71,27 +66,25 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.e(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.detail_menu, menu);
-        Log.i("yes", "onCreateOptionsMenu: " + "booklist");
 
         MenuItem menuItem = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-
         mShareActionProvider.setShareIntent(createShareIntent());
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //Creates a share intent which will share in case of a share action
     private Intent createShareIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        shareIntent.setType("text/plain");
-        String shareData = "Item is already deleted";
+        shareIntent.setType(getString(R.string.text_share_type));
+        String shareData = getString(R.string.text_share_initial);
         if (cursor.getCount() > 0) {
-            shareData = "Checkout this book! " + "\n" + "Title: " + cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) + " " +
-                    " Author: " + cursor.getString(
+            shareData = getString(R.string.text_checkout_book) + "\n"
+                    + getString(R.string.text_share_title) + cursor.getString(
+                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) +
+                    getString(R.string.text_share_item_type) + cursor.getString(
                     cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE));
         }
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
@@ -102,52 +95,24 @@ public class DetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == R.id.action_edit) {
-            if (getActivity() instanceof MainActivity) {
-                sendData.displayEditDialogFragment(uri);
-            } else {
-                sendData.displayEditFragment(uri);
+        if (cursor.getCount() > 0) {
+            if (itemId == R.id.action_edit) {
+                if (getActivity() instanceof MainActivity) {
+                    sendData.displayEditDialogFragment(uri);
+                } else {
+                    sendData.displayEditFragment(uri);
+                }
+                return true;
+            } else if (itemId == R.id.action_delete) {
+                sendData.showDeleteDialog(cursor.getString
+                        (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
+                selectedItems.clear();
+                return true;
             }
-            return true;
-        } else if (itemId == R.id.action_delete) {
-//            selectedItems.add(cursor.getString
-//                    (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
-            Log.i(TAG, "onOptionsItemSelected:cursor " + cursor.getString
-                    (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
-            Log.i(TAG, "onOptionsItemSelected:contenturi " + ContentUris.parseId(uri));
-            sendData.showDeleteDialog(cursor.getString
-                    (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
-//            sendData.showDeleteDialog(cursor.getString
-//                    (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
-            selectedItems.clear();
-            //deleteItem();
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-//    private void deleteItem() {
-//        String selection = ReturnContract.BookEntry._ID + " LIKE ?";
-//        String[] selectionArgs = {cursor.getString
-//                (cursor.getColumnIndex(ReturnContract.BookEntry._ID))};
-//
-//        int rowsDeleted = 0;
-//
-//        rowsDeleted = getContext().getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
-//                selection, selectionArgs);
-//
-//        if (rowsDeleted > 0) {
-//            Toast.makeText(getContext(), "Getting the delete feature", Toast.LENGTH_SHORT).show();
-//            if (getContext() instanceof MainActivity) {
-//                ((MainActivity) getContext()).deleteFragment();
-//            } else {
-//                getActivity().finish();
-//            }
-//        } else {
-//            Toast.makeText(getContext(), "error deleting the item", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -158,15 +123,12 @@ public class DetailFragment extends Fragment {
         setHasOptionsMenu(true);
         ButterKnife.bind(this, rootView);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         if (getActivity() instanceof MainActivity) {
             toolbar.setVisibility(View.GONE);
-            //((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         } else {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            toolbar.setTitle("Book Details");
+            toolbar.setTitle(R.string.text_details_title);
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
-
 
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -177,13 +139,13 @@ public class DetailFragment extends Fragment {
         }
 
         uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
-        Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
 
         displayData(uri);
 
         return rootView;
     }
 
+    //Displays the data on to the detail fragment
     private void displayData(Uri uri) {
         String[] projection = {
                 ReturnContract.BookEntry._ID,
@@ -200,7 +162,11 @@ public class DetailFragment extends Fragment {
 
         if (cursor != null) {
             if (cursor.getCount() > 0) {
+
+                //moving the cursor to the first position
                 cursor.moveToFirst();
+
+                //setting the text of the text fields
                 mTitle.setText(cursor.getString(
                         cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
                 mType.setText(cursor.getString(
@@ -214,7 +180,8 @@ public class DetailFragment extends Fragment {
                 mNotifyValue.setText(cursor.getString(
                         cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY)));
             } else {
-                mTitle.setText("Book is already deleted");
+                mTitle.setText(R.string.text_item_deleted);
+
             }
         }
     }

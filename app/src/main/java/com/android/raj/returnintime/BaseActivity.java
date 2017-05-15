@@ -4,21 +4,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
-import com.android.raj.returnintime.data.ReturnContract;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class BaseActivity extends AppCompatActivity implements
         DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment,
-        DatePickerFragment.SendDateToText, AddBookFragment.AddBookInterface,
+        DatePickerFragment.SendDateToText, AddItemFragment.AddBookInterface,
         EditDialogFragment.SendToDetailFragment {
 
     public static final String OPERATION = "OPERATION";
@@ -34,6 +24,7 @@ public class BaseActivity extends AppCompatActivity implements
     public static final String RETURN_TO_SERVICE = "RETURN_TO_SERVICE";
     public static final String TIME_TO_SERVICE = "TIME_TO_SERVICE";
     public static final String ID_TO_SERVICE = "ID_TO_SERVICE";
+    public static final String DELETE_ALL_ITEMS = "DELETE_ALL_ITEMS";
 //    boolean clicked;
 
     @Override
@@ -120,15 +111,15 @@ public class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void sendDate(String checkedoutOrReturn, int month, int day, int year) {
-        AddBookFragment addBookFragment = (AddBookFragment) getSupportFragmentManager()
+        AddItemFragment addItemFragment = (AddItemFragment) getSupportFragmentManager()
                 .findFragmentByTag(ADD_BOOK_FRAGMENT_TAG);
-        addBookFragment.updateEditText(checkedoutOrReturn, month, day, year);
+        addItemFragment.updateEditText(checkedoutOrReturn, month, day, year);
     }
 
     public void displayAddFragment() {
-        AddBookFragment addBookFragment = new AddBookFragment();
+        AddItemFragment addItemFragment = new AddItemFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.add_fragment_container, addBookFragment, ADD_BOOK_FRAGMENT_TAG)
+                .add(R.id.add_fragment_container, addItemFragment, ADD_BOOK_FRAGMENT_TAG)
                 .commit();
     }
 

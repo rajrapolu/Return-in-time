@@ -1,11 +1,9 @@
 package com.android.raj.returnintime.service;
 
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.android.raj.returnintime.BaseActivity;
 import com.android.raj.returnintime.utilities.NotificationUtils;

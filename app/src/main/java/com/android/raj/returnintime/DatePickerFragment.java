@@ -25,7 +25,12 @@ public class DatePickerFragment extends DialogFragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        sendDateToText = (SendDateToText) getActivity();
+        try {
+            sendDateToText = (SendDateToText) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() +
+                    getString(R.string.exception_send_to_text));
+        }
     }
 
     @NonNull

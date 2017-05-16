@@ -17,7 +17,8 @@ public class BaseActivity extends AppCompatActivity implements
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
     public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public static final String ITEM_ID = "ITEM_ID";
-    public static final String NOTIFY_ID = "NOTIFY_ID";
+    private static final String DELETE_DIALOG = "DELETE_DIALOG";
+    private static final String STAY_OR_LEAVE = "STAY_OR_LEAVE";
     public boolean mContextual = false;
     public static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
     public static final String TITLE_TO_SERVICE = "TITLE_NO_SERVICE";
@@ -25,7 +26,7 @@ public class BaseActivity extends AppCompatActivity implements
     public static final String TIME_TO_SERVICE = "TIME_TO_SERVICE";
     public static final String ID_TO_SERVICE = "ID_TO_SERVICE";
     public static final String DELETE_ALL_ITEMS = "DELETE_ALL_ITEMS";
-//    boolean clicked;
+    private static final String Date_Picker = "DATE_PICKER";
 
     @Override
     public void showDatePicker(String operation) {
@@ -33,7 +34,7 @@ public class BaseActivity extends AppCompatActivity implements
         Bundle args = new Bundle();
         args.putString(OPERATION, operation);
         dateFragment.setArguments(args);
-        dateFragment.show(getSupportFragmentManager(), "datePicker");
+        dateFragment.show(getSupportFragmentManager(), Date_Picker);
     }
 
     @Override
@@ -95,18 +96,17 @@ public class BaseActivity extends AppCompatActivity implements
     public void showDeleteDialog(String itemId) {
         Bundle args = new Bundle();
         args.putString(ITEM_ID, itemId);
-        //args.putString(ITEM_ID, Id);
         DeleteDialog deleteDialog = new DeleteDialog();
         deleteDialog.setArguments(args);
         deleteDialog.setCancelable(false);
-        deleteDialog.show(getSupportFragmentManager(), "DELETE DIALOG");
+        deleteDialog.show(getSupportFragmentManager(), DELETE_DIALOG);
     }
 
     @Override
     public void stayOrLeave() {
         AddItemDialog alertChangesDialog = new AddItemDialog();
         alertChangesDialog.setCancelable(false);
-        alertChangesDialog.show(getSupportFragmentManager(), "STAY_OR_LEAVE");
+        alertChangesDialog.show(getSupportFragmentManager(), STAY_OR_LEAVE);
     }
 
     @Override
@@ -122,31 +122,4 @@ public class BaseActivity extends AppCompatActivity implements
                 .add(R.id.add_fragment_container, addItemFragment, ADD_BOOK_FRAGMENT_TAG)
                 .commit();
     }
-
-
-//    @Override
-//    public void replaceFragment(Uri uri) {
-//        DetailFragment detailFragment = new DetailFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ITEM_URI, uri.toString());
-//        detailFragment.setArguments(args);
-//        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
-//                detailFragment, DETAIL_FRAGMENT).commit();
-//    }
-
-//    @Override
-//    public void showDatePicker(String operation) {
-//        DialogFragment dateFragment = new DatePickerFragment();
-//        Bundle args = new Bundle();
-//        args.putString(OPERATION, operation);
-//        dateFragment.setArguments(args);
-//        dateFragment.show(getSupportFragmentManager(), "datePicker");
-//    }
-
-//    @Override
-//    public void sendDate(String operation, int month, int day, int year) {
-//        EditFragment editFragment = (EditFragment) getSupportFragmentManager()
-//                .findFragmentByTag(EDIT_DETAIL);
-//        editFragment.updateEditText(operation, month, day, year);
-//    }
 }

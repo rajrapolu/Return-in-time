@@ -28,10 +28,10 @@
         android:id="@+id/text_return_in"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/text_recipient"
-        android:paddingLeft="16dp"
         android:layout_alignBaseline="@+id/text_recipient"
+        android:layout_toRightOf="@+id/text_recipient"
         android:fontFamily="sans-serif-regular"
+        android:paddingLeft="16dp"
         android:textSize="14sp" />
 
     <android.support.v7.widget.AppCompatCheckBox
@@ -40,30 +40,4 @@
         android:layout_height="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true" />
-
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/empty_view"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_centerInParent="true">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/empty_image"-->
-            <!--android:layout_width="88dp"-->
-            <!--android:layout_height="88dp"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:scaleType="centerInside"-->
-            <!--android:adjustViewBounds="true"-->
-            <!--android:src="@drawable/ic_books"/>-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/empty_text_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:paddingTop="16dp"-->
-            <!--android:layout_below="@+id/empty_image"-->
-            <!--android:layout_alignBaseline="@+id/empty_image"/>-->
-
-    <!--</RelativeLayout>-->
 </RelativeLayout>

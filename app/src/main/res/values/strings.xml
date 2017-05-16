@@ -36,4 +36,15 @@
     <string name="delete_successfull">Selected Items are successfully deleted</string>
     <string name="delete_failure_part_one">Error deleting the items. Only</string>
     <string name="delete_failure_part_two">are deleted</string>
+    <string name="text_itesm_selected_toast">Please select the itms to be deleted</string>
+    <string name="exception_send_to_detail">must implement SendToDetailFragment interface</string>
+    <string name="exception_add_book">must implement AddBookInterface</string>
+    <string name="text_items_added">Item added to the list</string>
+    <string name="error_inserting">Error while inserting item</string>
+    <string name="enter_mandatory_fields">Please enter all the mandatory fields</string>
+    <string name="exception_send_to_text">must implement SendDateTotext interface</string>
+    <string name="exception_delete_interface">must implement DeleteInterface interface</string>
+    <string name="exception_main_message">Cannot cast to MainActivity</string>
+    <string name="error_deleting_toast">Error deleting the item</string>
+    <string name="exception_detail_activity">must implement SendToDetailActivity interface</string>
 </resources>

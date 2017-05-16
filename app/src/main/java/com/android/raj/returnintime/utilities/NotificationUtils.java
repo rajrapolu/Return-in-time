@@ -34,7 +34,7 @@ public class NotificationUtils {
                 .setGroupSummary(true)
                 .setGroup(GROUP_KEY)
                 .setSmallIcon(R.drawable.ic_books)
-                .setContentTitle("Return Book Today")
+                .setContentTitle("Return Item Today")
                 .setContentText(Title)
                 .setAutoCancel(true)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
@@ -52,7 +52,6 @@ public class NotificationUtils {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, NOTIFY_ID);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        Log.i("id", "scheduleNotification: " + NOTIFY_ID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 NOTIFY_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

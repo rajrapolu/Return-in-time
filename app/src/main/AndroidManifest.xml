@@ -31,7 +31,7 @@
         <provider
             android:name=".data.ItemProvider"
             android:authorities="com.android.raj.returnintime.data"
-            android:exported="false"></provider>
+            android:exported="false" />
 
         <activity android:name=".DetailActivity"
             android:parentActivityName=".MainActivity">

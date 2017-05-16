@@ -90,47 +90,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
-//    private void insertData() {
-//
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_TITLE, "title");
-//        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_TYPE, "type");
-//        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO, "returnto");
-//        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT, "checkedout");
-//        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN, "return");
-//        contentValues.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY, "notify");
-//
-//        Uri uri = getActivity().getContentResolver()
-//                .insert(ReturnContract.BookEntry.CONTENT_URI, contentValues);
-//
-////        if (uri != null) {
-////            imageView.setVisibility(View.GONE);
-////            textView.setVisibility(View.GONE);
-////        }
-//
-//        Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
-//
-//    }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        Log.i("yes", "onCreateOptionsMenu: " + "booklist");
-//        inflater.inflate(R.menu.menu_main, menu);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_dummy) {
-//            insertData();
-//            //displayDatabaseMessage();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 

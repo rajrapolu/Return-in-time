@@ -5,10 +5,11 @@
     android:orientation="vertical"
     tools:context="com.android.raj.returnintime.AddItemFragment">
 
-    <TextView android:layout_height="wrap_content"
+    <TextView
+        style="@style/text_title"
         android:layout_width="match_parent"
-        android:text="Edit Book"
-        style="@style/text_title" />
+        android:layout_height="wrap_content"
+        android:text="Edit Book" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -60,8 +61,8 @@
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_checkedout"
-                    android:focusable="false"
                     style="@style/text_field"
+                    android:focusable="false"
                     android:hint="Start Date (MM/DD/YYYY)"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
@@ -72,8 +73,8 @@
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_return"
-                    android:focusable="false"
                     style="@style/text_field"
+                    android:focusable="false"
                     android:hint="End Date (MM/DD/YYYY)"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
@@ -84,8 +85,8 @@
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_notify"
-                    android:focusable="false"
                     style="@style/text_field"
+                    android:focusable="false"
                     android:hint="Notify Date (MM/DD/YYYY)"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
@@ -97,8 +98,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="bottom|end">
+                android:layout_gravity="bottom|end"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/button_cancel"
@@ -114,7 +115,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
 
     </ScrollView>

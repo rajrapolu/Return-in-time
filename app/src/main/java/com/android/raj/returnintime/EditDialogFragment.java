@@ -88,7 +88,12 @@ public class EditDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        sendDetails = (SendToDetailFragment) getActivity();
+        try {
+            sendDetails = (SendToDetailFragment) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() +
+                    getString(R.string.exception_send_to_detail));
+        }
     }
 
     @Nullable
@@ -150,11 +155,6 @@ public class EditDialogFragment extends DialogFragment {
 
     //called when a save button is clicked, the database values are updated in this method
     private void saveEdit() {
-//        if (mTextTitle.getEditText().getText() != null &&
-//                mTextType.getEditText().getText() != null &&
-//                mTextReturnTo.getEditText().getText() != null &&
-//                mTextCheckedout.getEditText().getText() != null &&
-//                mTextReturn.getEditText().getText() != null) {
 
         if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
                 !mTextType.getEditText().getText().toString().equals(mType) ||

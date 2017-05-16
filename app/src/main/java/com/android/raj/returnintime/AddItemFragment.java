@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 public class AddItemFragment extends Fragment {
 
     private int NOTIFY_ID;
-    public static final String GROUP_KEY = "group_key";
     @BindView(R.id.title_text_input_layout)
     TextInputLayout mTextTitle;
     @BindView(R.id.type_text_input_layout)
@@ -51,7 +50,6 @@ public class AddItemFragment extends Fragment {
     public static final String CHECKEDOUT = "CHECKEDOUT";
     public static final String RETURN = "RETURN";
     public static final String NOTIFY = "NOTIFY";
-    //    ReturnDBHelper dbHelper;
     private Uri uri;
     private Calendar calendar;
 
@@ -93,7 +91,12 @@ public class AddItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        showPicker = (AddBookInterface) getActivity();
+        try {
+            showPicker = (AddBookInterface) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() +
+                    getString(R.string.exception_add_book));
+        }
     }
 
     @Override
@@ -124,8 +127,6 @@ public class AddItemFragment extends Fragment {
                 }
             }
         });
-
-        //dbHelper = new ReturnDBHelper(getContext());
 
         mTextCheckedout.getEditText().setClickable(true);
         mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -171,6 +172,9 @@ public class AddItemFragment extends Fragment {
                     intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
                     intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
                     getActivity().startService(intent);
+                }
+
+                if (uri != null) {
                     getActivity().finish();
                 }
             }
@@ -205,16 +209,16 @@ public class AddItemFragment extends Fragment {
                     .insert(BookEntry.CONTENT_URI, values);
 
             if (uri != null) {
-                Toast.makeText(getContext(), "Item added to the list", Toast.LENGTH_SHORT)
+                Toast.makeText(getContext(), R.string.text_items_added, Toast.LENGTH_SHORT)
                         .show();
             } else {
-                Toast.makeText(getContext(), "Error while inserting item", Toast.LENGTH_SHORT)
+                Toast.makeText(getContext(), R.string.error_inserting, Toast.LENGTH_SHORT)
                         .show();
             }
 
             return uri;
         } else {
-            Toast.makeText(getContext(), "Please enter all the mandatory fields",
+            Toast.makeText(getContext(), R.string.enter_mandatory_fields,
                     Toast.LENGTH_SHORT).show();
             return null;
         }

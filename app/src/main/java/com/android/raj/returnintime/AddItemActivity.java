@@ -17,4 +17,9 @@ public class AddItemActivity extends BaseActivity implements AddItemFragment.Add
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
+    }
 }

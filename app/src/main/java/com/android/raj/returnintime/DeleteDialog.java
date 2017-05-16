@@ -28,7 +28,12 @@ public class DeleteDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getActivity() instanceof MainActivity) {
-            deleteInterface = (DeleteInterface) getActivity();
+            try {
+                deleteInterface = (DeleteInterface) getActivity();
+            } catch (ClassCastException e) {
+                throw new ClassCastException(getActivity().toString() +
+                        getString(R.string.exception_delete_interface));
+            }
         }
     }
 
@@ -88,14 +93,17 @@ public class DeleteDialog extends DialogFragment {
 
             if (rowsDeleted > 0) {
                 if (getContext() instanceof MainActivity) {
-                    ((MainActivity) getContext()).deleteFragment();
+                    try {
+                        ((MainActivity) getContext()).deleteFragment();
+                    } catch (ClassCastException e) {
+                        throw new ClassCastException(getString(R.string.exception_main_message));
+                    }
                 } else {
                     getActivity().finish();
                 }
-                Log.i("id", "deleteItems: " +itemId);
                 NotificationUtils.cancelNotification(getContext(), Integer.parseInt(itemId));
             } else {
-                Toast.makeText(getContext(), "error deleting the item", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_deleting_toast, Toast.LENGTH_SHORT).show();
             }
     }
 }

@@ -95,7 +95,12 @@ public class EditFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        sendDetails = (SendToDetailFragment) getActivity();
+        try {
+            sendDetails = (SendToDetailFragment) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() +
+                    getString(R.string.exception_send_to_detail));
+        }
     }
 
     @Override
@@ -209,11 +214,6 @@ public class EditFragment extends Fragment {
 
     //called when save button is clicked. The data values are updated in the database
     private void saveEdit() {
-//        if (mTextTitle.getEditText().getText() != null &&
-//                mTextType.getEditText().getText() != null &&
-//                mTextReturnTo.getEditText().getText() != null &&
-//                mTextCheckedout.getEditText().getText() != null &&
-//                mTextReturn.getEditText().getText() != null) {
 
         if (changesCheck()) {
             ContentValues values = new ContentValues();
@@ -260,7 +260,6 @@ public class EditFragment extends Fragment {
             }
         }
         sendDetails.replaceFragment(uri);
-        //}
     }
 
     private boolean changesCheck() {

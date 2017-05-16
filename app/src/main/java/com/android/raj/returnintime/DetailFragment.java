@@ -61,7 +61,12 @@ public class DetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        sendData = (SendToDetailActivity) getActivity();
+        try {
+            sendData = (SendToDetailActivity) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() +
+                    getString(R.string.exception_detail_activity));
+        }
     }
 
     @Override

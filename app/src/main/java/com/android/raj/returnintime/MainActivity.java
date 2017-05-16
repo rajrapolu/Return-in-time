@@ -2,6 +2,7 @@ package com.android.raj.returnintime;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,10 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInterface {
+    private static final String MENU_STATE = "MENU_STATE";
     ItemAdapter itemAdapter;
     private boolean mTablet;
     @BindView(R.id.toolbar) Toolbar toolbar;
     MenuItem deleteAction;
+    FloatingActionButton fab;
 
 
     @Override
@@ -31,18 +34,25 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_left);
             }
         });
 
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.detail_fragment_container);
         mTablet = (frameLayout != null);
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(MENU_STATE, mContextual);
+        super.onSaveInstanceState(outState);
     }
 
     public boolean isTablet() {
@@ -57,6 +67,8 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
     //To handle the actions that need to be done when the app enters contextual mode
     public Toolbar displayContextualMode(boolean contexual) {
         mContextual = contexual;
+
+        fab.setVisibility(View.GONE);
 
         toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, false);
         toolbar.getMenu().setGroupVisible(R.id.detail_menu_group, false);
@@ -87,6 +99,7 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
     private void clearActions() {
         mContextual = false;
         itemAdapter.notifyDataSetChanged();
+        fab.setVisibility(View.VISIBLE);
         if (isTablet() && itemAdapter.clicked) {
             deleteFragment();
             itemAdapter.clicked = false;
@@ -120,7 +133,7 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
         if (id == R.id.action_contexual_delete) {
             if (itemAdapter.selectedBooks.size() == 0) {
                 Toast.makeText(getApplicationContext(),
-                        "Please select the itms to be deleted", Toast.LENGTH_SHORT).show();
+                        R.string.text_itesm_selected_toast, Toast.LENGTH_SHORT).show();
             } else {
                 itemAdapter.counter = 0;
                 showDeleteDialog(DELETE_ALL_ITEMS);

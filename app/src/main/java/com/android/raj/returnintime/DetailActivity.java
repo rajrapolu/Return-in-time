@@ -23,4 +23,9 @@ public class DetailActivity extends BaseActivity {
             replaceFragment(uri);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }

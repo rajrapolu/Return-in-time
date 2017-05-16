@@ -61,19 +61,19 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
                     if (!((BaseActivity)mContext).mContextual) {
 
                         Log.i("yes", "onClick: " + cursor.moveToPosition(position));
-                        clicked = true;
-                        Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
-                                Long.parseLong(cursor.getString(cursor
-                                        .getColumnIndex(ReturnContract.BookEntry._ID))));
+                            clicked = true;
+                            Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
+                                    Long.parseLong(cursor.getString(cursor
+                                            .getColumnIndex(ReturnContract.BookEntry._ID))));
 
-                        if (((MainActivity) mContext).isTablet()) {
-                            ((BaseActivity) mContext).replaceFragment(uri);
-                        } else {
-                            Intent intent = new Intent(mContext, DetailActivity.class);
-                            intent.setData(uri);
-                            mContext.startActivity(intent);
+                            if (((MainActivity) mContext).isTablet()) {
+                                ((BaseActivity) mContext).replaceFragment(uri);
+                            } else {
+                                Intent intent = new Intent(mContext, DetailActivity.class);
+                                intent.setData(uri);
+                                mContext.startActivity(intent);
+                            }
                         }
-                    }
                 }
             });
 

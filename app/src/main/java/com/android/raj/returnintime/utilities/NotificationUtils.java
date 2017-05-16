@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.android.raj.returnintime.DetailActivity;
+import com.android.raj.returnintime.MainActivity;
 import com.android.raj.returnintime.R;
 
 public class NotificationUtils {
@@ -34,7 +35,7 @@ public class NotificationUtils {
                 .setGroupSummary(true)
                 .setGroup(GROUP_KEY)
                 .setSmallIcon(R.drawable.ic_books)
-                .setContentTitle("Return Item Today")
+                .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(Title)
                 .setAutoCancel(true)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))

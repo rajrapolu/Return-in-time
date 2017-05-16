@@ -47,4 +47,10 @@
     <string name="exception_main_message">Cannot cast to MainActivity</string>
     <string name="error_deleting_toast">Error deleting the item</string>
     <string name="exception_detail_activity">must implement SendToDetailActivity interface</string>
+    <string name="notification_title">Return Item Today</string>
+    <string name="hint_type">Type (eg: Book, Money, Car, Bills) *</string>
+    <string name="hint_return_to">Return To (eg: Name, Library) *</string>
+    <string name="hint_start_date">Start Date (MM/DD/YYYY) *</string>
+    <string name="hint_end_date">End Date (MM/DD/YYYY) *</string>
+    <string name="hint_notify_date">Notify Date (MM/DD/YYYY)</string>
 </resources>

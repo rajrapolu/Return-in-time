@@ -5,4 +5,5 @@
     <dimen name="label_size">12sp</dimen>
     <dimen name="text_size">16sp</dimen>
     <dimen name="button_min_width">88dp</dimen>
+    <dimen name="width_share">0dp</dimen>
 </resources>

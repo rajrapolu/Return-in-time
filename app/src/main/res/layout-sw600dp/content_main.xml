@@ -12,13 +12,13 @@
     <fragment
         android:id="@+id/fragment"
         android:name="com.android.raj.returnintime.ItemListFragment"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/width_share"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <FrameLayout
         android:id="@+id/detail_fragment_container"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/width_share"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 

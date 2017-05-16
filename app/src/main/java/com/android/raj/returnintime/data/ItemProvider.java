@@ -86,7 +86,6 @@ public class ItemProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case BOOKS:
-                Log.i(TAG, "insert: " + "yes");
                 return insertBook(uri, values);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -98,12 +97,11 @@ public class ItemProvider extends ContentProvider {
         String bookTitle = values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TITLE);
         String bookType = values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TYPE);
         if (bookTitle == null || bookType == null) {
-            throw new IllegalArgumentException("Book requires Title, Author");
+            throw new IllegalArgumentException("Item requires Title, Type");
         }
         long rowId = database.insert(ReturnContract.BookEntry.TABLE_NAME, null, values);
         if (rowId == -1) {
-            Toast.makeText(getContext(), "Returning -1", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Failed to insert the row for " + uri);
+            Toast.makeText(getContext(), "Failed to insert item", Toast.LENGTH_SHORT).show();
             return null;
         }
 
@@ -170,7 +168,7 @@ public class ItemProvider extends ContentProvider {
 
         if (values.containsKey(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)) {
             if (values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TYPE) == null) {
-                throw new IllegalArgumentException("Author cannot be empty");
+                throw new IllegalArgumentException("Type cannot be empty");
             }
         }
 

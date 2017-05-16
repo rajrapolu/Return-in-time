@@ -28,7 +28,6 @@ public final class ReturnContract {
 
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_BOOK_TITLE = "bookTitle";
-        //public static final String COLUMN_BOOK_AUTHOR = "bookAuthor";
         public static final String COLUMN_BOOK_TYPE = "bookType";
         public static final String COLUMN_BOOK_RETURN_TO = "bookReturnTo";
         public static final String COLUMN_BOOK_CHECKEDOUT = "bookCheckedout";

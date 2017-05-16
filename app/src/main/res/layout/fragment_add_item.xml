@@ -36,7 +36,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_type"
                     style="@style/text_field"
-                    android:hint="Type(eg: Book, Money, Car, Bills) *"
+                    android:hint="@string/hint_type"
                     android:inputType="text|textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
@@ -47,7 +47,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_return_to"
                     style="@style/text_field"
-                    android:hint="Recipient(eg: Name, Library) *"
+                    android:hint="@string/hint_return_to"
                     android:inputType="text|textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
@@ -59,7 +59,7 @@
                     android:id="@+id/edit_checkedout"
                     style="@style/text_field"
                     android:focusable="false"
-                    android:hint="Start Date (MM/DD/YYYY) *"
+                    android:hint="@string/hint_start_date"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
@@ -71,7 +71,7 @@
                     android:id="@+id/edit_return"
                     style="@style/text_field"
                     android:focusable="false"
-                    android:hint="End Date (MM/DD/YYYY) *"
+                    android:hint="@string/hint_end_date"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
@@ -83,7 +83,7 @@
                     android:id="@+id/edit_notify"
                     style="@style/text_field"
                     android:focusable="false"
-                    android:hint="Notify Date (MM/DD/YYYY)"
+                    android:hint="@string/hint_notify_date"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 

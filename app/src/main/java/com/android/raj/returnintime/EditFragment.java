@@ -157,13 +157,13 @@ public class EditFragment extends Fragment {
     //Displays the data in corresponding text fields to display the existing data
     private void displayData(Uri uri) {
         String[] projection = {
-                ReturnContract.BookEntry._ID,
-                ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
-                ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
-                ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY
+                ReturnContract.ItemEntry._ID,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
+                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
+                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
         };
 
         Cursor cursor = getActivity()
@@ -172,17 +172,17 @@ public class EditFragment extends Fragment {
         if (cursor != null) {
             cursor.moveToFirst();
             mTitle = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE));
             mType = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
             mReturnTo = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO));
             mCheckedout = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT));
             mReturn = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
             mNotify = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
 
             mTextTitle.getEditText().setText(mTitle);
             mTextType.getEditText().setText(mType);
@@ -218,17 +218,17 @@ public class EditFragment extends Fragment {
         if (changesCheck()) {
             ContentValues values = new ContentValues();
 
-            values.put(ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
                     mTextTitle.getEditText().getText().toString());
-            values.put(ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
                     mTextType.getEditText().getText().toString());
-            values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
                     mTextReturnTo.getEditText().getText().toString());
-            values.put(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
                     mTextCheckedout.getEditText().getText().toString());
-            values.put(ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
                     mTextReturn.getEditText().getText().toString());
-            values.put(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY,
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY,
                     mTextNotify.getEditText().getText().toString());
 
             int rowsAffected = getContext().getContentResolver()

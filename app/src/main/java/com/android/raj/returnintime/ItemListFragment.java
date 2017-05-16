@@ -58,16 +58,16 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     //Displays the of items that are present in the database
     private void displayListOfItems() {
         String[] projection = {
-                ReturnContract.BookEntry._ID,
-                ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
-                ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN
+                ReturnContract.ItemEntry._ID,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
+                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN
         };
 
         cursor = getActivity().getContentResolver()
-                .query(ReturnContract.BookEntry.CONTENT_URI, projection, null,
+                .query(ReturnContract.ItemEntry.CONTENT_URI, projection, null,
                         null, null);
 
         if (cursor != null) {
@@ -94,16 +94,16 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         String[] projection = {
-                ReturnContract.BookEntry._ID,
-                ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
-                ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
-                ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY
+                ReturnContract.ItemEntry._ID,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
+                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
+                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
         };
 
-        return new CursorLoader(getContext(), ReturnContract.BookEntry.CONTENT_URI,
+        return new CursorLoader(getContext(), ReturnContract.ItemEntry.CONTENT_URI,
                 projection, null, null, null);
     }
 

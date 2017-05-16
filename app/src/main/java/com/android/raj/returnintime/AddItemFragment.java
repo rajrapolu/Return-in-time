@@ -16,7 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.raj.returnintime.data.ReturnContract.BookEntry;
+import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.data.ReturnContract.ItemEntry;
 import com.android.raj.returnintime.service.ItemService;
 
 import java.util.Calendar;
@@ -198,15 +199,15 @@ public class AddItemFragment extends Fragment {
             mNotify = mTextNotify.getEditText().getText().toString();
 
             ContentValues values = new ContentValues();
-            values.put(BookEntry.COLUMN_BOOK_TITLE, mTitle);
-            values.put(BookEntry.COLUMN_BOOK_TYPE, mType);
-            values.put(BookEntry.COLUMN_BOOK_RETURN_TO, mReturnTo);
-            values.put(BookEntry.COLUMN_BOOK_CHECKEDOUT, mCheckedout);
-            values.put(BookEntry.COLUMN_BOOK_RETURN, mReturn);
-            values.put(BookEntry.COLUMN_BOOK_NOTIFY, mNotify);
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE, mTitle);
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE, mType);
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO, mReturnTo);
+            values.put(ItemEntry.COLUMN_ITEM_CHECKEDOUT, mCheckedout);
+            values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN, mReturn);
+            values.put(ItemEntry.COLUMN_ITEM_NOTIFY, mNotify);
 
             Uri uri = getContext().getContentResolver()
-                    .insert(BookEntry.CONTENT_URI, values);
+                    .insert(ItemEntry.CONTENT_URI, values);
 
             if (uri != null) {
                 Toast.makeText(getContext(), R.string.text_items_added, Toast.LENGTH_SHORT)

@@ -85,9 +85,9 @@ public class DetailFragment extends Fragment {
         if (cursor.getCount() > 0) {
             shareData = getString(R.string.text_checkout_book) + "\n"
                     + getString(R.string.text_share_title) + cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) +
+                    cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE)) +
                     getString(R.string.text_share_item_type) + cursor.getString(
-                    cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE));
+                    cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
         }
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
         return shareIntent;
@@ -107,7 +107,7 @@ public class DetailFragment extends Fragment {
                 return true;
             } else if (itemId == R.id.action_delete) {
                 sendData.showDeleteDialog(cursor.getString
-                        (cursor.getColumnIndex(ReturnContract.BookEntry._ID)));
+                        (cursor.getColumnIndex(ReturnContract.ItemEntry._ID)));
                 selectedItems.clear();
                 return true;
             }
@@ -150,13 +150,13 @@ public class DetailFragment extends Fragment {
     //Displays the data on to the detail fragment
     private void displayData(Uri uri) {
         String[] projection = {
-                ReturnContract.BookEntry._ID,
-                ReturnContract.BookEntry.COLUMN_BOOK_TITLE,
-                ReturnContract.BookEntry.COLUMN_BOOK_TYPE,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO,
-                ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT,
-                ReturnContract.BookEntry.COLUMN_BOOK_RETURN,
-                ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY
+                ReturnContract.ItemEntry._ID,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
+                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
+                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
         };
 
         cursor = getActivity()
@@ -170,17 +170,17 @@ public class DetailFragment extends Fragment {
 
                 //setting the text of the text fields
                 mTitle.setText(cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE)));
                 mType.setText(cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)));
+                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE)));
                 mReturnToValue.setText(cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO)));
+                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO)));
                 mBorrowedValue.setText(cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_CHECKEDOUT)));
+                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT)));
                 mReturValue.setText(cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN)));
                 mNotifyValue.setText(cursor.getString(
-                        cursor.getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_NOTIFY)));
+                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY)));
             } else {
                 mTitle.setText(R.string.text_item_deleted);
 

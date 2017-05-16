@@ -18,13 +18,13 @@ public class ItemProvider extends ContentProvider {
 
     public static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    public static final int BOOKS = 1;
-    public static final int BOOK_ID = 2;
+    public static final int ITEMS = 1;
+    public static final int iTEM_ID = 2;
 
     static {
-        sUriMatcher.addURI(ReturnContract.CONTENT_AUTHORITY, ReturnContract.PATH_BOOKS, BOOKS);
-        sUriMatcher.addURI(ReturnContract.CONTENT_AUTHORITY, ReturnContract.PATH_BOOKS + "/#",
-                BOOK_ID);
+        sUriMatcher.addURI(ReturnContract.CONTENT_AUTHORITY, ReturnContract.PATH_ITEMS, ITEMS);
+        sUriMatcher.addURI(ReturnContract.CONTENT_AUTHORITY, ReturnContract.PATH_ITEMS + "/#",
+                iTEM_ID);
     }
 
     @Override
@@ -43,15 +43,15 @@ public class ItemProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
         switch (match) {
-            case BOOKS:
-                cursor = database.query(ReturnContract.BookEntry.TABLE_NAME, projection, selection,
+            case ITEMS:
+                cursor = database.query(ReturnContract.ItemEntry.TABLE_NAME, projection, selection,
                         selectionArgs, null, null, sortOrder);
                 break;
-            case BOOK_ID:
-                selection = ReturnContract.BookEntry._ID + "=?";
+            case iTEM_ID:
+                selection = ReturnContract.ItemEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
 
-                cursor = database.query(ReturnContract.BookEntry.TABLE_NAME, projection, selection,
+                cursor = database.query(ReturnContract.ItemEntry.TABLE_NAME, projection, selection,
                         selectionArgs, null, null, sortOrder);
                 break;
             default:
@@ -69,10 +69,10 @@ public class ItemProvider extends ContentProvider {
 
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case BOOKS:
-                return ReturnContract.BookEntry.CONTENT_LIST_TYPE;
-            case BOOK_ID:
-                return ReturnContract.BookEntry.CONTENT_ITEM_TYPE;
+            case ITEMS:
+                return ReturnContract.ItemEntry.CONTENT_LIST_TYPE;
+            case iTEM_ID:
+                return ReturnContract.ItemEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown uri " + uri + "with match " + match);
         }
@@ -84,7 +84,7 @@ public class ItemProvider extends ContentProvider {
 
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case BOOKS:
+            case ITEMS:
                 return insertBook(uri, values);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -93,12 +93,12 @@ public class ItemProvider extends ContentProvider {
 
     private Uri insertBook(Uri uri, ContentValues values) {
         SQLiteDatabase database = returnDBHelper.getWritableDatabase();
-        String bookTitle = values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TITLE);
-        String bookType = values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TYPE);
+        String bookTitle = values.getAsString(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE);
+        String bookType = values.getAsString(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE);
         if (bookTitle == null || bookType == null) {
             throw new IllegalArgumentException("Item requires Title, Type");
         }
-        long rowId = database.insert(ReturnContract.BookEntry.TABLE_NAME, null, values);
+        long rowId = database.insert(ReturnContract.ItemEntry.TABLE_NAME, null, values);
         if (rowId == -1) {
             Toast.makeText(getContext(), "Failed to insert item", Toast.LENGTH_SHORT).show();
             return null;
@@ -116,14 +116,14 @@ public class ItemProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
         switch (match) {
-            case BOOKS:
-                rowsDeleted = database.delete(ReturnContract.BookEntry.TABLE_NAME, selection,
+            case ITEMS:
+                rowsDeleted = database.delete(ReturnContract.ItemEntry.TABLE_NAME, selection,
                         selectionArgs);
                 break;
-            case BOOK_ID:
-                selection = ReturnContract.BookEntry._ID + "=?";
+            case iTEM_ID:
+                selection = ReturnContract.ItemEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
-                rowsDeleted = database.delete(ReturnContract.BookEntry.TABLE_NAME, selection,
+                rowsDeleted = database.delete(ReturnContract.ItemEntry.TABLE_NAME, selection,
                         selectionArgs);
                 break;
             default:
@@ -141,10 +141,10 @@ public class ItemProvider extends ContentProvider {
                       @Nullable String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case BOOKS:
+            case ITEMS:
                 return updatePet(uri, values, selection, selectionArgs);
-            case BOOK_ID:
-                selection = ReturnContract.BookEntry._ID + "=?";
+            case iTEM_ID:
+                selection = ReturnContract.ItemEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 return updatePet(uri, values, selection, selectionArgs);
             default:
@@ -159,19 +159,19 @@ public class ItemProvider extends ContentProvider {
             return 0;
         }
 
-        if (values.containsKey(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)) {
-            if (values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TITLE) == null) {
+        if (values.containsKey(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE)) {
+            if (values.getAsString(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE) == null) {
                 throw new IllegalArgumentException("Title cannot be empty");
             }
         }
 
-        if (values.containsKey(ReturnContract.BookEntry.COLUMN_BOOK_TYPE)) {
-            if (values.getAsString(ReturnContract.BookEntry.COLUMN_BOOK_TYPE) == null) {
+        if (values.containsKey(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE)) {
+            if (values.getAsString(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE) == null) {
                 throw new IllegalArgumentException("Type cannot be empty");
             }
         }
 
-        int rowsUpdated = database.update(ReturnContract.BookEntry.TABLE_NAME, values, selection,
+        int rowsUpdated = database.update(ReturnContract.ItemEntry.TABLE_NAME, values, selection,
                 selectionArgs);
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);

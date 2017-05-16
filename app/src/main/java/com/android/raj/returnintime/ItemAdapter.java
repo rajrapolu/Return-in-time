@@ -42,11 +42,11 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
         final CheckBox checkBox = holder.checkBox;
 
             holder.tvTitle.setText(cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_TITLE)));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE)));
             holder.tvRecipient.setText(cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN_TO)));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO)));
             holder.tvReturnIn.setText(cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.BookEntry.COLUMN_BOOK_RETURN)));
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN)));
 
             if (!((BaseActivity)mContext).mContextual) {
                 checkBox.setVisibility(View.GONE);
@@ -62,9 +62,9 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
 
                         Log.i("yes", "onClick: " + cursor.moveToPosition(position));
                             clicked = true;
-                            Uri uri = ContentUris.withAppendedId(ReturnContract.BookEntry.CONTENT_URI,
+                            Uri uri = ContentUris.withAppendedId(ReturnContract.ItemEntry.CONTENT_URI,
                                     Long.parseLong(cursor.getString(cursor
-                                            .getColumnIndex(ReturnContract.BookEntry._ID))));
+                                            .getColumnIndex(ReturnContract.ItemEntry._ID))));
 
                             if (((MainActivity) mContext).isTablet()) {
                                 ((BaseActivity) mContext).replaceFragment(uri);
@@ -94,14 +94,14 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
                 if (checkBox.isChecked()) {
                     if (cursor.moveToPosition(holder.getAdapterPosition())) {
                         selectedBooks.add(cursor.getString(cursor
-                                .getColumnIndex(ReturnContract.BookEntry._ID)));
+                                .getColumnIndex(ReturnContract.ItemEntry._ID)));
                         counter++;
                     }
 
                 } else {
                     if (cursor.moveToPosition(holder.getAdapterPosition())) {
                         selectedBooks.remove(cursor.getString(cursor
-                                .getColumnIndex(ReturnContract.BookEntry._ID)));
+                                .getColumnIndex(ReturnContract.ItemEntry._ID)));
                         counter--;
                     }
                 }

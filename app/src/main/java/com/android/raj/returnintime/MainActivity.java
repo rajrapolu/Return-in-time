@@ -148,10 +148,10 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
     public void deleteAllItems() {
         int rowsDeleted = 0, finalRowsDeleted = 0;
         for (String id: itemAdapter.selectedBooks) {
-            String selection = ReturnContract.BookEntry._ID + " " + getString(R.string.delete_db_selection);
+            String selection = ReturnContract.ItemEntry._ID + " " + getString(R.string.delete_db_selection);
             String[] selectionArgs = {id};
 
-            rowsDeleted = getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
+            rowsDeleted = getContentResolver().delete(ReturnContract.ItemEntry.CONTENT_URI,
                     selection, selectionArgs);
 
             if (rowsDeleted > 0) {

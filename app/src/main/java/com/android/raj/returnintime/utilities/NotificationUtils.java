@@ -12,6 +12,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 
 import com.android.raj.returnintime.DetailActivity;
+import com.android.raj.returnintime.MainActivity;
 import com.android.raj.returnintime.R;
 
 public class NotificationUtils {
@@ -24,10 +25,10 @@ public class NotificationUtils {
         intent.setData(uri);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(DetailActivity.class);
+        stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(intent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setGroupSummary(true)
@@ -52,7 +53,7 @@ public class NotificationUtils {
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, NOTIFY_ID);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                NOTIFY_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                NOTIFY_ID, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
@@ -64,7 +65,7 @@ public class NotificationUtils {
     public static void cancelNotification(Context context, int itemId) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                itemId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                itemId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);

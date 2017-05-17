@@ -3,18 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/ripple"
-    android:minHeight="72dp"
-    android:paddingBottom="20dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="20dp">
+    android:minHeight="@dimen/min_height"
+    android:paddingBottom="@dimen/padding_all_sides"
+    android:paddingLeft="@dimen/padding_all_sides"
+    android:paddingRight="@dimen/padding_all_sides"
+    android:paddingTop="@dimen/padding_all_sides">
 
     <TextView
         android:id="@+id/detail_text_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-regular"
-        android:textSize="16sp" />
+        android:textSize="@dimen/text_size" />
 
     <TextView
         android:id="@+id/text_recipient"
@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/detail_text_title"
         android:fontFamily="sans-serif-regular"
-        android:textSize="14sp" />
+        android:textSize="@dimen/second_line_text_size" />
 
     <TextView
         android:id="@+id/text_return_in"
@@ -30,14 +30,16 @@
         android:layout_height="match_parent"
         android:layout_alignBaseline="@+id/text_recipient"
         android:layout_toRightOf="@+id/text_recipient"
+        android:layout_toEndOf="@+id/text_recipient"
         android:fontFamily="sans-serif-regular"
-        android:paddingLeft="16dp"
-        android:textSize="14sp" />
+        android:paddingLeft="@dimen/padding_all_sides"
+        android:textSize="@dimen/second_line_text_size" />
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/checkbox"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="@dimen/padding_all_sides"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

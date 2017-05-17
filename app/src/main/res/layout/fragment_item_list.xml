@@ -14,7 +14,7 @@
             android:id="@+id/recyler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:paddingBottom="@dimen/padding_all_sides"
             app:layoutManager="LinearLayoutManager" />
     </ScrollView>
 
@@ -29,8 +29,8 @@
 
         <ImageView
             android:id="@+id/empty_image"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
+            android:layout_width="@dimen/button_min_width"
+            android:layout_height="@dimen/button_min_width"
             android:layout_gravity="center_horizontal|center_vertical"
             android:src="@drawable/ic_books" />
 
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:padding="16dp" />
+            android:padding="@dimen/padding_all_sides" />
 
     </LinearLayout>
 

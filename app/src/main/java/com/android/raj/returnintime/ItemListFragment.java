@@ -84,8 +84,8 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
                 recyclerView.setAdapter(activity.itemAdapter);
                 activity.itemAdapter.notifyDataSetChanged();
 
-            } finally {
-                cursor.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

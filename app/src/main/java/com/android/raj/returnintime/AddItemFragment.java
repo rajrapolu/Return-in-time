@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +76,6 @@ public class AddItemFragment extends Fragment {
                         + day + getString(R.string.text_slash) + year);
                 calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
-                calendar.setTimeInMillis(System.currentTimeMillis());
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
                 break;
@@ -172,6 +172,7 @@ public class AddItemFragment extends Fragment {
                             mTextReturnTo.getEditText().getText().toString());
                     intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
                     intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
+                    Log.i("woo", "onClick: " + calendar.getTimeInMillis());
                     getActivity().startService(intent);
                 }
 

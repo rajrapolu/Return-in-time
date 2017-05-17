@@ -15,7 +15,7 @@
     <string name="toolbar_add_item_title">Add Item</string>
     <string name="text_delete_items_title">Delete Item(s)?</string>
     <string name="text_delete_items_message">The item(s) will be permanently deleted. Changes made cannot be reverted</string>
-    <string name="text_cancel_button_title">CANCEL</string>
+    <string name="text_cancel_button_title">Cancel</string>
     <string name="text_delete_button_title">DELETE</string>
     <string name="text_no_items_selected">There are no items selected to delete</string>
     <string name="delete_db_selection"> LIKE ?</string>
@@ -53,4 +53,13 @@
     <string name="hint_start_date">Start Date (MM/DD/YYYY) *</string>
     <string name="hint_end_date">End Date (MM/DD/YYYY) *</string>
     <string name="hint_notify_date">Notify Date (MM/DD/YYYY)</string>
+    <string name="return_to">Return To:</string>
+    <string name="borrowed_on">Borrowed On:</string>
+    <string name="return_by">Return By:</string>
+    <string name="notify_me_on">Notify Me On:</string>
+    <string name="save">Save</string>
+    <string name="edit_item">Edit Item</string>
+    <string name="edit">Edit</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
 </resources>

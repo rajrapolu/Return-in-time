@@ -76,7 +76,6 @@ public class EditDialogFragment extends DialogFragment {
                 mTextNotify.getEditText().setText(month + "/" + day + "/" + year);
                 calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
-                calendar.setTimeInMillis(System.currentTimeMillis());
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
                 break;

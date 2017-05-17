@@ -4,6 +4,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -40,15 +41,20 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
     @Override
     public void onBindViewHolder(final ViewHolder holder, final Cursor cursor, final int position) {
         final CheckBox checkBox = holder.checkBox;
+        cursor.moveToPosition(position);
 
+        try {
             holder.tvTitle.setText(cursor.getString(cursor
                     .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE)));
             holder.tvRecipient.setText(cursor.getString(cursor
                     .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO)));
             holder.tvReturnIn.setText(cursor.getString(cursor
                     .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN)));
+        } catch (CursorIndexOutOfBoundsException e) {
+            throw new CursorIndexOutOfBoundsException("Requested an index of -1");
+        }
 
-            if (!((BaseActivity)mContext).mContextual) {
+        if (!((BaseActivity)mContext).mContextual) {
                 checkBox.setVisibility(View.GONE);
             } else {
                 checkBox.setVisibility(View.VISIBLE);

@@ -4,6 +4,8 @@
         <item name="android:minWidth">@dimen/button_min_width</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/button_ripple</item>
     </style>
 
     <style name="view_text_details">

@@ -1,16 +1,8 @@
 package com.android.raj.returnintime;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,45 +11,47 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
-import com.android.raj.returnintime.data.ReturnContract.BookEntry;
+import com.android.raj.returnintime.utilities.NotificationUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInterface /*AppCompatActivity implements
-        DetailFragment.SendToDetailActivity, EditFragment.SendToDetailFragment,
-        DatePickerFragment.SendDateToText*/ {
-    BookAdapter bookAdapter;
+public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInterface {
+    private static final String MENU_STATE = "MENU_STATE";
+    ItemAdapter itemAdapter;
     private boolean mTablet;
-    Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     MenuItem deleteAction;
+    FloatingActionButton fab;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        //displayContextualMode(false);
-        ButterKnife.bind(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddBookActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_left);
             }
         });
 
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.detail_fragment_container);
         mTablet = (frameLayout != null);
 
-        //getSupportLoaderManager().initLoader(0, null, this);
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(MENU_STATE, mContextual);
+        super.onSaveInstanceState(outState);
     }
 
     public boolean isTablet() {
@@ -69,44 +63,45 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
         super.onStart();
     }
 
+    //To handle the actions that need to be done when the app enters contextual mode
     public Toolbar displayContextualMode(boolean contexual) {
         mContextual = contexual;
 
+        fab.setVisibility(View.GONE);
+
         toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, false);
         toolbar.getMenu().setGroupVisible(R.id.detail_menu_group, false);
-        //toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, false);
         deleteAction.setVisible(true);
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
 
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bookAdapter.counter = 0;
+                    itemAdapter.counter = 0;
                     clearActions();
                 }
             });
-//        }
         return toolbar;
     }
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
         if (mContextual) {
-            bookAdapter.counter = 0;
+            itemAdapter.counter = 0;
             clearActions();
         } else {
             super.onBackPressed();
         }
     }
 
+    //To handle the actions that need to be done post-contextual mode
     private void clearActions() {
-//        toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, false);
         mContextual = false;
-        bookAdapter.notifyDataSetChanged();
-        if (isTablet() && bookAdapter.clicked) {
+        itemAdapter.notifyDataSetChanged();
+        fab.setVisibility(View.VISIBLE);
+        if (isTablet() && itemAdapter.clicked) {
             deleteFragment();
-            bookAdapter.clicked = false;
+            itemAdapter.clicked = false;
         }
 
         toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, true);
@@ -114,8 +109,7 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
         deleteAction.setVisible(false);
 
         toolbar.setNavigationIcon(null);
-        toolbar.setTitle("Return in time");
-        Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
+        toolbar.setTitle(R.string.app_title);
     }
 
         @Override
@@ -136,140 +130,51 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_contexual_delete) {
-            bookAdapter.counter = 0;
-            showDeleteDialog("deleteAll");
-            //deleteItems();
-            clearActions();
-            Toast.makeText(getApplicationContext(), "Delete", Toast.LENGTH_SHORT).show();
-            return true;
+            if (itemAdapter.selectedBooks.size() == 0) {
+                Toast.makeText(getApplicationContext(),
+                        R.string.text_itesm_selected_toast, Toast.LENGTH_SHORT).show();
+            } else {
+                itemAdapter.counter = 0;
+                showDeleteDialog(DELETE_ALL_ITEMS);
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-//    private void deleteItems() {
-//        for (String id: bookAdapter.selectedBooks) {
-//            String selection = ReturnContract.BookEntry._ID + " LIKE ?";
-//            String[] selectionArgs = {id};
-//
-//            int rowsDeleted = 0;
-//
-//            rowsDeleted = getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
-//                    selection, selectionArgs);
-//
-//            if (rowsDeleted > 0) {
-//                Toast.makeText(getApplicationContext(), "Getting the delete feature",
-//                        Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(getApplicationContext(), "error deleting the item",
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //mBooks.clear();
-        //mBooks.close();
-    }
-
+    //Deletes all the selected items
     @Override
     public void deleteAllItems() {
-        for (String id: bookAdapter.selectedBooks) {
-            String selection = ReturnContract.BookEntry._ID + " LIKE ?";
+        int rowsDeleted = 0, finalRowsDeleted = 0;
+        for (String id: itemAdapter.selectedBooks) {
+            String selection = ReturnContract.ItemEntry._ID + " " + getString(R.string.delete_db_selection);
             String[] selectionArgs = {id};
 
-            int rowsDeleted = 0;
-
-            rowsDeleted = getContentResolver().delete(ReturnContract.BookEntry.CONTENT_URI,
+            rowsDeleted = getContentResolver().delete(ReturnContract.ItemEntry.CONTENT_URI,
                     selection, selectionArgs);
 
             if (rowsDeleted > 0) {
-                Toast.makeText(getApplicationContext(), "Getting the delete feature",
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "error deleting the item",
-                        Toast.LENGTH_SHORT).show();
+                finalRowsDeleted++;
             }
+
+            NotificationUtils.cancelNotification(getApplicationContext(), Integer.parseInt(id));
         }
-        bookAdapter.selectedBooks.clear();
+        if (finalRowsDeleted == itemAdapter.selectedBooks.size()) {
+            Toast.makeText(getApplicationContext(), R.string.delete_successfull,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.delete_failure_part_one)
+                            + finalRowsDeleted + getString(R.string.delete_failure_part_two),
+                    Toast.LENGTH_SHORT).show();
+        }
+        itemAdapter.selectedBooks.clear();
+        clearActions();
     }
 
-//    public void presentDetailFragment(Uri uri) {
-//        DetailFragment detailFragment = new DetailFragment();
-//        Bundle args = new Bundle();
-//        args.putString(DetailActivity.ITEM_URI, uri.toString());
-//        detailFragment.setArguments(args);
-//        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
-//                detailFragment, DETAIL_FRAGMENT).commit();
-//    }
-
-//    @Override
-//    public void displayEditFragment(Uri uri) {
-//        EditDialogFragment editDialog = new EditDialogFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ITEM_URI, uri.toString());
-//        editDialog.setArguments(args);
-//
-//        editDialog.show(getSupportFragmentManager(), EDIT_DIALOG);
-//    }
-//
-//    public void deleteFragment() {
-//        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-//                .findFragmentByTag(DETAIL_FRAGMENT);
-//
-//        getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
-//    }
-//
-//    @Override
-//    public void replaceFragment(Uri uri) {
-//        DetailFragment detailFragment = new DetailFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ITEM_URI, uri.toString());
-//        detailFragment.setArguments(args);
-//        getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
-//                detailFragment, DETAIL_FRAGMENT).commit();
-//    }
-//
-//    @Override
-//    public void showDatePicker(String operation) {
-//        DialogFragment dateFragment = new DatePickerFragment();
-//        Bundle args = new Bundle();
-//        args.putString(OPERATION, operation);
-//        dateFragment.setArguments(args);
-//        dateFragment.show(getSupportFragmentManager(), "datePicker");
-//    }
-//
-//    @Override
-//    public void sendDate(String operation, int month, int day, int year) {
-//        EditFragment editFragment = (EditFragment) getSupportFragmentManager()
-//                .findFragmentByTag(EDIT_DETAIL);
-//        editFragment.updateEditText(operation, month, day, year);
-//    }
-
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//
-//        String[] projection = {
-//                BookEntry._ID,
-//                BookEntry.COLUMN_BOOK_TITLE,
-//                BookEntry.COLUMN_BOOK_AUTHOR,
-//                BookEntry.COLUMN_BOOK_CHECKEDOUT,
-//                BookEntry.COLUMN_BOOK_RETURN
-//        };
-//
-//        return new CursorLoader(getApplicationContext(), BookEntry.CONTENT_URI,
-//                projection, null, null, null);
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        bookAdapter.swapCursor(data);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader) {
-//        bookAdapter.swapCursor(null);
-//    }
+    @Override
+    public void clearSelectedItems() {
+        itemAdapter.selectedBooks.clear();
+        clearActions();
+    }
 }

@@ -1,15 +1,8 @@
 package com.android.raj.returnintime;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,41 +10,48 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.android.raj.returnintime.data.ReturnContract.BookEntry;
+import com.android.raj.returnintime.data.ReturnContract;
+import com.android.raj.returnintime.utilities.NotificationUtils;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements
-        DetailFragment.SendToDetailActivity/*implements LoaderManager.LoaderCallbacks<Cursor>*/ {
-
-
-    private static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
-    BookAdapter bookAdapter;
+public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInterface {
+    private static final String MENU_STATE = "MENU_STATE";
+    ItemAdapter itemAdapter;
     private boolean mTablet;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    MenuItem deleteAction;
+    FloatingActionButton fab;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ButterKnife.bind(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddBookActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_left);
             }
         });
 
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.detail_fragment_container);
         mTablet = (frameLayout != null);
 
-        //getSupportLoaderManager().initLoader(0, null, this);
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(MENU_STATE, mContextual);
+        super.onSaveInstanceState(outState);
     }
 
     public boolean isTablet() {
@@ -63,83 +63,118 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        } else if (id == R.id.action_dummy) {
-//            //insertData();
-//            //displayDatabaseMessage();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    //To handle the actions that need to be done when the app enters contextual mode
+    public Toolbar displayContextualMode(boolean contexual) {
+        mContextual = contexual;
 
+        fab.setVisibility(View.GONE);
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //mBooks.clear();
-        //mBooks.close();
-    }
+        toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, false);
+        toolbar.getMenu().setGroupVisible(R.id.detail_menu_group, false);
+        deleteAction.setVisible(true);
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24px);
 
-    public void presentDetailFragment(Uri uri) {
-        DetailFragment detailFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(DetailActivity.ITEM_URI, uri.toString());
-        detailFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().add(R.id.detail_fragment_container,
-                detailFragment, DETAIL_FRAGMENT).commit();
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemAdapter.counter = 0;
+                    clearActions();
+                }
+            });
+        return toolbar;
     }
 
     @Override
-    public void displayEditFragment(Uri uri) {
-
+    public void onBackPressed() {
+        if (mContextual) {
+            itemAdapter.counter = 0;
+            clearActions();
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    public void deleteFragment() {
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentByTag(DETAIL_FRAGMENT);
+    //To handle the actions that need to be done post-contextual mode
+    private void clearActions() {
+        mContextual = false;
+        itemAdapter.notifyDataSetChanged();
+        fab.setVisibility(View.VISIBLE);
+        if (isTablet() && itemAdapter.clicked) {
+            deleteFragment();
+            itemAdapter.clicked = false;
+        }
 
-        getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+        toolbar.getMenu().setGroupVisible(R.id.menu_delete_group, true);
+        toolbar.getMenu().setGroupVisible(R.id.detail_menu_group, true);
+        deleteAction.setVisible(false);
+
+        toolbar.setNavigationIcon(null);
+        toolbar.setTitle(R.string.app_title);
     }
 
+        @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_contexual, menu);
+            deleteAction = menu.findItem(R.id.action_contexual_delete);
+            deleteAction.setVisible(false);
+        return true;
+    }
 
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//
-//        String[] projection = {
-//                BookEntry._ID,
-//                BookEntry.COLUMN_BOOK_TITLE,
-//                BookEntry.COLUMN_BOOK_AUTHOR,
-//                BookEntry.COLUMN_BOOK_CHECKEDOUT,
-//                BookEntry.COLUMN_BOOK_RETURN
-//        };
-//
-//        return new CursorLoader(getApplicationContext(), BookEntry.CONTENT_URI,
-//                projection, null, null, null);
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        bookAdapter.swapCursor(data);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader) {
-//        bookAdapter.swapCursor(null);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_contexual_delete) {
+            if (itemAdapter.selectedBooks.size() == 0) {
+                Toast.makeText(getApplicationContext(),
+                        R.string.text_itesm_selected_toast, Toast.LENGTH_SHORT).show();
+            } else {
+                itemAdapter.counter = 0;
+                showDeleteDialog(DELETE_ALL_ITEMS);
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    //Deletes all the selected items
+    @Override
+    public void deleteAllItems() {
+        int rowsDeleted = 0, finalRowsDeleted = 0;
+        for (String id: itemAdapter.selectedBooks) {
+            String selection = ReturnContract.ItemEntry._ID + " " + getString(R.string.delete_db_selection);
+            String[] selectionArgs = {id};
+
+            rowsDeleted = getContentResolver().delete(ReturnContract.ItemEntry.CONTENT_URI,
+                    selection, selectionArgs);
+
+            if (rowsDeleted > 0) {
+                finalRowsDeleted++;
+            }
+
+            NotificationUtils.cancelNotification(getApplicationContext(), Integer.parseInt(id));
+        }
+        if (finalRowsDeleted == itemAdapter.selectedBooks.size()) {
+            Toast.makeText(getApplicationContext(), R.string.delete_successfull,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.delete_failure_part_one)
+                            + finalRowsDeleted + getString(R.string.delete_failure_part_two),
+                    Toast.LENGTH_SHORT).show();
+        }
+        itemAdapter.selectedBooks.clear();
+        clearActions();
+    }
+
+    @Override
+    public void clearSelectedItems() {
+        itemAdapter.selectedBooks.clear();
+        clearActions();
+    }
 }

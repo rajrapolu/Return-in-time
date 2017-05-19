@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddBookActivity"
+        <activity android:name=".AddItemActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -29,9 +29,9 @@
         </activity>
 
         <provider
-            android:name=".data.BookProvider"
+            android:name=".data.ItemProvider"
             android:authorities="com.android.raj.returnintime.data"
-            android:exported="false"></provider>
+            android:exported="false" />
 
         <activity android:name=".DetailActivity"
             android:parentActivityName=".MainActivity">
@@ -39,6 +39,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.raj.returnintime.MainActivity"/>
         </activity>
+
+        <service android:name=".service.ItemService"
+            android:exported="false" />
+
+        <receiver android:name=".utilities.NotificationPublisher" />
     </application>
 
 </manifest>

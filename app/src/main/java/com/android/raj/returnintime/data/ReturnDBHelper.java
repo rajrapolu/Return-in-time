@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.android.raj.returnintime.data.ReturnContract.BookEntry;
+import com.android.raj.returnintime.data.ReturnContract.ItemEntry;
 
 public class ReturnDBHelper extends SQLiteOpenHelper {
 
@@ -17,15 +17,17 @@ public class ReturnDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String SQL_BOOK_STATEMENT =
-                "CREATE TABLE " + BookEntry.TABLE_NAME + "("
-                + BookEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + BookEntry.COLUMN_BOOK_TITLE + " TEXT NOT NULL, "
-                + BookEntry.COLUMN_BOOK_AUTHOR + " TEXT, "
-                + BookEntry.COLUMN_BOOK_CHECKEDOUT + " DATE NOT NULL, "
-                + BookEntry.COLUMN_BOOK_RETURN + " DATE);";
+        String SQL_ITEM_STATEMENT =
+                "CREATE TABLE " + ItemEntry.TABLE_NAME + "("
+                        + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + ItemEntry.COLUMN_ITEM_TITLE + " TEXT NOT NULL, "
+                        + ItemEntry.COLUMN_ITEM_TYPE + " TEXT, "
+                        + ItemEntry.COLUMN_ITEM_RETURN_TO + " TEXT, "
+                        + ItemEntry.COLUMN_ITEM_CHECKEDOUT + " TEXT NOT NULL, "
+                        + ItemEntry.COLUMN_ITEM_RETURN + " TEXT, "
+                        + ItemEntry.COLUMN_ITEM_NOTIFY + " TEXT);";
 
-        db.execSQL(SQL_BOOK_STATEMENT);
+        db.execSQL(SQL_ITEM_STATEMENT);
     }
 
     @Override

@@ -3,19 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.android.raj.returnintime.AddBookFragment">
+    tools:context="com.android.raj.returnintime.AddItemFragment">
 
     <include layout="@layout/toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/padding_all_sides">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_all_sides">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/title_text_input_layout"
@@ -30,13 +30,24 @@
 
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/author_text_input_layout"
+                android:id="@+id/type_text_input_layout"
                 style="@style/text_input">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edit_author"
+                    android:id="@+id/edit_type"
                     style="@style/text_field"
-                    android:hint="@string/text_author"
+                    android:hint="@string/hint_type"
+                    android:inputType="text|textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/return_to_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_return_to"
+                    style="@style/text_field"
+                    android:hint="@string/hint_return_to"
                     android:inputType="text|textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
@@ -46,9 +57,9 @@
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_checkedout"
-                    android:focusable="false"
                     style="@style/text_field"
-                    android:hint="MM/DD/YYYY"
+                    android:focusable="false"
+                    android:hint="@string/hint_start_date"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
@@ -58,9 +69,21 @@
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_return"
-                    android:focusable="false"
                     style="@style/text_field"
-                    android:hint="MM/DD/YYYY"
+                    android:focusable="false"
+                    android:hint="@string/hint_end_date"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/notify_text_input_layout"
+                style="@style/text_input">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_notify"
+                    style="@style/text_field"
+                    android:focusable="false"
+                    android:hint="@string/hint_notify_date"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 

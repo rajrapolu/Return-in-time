@@ -1,6 +1,5 @@
 package com.android.raj.returnintime;
 
-
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,16 +7,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -29,43 +27,43 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class EditFragment extends Fragment {
-    @BindView(R.id.title_text_input_layout)
-    TextInputLayout mTextTitle;
-    @BindView(R.id.type_text_input_layout)
-    TextInputLayout mTextType;
-    @BindView(R.id.return_to_text_input_layout)
-    TextInputLayout mTextReturnTo;
-    @BindView(R.id.checkedout_text_input_layout)
-    TextInputLayout mTextCheckedout;
-    @BindView(R.id.return_text_input_layout)
-    TextInputLayout mTextReturn;
-    @BindView(R.id.notify_text_input_layout)
-    TextInputLayout mTextNotify;
-    @BindView(R.id.add_button)
-    Button mButton;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    Uri uri;
-    public int NOTIFY_ID;
-    String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
-    SendToDetailFragment sendDetails;
-    Calendar calendar;
+public class EditDialogFragment extends DialogFragment {
     private static final int TIME_IN_HOURS = 6;
     private static final int TIME_IN_MINUTES = 30;
+    private Uri uri;
+    @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
+    @BindView(R.id.type_text_input_layout) TextInputLayout mTextType;
+    @BindView(R.id.return_to_text_input_layout) TextInputLayout mTextReturnTo;
+    @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
+    @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
+    @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
+    private Button mSaveButton, mCancelButton;
+    private String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
+    private Calendar calendar;
+    public int NOTIFY_ID;
+    private SendToDetailFragment sendDetails;
     public static final String CHECKEDOUT = "CHECKEDOUT";
     public static final String RETURN = "RETURN";
     public static final String NOTIFY = "NOTIFY";
 
-    public EditFragment() {
-        // Required empty public constructor
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //This is used to define the dimensions of the dialog
+        Window window = getDialog().getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
 
     }
+    
+    public interface SendToDetailFragment {
+        void showDatePicker(String operation);
+        void replaceFragment(Uri uri);
+    }
 
+    //Updates the edit text based on text field that is clicked
     public void updateEditText(String operation, int month, int day, int year) {
         switch (operation) {
             case CHECKEDOUT:
@@ -85,12 +83,6 @@ public class EditFragment extends Fragment {
         }
     }
 
-    public interface SendToDetailFragment {
-        void replaceFragment(Uri uri);
-
-        void showDatePicker(String operation);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -102,27 +94,35 @@ public class EditFragment extends Fragment {
         }
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_add_item, container, false);
-        setHasOptionsMenu(true);
-        ButterKnife.bind(this, rootView);
-        mButton.setVisibility(View.GONE);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.text_edit_fragment_title);
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24px);
+        View view = inflater.inflate(R.layout.fragment_edit, container, false);
+        ButterKnife.bind(this, view);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
+
+        displayData(uri);
+
+        mSaveButton = (Button) view.findViewById(R.id.button_save);
+        mCancelButton = (Button) view.findViewById(R.id.button_cancel);
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDetails.replaceFragment(uri);
+                saveEdit();
+                getDialog().dismiss();
             }
         });
 
-        uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelEdit();
+            }
+        });
 
         mTextCheckedout.getEditText().setClickable(true);
         mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -148,73 +148,19 @@ public class EditFragment extends Fragment {
             }
         });
 
-        displayData(uri);
-
-        return rootView;
+        return view;
     }
 
-    //Displays the data in corresponding text fields to display the existing data
-    private void displayData(Uri uri) {
-        String[] projection = {
-                ReturnContract.ItemEntry._ID,
-                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
-                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
-                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
-                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
-                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
-                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
-        };
-
-        Cursor cursor = getActivity()
-                .getContentResolver().query(uri, projection, null, null, null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-            mTitle = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE));
-            mType = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
-            mReturnTo = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO));
-            mCheckedout = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT));
-            mReturn = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
-            mNotify = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
-
-            mTextTitle.getEditText().setText(mTitle);
-            mTextType.getEditText().setText(mType);
-            mTextReturnTo.getEditText().setText(mReturnTo);
-            mTextCheckedout.getEditText().setText(mCheckedout);
-            mTextReturn.getEditText().setText(mReturn);
-            mTextNotify.getEditText().setText(mNotify);
-            cursor.close();
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.edit_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-
-        if (itemId == R.id.action_save) {
-            saveEdit();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    //called when save button is clicked. The data values are updated in the database
+    //called when a save button is clicked, the database values are updated in this method
     private void saveEdit() {
 
-        if (changesCheck()) {
+        if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
+                !mTextType.getEditText().getText().toString().equals(mType) ||
+                !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
+                !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
+                !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
+                !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
+
             ContentValues values = new ContentValues();
 
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
@@ -244,8 +190,7 @@ public class EditFragment extends Fragment {
                         !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
                     NOTIFY_ID = (int) ContentUris.parseId(uri);
 
-                    //starting the service so that the notification is handled
-                    // on the background thread
+                    //starting the intent service to handle notifications on a background thread
                     Intent intent = new Intent(getContext(), ItemService.class);
                     intent.setData(uri);
                     intent.putExtra(BaseActivity.TITLE_TO_SERVICE,
@@ -259,18 +204,52 @@ public class EditFragment extends Fragment {
             }
         }
         sendDetails.replaceFragment(uri);
+    //}
     }
 
-    private boolean changesCheck() {
-        if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
-                !mTextType.getEditText().getText().toString().equals(mType) ||
-                !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
-                !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
-                !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
-            return true;
+    //called when a cancel button is clicked
+    private void cancelEdit() {
+        getDialog().dismiss();
+    }
+
+    //Displays the data in the corresponding text field to display the existing data to the user
+    private void displayData(Uri uri) {
+        String[] projection = {
+                ReturnContract.ItemEntry._ID,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
+                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
+                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
+        };
+
+        Cursor cursor = getActivity()
+                .getContentResolver().query(uri, projection, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            mTitle = cursor.getString(cursor
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE));
+            mType = cursor.getString(cursor
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
+            mReturnTo = cursor.getString(cursor
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO));
+            mCheckedout = cursor.getString(cursor
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT));
+            mReturn = cursor.getString(cursor
+                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
+            mNotify = cursor.getString(cursor
+                    .getColumnIndexOrThrow(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
+
+
+            mTextTitle.getEditText().setText(mTitle);
+            mTextType.getEditText().setText(mType);
+            mTextReturnTo.getEditText().setText(mReturnTo);
+            mTextCheckedout.getEditText().setText(mCheckedout);
+            mTextReturn.getEditText().setText(mReturn);
+            mTextNotify.getEditText().setText(mNotify);
+            cursor.close();
         }
-        return false;
     }
-
 }

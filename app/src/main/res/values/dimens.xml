@@ -5,4 +5,7 @@
     <dimen name="label_size">12sp</dimen>
     <dimen name="text_size">16sp</dimen>
     <dimen name="button_min_width">88dp</dimen>
+    <dimen name="width_share">0dp</dimen>
+    <dimen name="min_height">72dp</dimen>
+    <dimen name="second_line_text_size">14sp</dimen>
 </resources>

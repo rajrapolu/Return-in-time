@@ -44,6 +44,8 @@
         <item name="android:minWidth">@dimen/button_min_width</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_ripple</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="view_text_details">
@@ -58,11 +60,25 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="text_title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
     <style name="custom_tool_bar" parent="Base.Widget.AppCompat.Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:theme">@style/AppTheme.AppBarOverlay</item>
+    </style>
+
+    <style name="falt_button" parent="Base.Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:gravity">bottom|end</item>
     </style>
 
 </resources>

@@ -132,7 +132,7 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
         if (id == R.id.action_contexual_delete) {
             if (itemAdapter.selectedBooks.size() == 0) {
                 Toast.makeText(getApplicationContext(),
-                        R.string.text_itesm_selected_toast, Toast.LENGTH_SHORT).show();
+                        R.string.text_items_selected_toast, Toast.LENGTH_SHORT).show();
             } else {
                 itemAdapter.counter = 0;
                 showDeleteDialog(DELETE_ALL_ITEMS);

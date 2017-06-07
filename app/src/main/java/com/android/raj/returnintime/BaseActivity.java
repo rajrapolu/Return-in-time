@@ -67,7 +67,10 @@ public class BaseActivity extends AppCompatActivity implements
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentByTag(DETAIL_FRAGMENT);
 
-        getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+        if (detailFragment != null) {
+            detailFragment.attached = false;
+            getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+        }
     }
 
     @Override
@@ -79,8 +82,6 @@ public class BaseActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,
                 detailFragment, DETAIL_FRAGMENT).commit();
     }
-
-    //Detail Activity
 
     @Override
     public void displayEditFragment(Uri uri) {

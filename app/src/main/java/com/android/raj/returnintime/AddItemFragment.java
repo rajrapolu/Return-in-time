@@ -172,7 +172,6 @@ public class AddItemFragment extends Fragment {
                             mTextReturnTo.getEditText().getText().toString());
                     intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
                     intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
-                    Log.i("woo", "onClick: " + calendar.getTimeInMillis());
                     getActivity().startService(intent);
                 }
 

@@ -32,6 +32,7 @@
             android:layout_width="@dimen/button_min_width"
             android:layout_height="@dimen/button_min_width"
             android:layout_gravity="center_horizontal|center_vertical"
+            android:contentDescription="@string/pile_of_books"
             android:src="@drawable/ic_books" />
 
         <TextView

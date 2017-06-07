@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +30,22 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EditDialogFragment extends DialogFragment {
+public class EditDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int TIME_IN_HOURS = 6;
     private static final int TIME_IN_MINUTES = 30;
     private Uri uri;
-    @BindView(R.id.title_text_input_layout) TextInputLayout mTextTitle;
-    @BindView(R.id.type_text_input_layout) TextInputLayout mTextType;
-    @BindView(R.id.return_to_text_input_layout) TextInputLayout mTextReturnTo;
-    @BindView(R.id.checkedout_text_input_layout) TextInputLayout mTextCheckedout;
-    @BindView(R.id.return_text_input_layout) TextInputLayout mTextReturn;
-    @BindView(R.id.notify_text_input_layout) TextInputLayout mTextNotify;
+    @BindView(R.id.title_text_input_layout)
+    TextInputLayout mTextTitle;
+    @BindView(R.id.type_text_input_layout)
+    TextInputLayout mTextType;
+    @BindView(R.id.return_to_text_input_layout)
+    TextInputLayout mTextReturnTo;
+    @BindView(R.id.checkedout_text_input_layout)
+    TextInputLayout mTextCheckedout;
+    @BindView(R.id.return_text_input_layout)
+    TextInputLayout mTextReturn;
+    @BindView(R.id.notify_text_input_layout)
+    TextInputLayout mTextNotify;
     private Button mSaveButton, mCancelButton;
     private String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
     private Calendar calendar;
@@ -45,6 +54,8 @@ public class EditDialogFragment extends DialogFragment {
     public static final String CHECKEDOUT = "CHECKEDOUT";
     public static final String RETURN = "RETURN";
     public static final String NOTIFY = "NOTIFY";
+    Cursor cursor;
+    private static final int ITEMS_LOADER = 3;
 
     @Override
     public void onResume() {
@@ -57,9 +68,42 @@ public class EditDialogFragment extends DialogFragment {
         window.setGravity(Gravity.CENTER);
 
     }
-    
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                ReturnContract.ItemEntry._ID,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
+                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
+                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
+        };
+
+        return new CursorLoader(getActivity(), uri,
+                projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        cursor = data;
+        displayData(uri);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mTextTitle.getEditText().setText("");
+        mTextType.getEditText().setText("");
+        mTextReturnTo.getEditText().setText("");
+        mTextCheckedout.getEditText().setText("");
+        mTextReturn.getEditText().setText("");
+        mTextNotify.getEditText().setText("");
+    }
+
     public interface SendToDetailFragment {
         void showDatePicker(String operation);
+
         void replaceFragment(Uri uri);
     }
 
@@ -104,8 +148,6 @@ public class EditDialogFragment extends DialogFragment {
 
         uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
 
-        displayData(uri);
-
         mSaveButton = (Button) view.findViewById(R.id.button_save);
         mCancelButton = (Button) view.findViewById(R.id.button_cancel);
 
@@ -149,6 +191,12 @@ public class EditDialogFragment extends DialogFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().getSupportLoaderManager().restartLoader(ITEMS_LOADER, null, this);
     }
 
     //called when a save button is clicked, the database values are updated in this method
@@ -203,8 +251,7 @@ public class EditDialogFragment extends DialogFragment {
                 }
             }
         }
-        sendDetails.replaceFragment(uri);
-    //}
+        //sendDetails.replaceFragment(uri);
     }
 
     //called when a cancel button is clicked
@@ -214,42 +261,31 @@ public class EditDialogFragment extends DialogFragment {
 
     //Displays the data in the corresponding text field to display the existing data to the user
     private void displayData(Uri uri) {
-        String[] projection = {
-                ReturnContract.ItemEntry._ID,
-                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
-                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
-                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
-                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
-                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
-                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
-        };
-
-        Cursor cursor = getActivity()
-                .getContentResolver().query(uri, projection, null, null, null);
 
         if (cursor != null) {
-            cursor.moveToFirst();
-            mTitle = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE));
-            mType = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
-            mReturnTo = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO));
-            mCheckedout = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT));
-            mReturn = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
-            mNotify = cursor.getString(cursor
-                    .getColumnIndexOrThrow(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                mTitle = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE));
+                mType = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
+                mReturnTo = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO));
+                mCheckedout = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT));
+                mReturn = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
+                mNotify = cursor.getString(cursor
+                        .getColumnIndexOrThrow(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
 
 
-            mTextTitle.getEditText().setText(mTitle);
-            mTextType.getEditText().setText(mType);
-            mTextReturnTo.getEditText().setText(mReturnTo);
-            mTextCheckedout.getEditText().setText(mCheckedout);
-            mTextReturn.getEditText().setText(mReturn);
-            mTextNotify.getEditText().setText(mNotify);
-            cursor.close();
+                mTextTitle.getEditText().setText(mTitle);
+                mTextType.getEditText().setText(mType);
+                mTextReturnTo.getEditText().setText(mReturnTo);
+                mTextCheckedout.getEditText().setText(mCheckedout);
+                mTextReturn.getEditText().setText(mReturn);
+                mTextNotify.getEditText().setText(mNotify);
+            }
         }
     }
 }

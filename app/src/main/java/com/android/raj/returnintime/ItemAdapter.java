@@ -51,7 +51,8 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
             holder.tvReturnIn.setText(cursor.getString(cursor
                     .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN)));
         } catch (CursorIndexOutOfBoundsException e) {
-            throw new CursorIndexOutOfBoundsException("Requested an index of -1");
+            throw new CursorIndexOutOfBoundsException(mContext
+                    .getString(R.string.requested_index_failed));
         }
 
         if (!((BaseActivity)mContext).mContextual) {
@@ -66,7 +67,7 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
                 public void onClick(View v) {
                     if (!((BaseActivity)mContext).mContextual) {
 
-                        Log.i("yes", "onClick: " + cursor.moveToPosition(position));
+                        Log.i("yes", "onClick: " + cursor.moveToPosition(holder.getAdapterPosition()));
                             clicked = true;
                             Uri uri = ContentUris.withAppendedId(ReturnContract.ItemEntry.CONTENT_URI,
                                     Long.parseLong(cursor.getString(cursor

@@ -22,8 +22,8 @@
     <string name="text_share_type">text/plain</string>
     <string name="text_share_initial">Item is already deleted</string>
     <string name="text_checkout_book">Checkout this book!</string>
-    <string name="text_share_title">Title:</string>
-    <string name="text_share_item_type">Type:</string>
+    <string name="text_share_title">Title: </string>
+    <string name="text_share_item_type"> Type: </string>
     <string name="text_details_title">Item Details</string>
     <string name="text_item_deleted">Item is already deleted</string>
     <string name="text_item_updating_problem">There was a problem updating the item</string>
@@ -36,7 +36,7 @@
     <string name="delete_successfull">Selected Items are successfully deleted</string>
     <string name="delete_failure_part_one">Error deleting the items. Only</string>
     <string name="delete_failure_part_two">are deleted</string>
-    <string name="text_itesm_selected_toast">Please select the itms to be deleted</string>
+    <string name="text_items_selected_toast">Please select the items to be deleted</string>
     <string name="exception_send_to_detail">must implement SendToDetailFragment interface</string>
     <string name="exception_add_book">must implement AddBookInterface</string>
     <string name="text_items_added">Item added to the list</string>
@@ -53,13 +53,15 @@
     <string name="hint_start_date">Start Date (MM/DD/YYYY) *</string>
     <string name="hint_end_date">End Date (MM/DD/YYYY) *</string>
     <string name="hint_notify_date">Notify Date (MM/DD/YYYY)</string>
-    <string name="return_to">Return To:</string>
-    <string name="borrowed_on">Borrowed On:</string>
-    <string name="return_by">Return By:</string>
-    <string name="notify_me_on">Notify Me On:</string>
+    <string name="return_to">Return To: </string>
+    <string name="borrowed_on">Borrowed On: </string>
+    <string name="return_by">Return By: </string>
+    <string name="notify_me_on">Notify Me On: </string>
     <string name="save">Save</string>
     <string name="edit_item">Edit Item</string>
     <string name="edit">Edit</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
+    <string name="requested_index_failed">Requested an index of -1</string>
+    <string name="pile_of_books">Pile of Books</string>
 </resources>

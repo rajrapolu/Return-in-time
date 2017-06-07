@@ -21,4 +21,5 @@ public class DetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
     }
+
 }

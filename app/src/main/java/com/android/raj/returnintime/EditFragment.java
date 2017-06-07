@@ -8,10 +8,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,7 +38,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditFragment extends Fragment {
+public class EditFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     @BindView(R.id.title_text_input_layout)
     TextInputLayout mTextTitle;
     @BindView(R.id.type_text_input_layout)
@@ -60,6 +65,8 @@ public class EditFragment extends Fragment {
     public static final String CHECKEDOUT = "CHECKEDOUT";
     public static final String RETURN = "RETURN";
     public static final String NOTIFY = "NOTIFY";
+    Cursor cursor;
+    private static final int ITEMS_LOADER = 2;
 
     public EditFragment() {
         // Required empty public constructor
@@ -123,6 +130,7 @@ public class EditFragment extends Fragment {
         });
 
         uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
+        Log.i("uri", "onCreateView: " + uri.toString());
 
         mTextCheckedout.getEditText().setClickable(true);
         mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -148,48 +156,41 @@ public class EditFragment extends Fragment {
             }
         });
 
-        displayData(uri);
-
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().getSupportLoaderManager().initLoader(ITEMS_LOADER, null, this);
     }
 
     //Displays the data in corresponding text fields to display the existing data
     private void displayData(Uri uri) {
-        String[] projection = {
-                ReturnContract.ItemEntry._ID,
-                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
-                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
-                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
-                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
-                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
-                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
-        };
-
-        Cursor cursor = getActivity()
-                .getContentResolver().query(uri, projection, null, null, null);
 
         if (cursor != null) {
-            cursor.moveToFirst();
-            mTitle = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE));
-            mType = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
-            mReturnTo = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO));
-            mCheckedout = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT));
-            mReturn = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
-            mNotify = cursor.getString(cursor
-                    .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                mTitle = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE));
+                mType = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
+                mReturnTo = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO));
+                mCheckedout = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT));
+                mReturn = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
+                mNotify = cursor.getString(cursor
+                        .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
 
-            mTextTitle.getEditText().setText(mTitle);
-            mTextType.getEditText().setText(mType);
-            mTextReturnTo.getEditText().setText(mReturnTo);
-            mTextCheckedout.getEditText().setText(mCheckedout);
-            mTextReturn.getEditText().setText(mReturn);
-            mTextNotify.getEditText().setText(mNotify);
-            cursor.close();
+                mTextTitle.getEditText().setText(mTitle);
+                mTextType.getEditText().setText(mType);
+                mTextReturnTo.getEditText().setText(mReturnTo);
+                mTextCheckedout.getEditText().setText(mCheckedout);
+                mTextReturn.getEditText().setText(mReturn);
+                mTextNotify.getEditText().setText(mNotify);
+            }
         }
     }
 
@@ -261,6 +262,7 @@ public class EditFragment extends Fragment {
         sendDetails.replaceFragment(uri);
     }
 
+    //verifying if there are any changes made to the data
     private boolean changesCheck() {
         if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
                 !mTextType.getEditText().getText().toString().equals(mType) ||
@@ -271,6 +273,38 @@ public class EditFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                ReturnContract.ItemEntry._ID,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
+                ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
+                ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
+                ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
+        };
+
+        return new CursorLoader(getActivity(), uri,
+                projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        cursor = data;
+        displayData(uri);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mTextTitle.getEditText().setText("");
+        mTextType.getEditText().setText("");
+        mTextReturnTo.getEditText().setText("");
+        mTextCheckedout.getEditText().setText("");
+        mTextReturn.getEditText().setText("");
+        mTextNotify.getEditText().setText("");
     }
 
 }

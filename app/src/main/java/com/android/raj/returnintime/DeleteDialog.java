@@ -80,8 +80,7 @@ public class DeleteDialog extends DialogFragment {
     //Deletes the row from the database
     private void deleteItems(String itemId) {
 
-            String selection = ReturnContract.ItemEntry._ID + " " +
-                    getString(R.string.delete_db_selection);
+            String selection = ReturnContract.ItemEntry._ID + " LIKE ?";
             String[] selectionArgs = {itemId};
 
             int rowsDeleted = 0;

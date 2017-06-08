@@ -227,7 +227,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             if (cursor != null) {
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
-                    shareData = getString(R.string.text_checkout_book) + "\n"
+                    shareData = getString(R.string.text_checkout) + "\n"
                             + getString(R.string.text_share_title) + cursor.getString(
                             cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE))
                             + "\n" +
@@ -240,7 +240,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 mShareActionProvider.setShareIntent(createShareIntent());
             }
         }
-
     }
 
     @Override

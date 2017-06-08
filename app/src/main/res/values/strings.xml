@@ -21,7 +21,6 @@
     <string name="delete_db_selection"> LIKE ?</string>
     <string name="text_share_type">text/plain</string>
     <string name="text_share_initial">Item is already deleted</string>
-    <string name="text_checkout_book">Checkout this book!</string>
     <string name="text_share_title">Title: </string>
     <string name="text_share_item_type"> Type: </string>
     <string name="text_details_title">Item Details</string>
@@ -64,4 +63,5 @@
     <string name="delete">Delete</string>
     <string name="requested_index_failed">Requested an index of -1</string>
     <string name="pile_of_books">Pile of Books</string>
+    <string name="text_checkout">Checkout this!</string>
 </resources>

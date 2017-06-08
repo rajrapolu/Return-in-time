@@ -306,5 +306,4 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
         mTextReturn.getEditText().setText("");
         mTextNotify.getEditText().setText("");
     }
-
 }

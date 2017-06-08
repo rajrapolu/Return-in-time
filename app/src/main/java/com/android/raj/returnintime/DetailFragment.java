@@ -100,17 +100,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         shareIntent.setType(getString(R.string.text_share_type));
-//        shareData = getString(R.string.text_share_initial);
-//        if (cursor != null) {
-//            if (cursor.getCount() > 0) {
-//                cursor.moveToFirst();
-//                shareData = getString(R.string.text_checkout_book) + "\n"
-//                        + getString(R.string.text_share_title) + cursor.getString(
-//                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE)) +
-//                        getString(R.string.text_share_item_type) + cursor.getString(
-//                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
-//            }
-//        }
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
         return shareIntent;
     }

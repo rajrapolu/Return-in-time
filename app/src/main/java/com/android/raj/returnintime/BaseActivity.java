@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 
 public class BaseActivity extends AppCompatActivity implements
@@ -114,6 +115,7 @@ public class BaseActivity extends AppCompatActivity implements
     public void sendDate(String checkedoutOrReturn, int month, int day, int year) {
         AddItemFragment addItemFragment = (AddItemFragment) getSupportFragmentManager()
                 .findFragmentByTag(ADD_BOOK_FRAGMENT_TAG);
+
         addItemFragment.updateEditText(checkedoutOrReturn, month, day, year);
     }
 

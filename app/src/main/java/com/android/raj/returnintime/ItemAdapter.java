@@ -131,29 +131,32 @@ public class ItemAdapter extends RecyclerViewCursorAdapter<ItemAdapter.ViewHolde
     private void displayImage(String string, ViewHolder holder) {
         int drawable;
 
-        switch (string) {
-            case "flight":
-                drawable = R.drawable.ic_flight_takeoff_black_24px;
-                break;
-            case "book":
-                drawable = R.drawable.ic_library_books_black_24px;
-                break;
-            case "bills":
-                drawable = R.drawable.ic_attach_money_black_24dp;
-                break;
-            case "assignment":
-                drawable = R.drawable.ic_assignment_black_24dp;
-                break;
-            case "workout":
-                drawable = R.drawable.ic_fitness_center_black_24dp;
-                break;
-            case "swimming":
-                drawable = R.drawable.ic_pool_black_24dp;
-                break;
-            default:
-                drawable = R.drawable.ic_event_available_black_24dp;
+        if (string.toLowerCase().contains(mContext.getString(R.string.text_flight).toLowerCase()) ||
+                string.toLowerCase().contains(
+                        mContext.getString(R.string.text_travel).toLowerCase().toLowerCase())) {
+            drawable = R.drawable.ic_flight_takeoff_black_24px;
+        } else if (string.toLowerCase().contains(
+                mContext.getString(R.string.text_book).toLowerCase().toLowerCase())) {
+            drawable = R.drawable.ic_library_books_black_24px;
+        } else if (string.toLowerCase().contains(
+                mContext.getString(R.string.text_bills).toLowerCase().toLowerCase()) ||
+                string.toLowerCase().contains(
+                        mContext.getString(R.string.text_pay).toLowerCase().toLowerCase())) {
+            drawable = R.drawable.ic_attach_money_black_24dp;
+        } else if (string.toLowerCase().contains(
+                mContext.getString(R.string.text_assignment).toLowerCase().toLowerCase())) {
+            drawable = R.drawable.ic_assignment_black_24dp;
+        } else if (string.toLowerCase().contains(
+                mContext.getString(R.string.text_workout).toLowerCase().toLowerCase()) ||
+                string.toLowerCase().contains(
+                        mContext.getString(R.string.text_gym).toLowerCase().toLowerCase())) {
+            drawable = R.drawable.ic_fitness_center_black_24dp;
+        } else if (string.toLowerCase().contains(
+                mContext.getString(R.string.text_swim).toLowerCase().toLowerCase())) {
+            drawable = R.drawable.ic_pool_black_24dp;
+        } else {
+            drawable = R.drawable.ic_event_available_black_24dp;
         }
-
         if (Build.VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
             holder.mImage.setImageDrawable(mContext.getResources()
                     .getDrawable(drawable, null));

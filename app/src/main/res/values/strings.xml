@@ -64,4 +64,13 @@
     <string name="requested_index_failed">Requested an index of -1</string>
     <string name="pile_of_books">Pile of Books</string>
     <string name="text_checkout">Checkout this!</string>
+    <string name="text_flight">flight</string>
+    <string name="text_travel">travel</string>
+    <string name="text_book">book</string>
+    <string name="text_bills">bills</string>
+    <string name="text_pay">pay</string>
+    <string name="text_assignment">assignment</string>
+    <string name="text_workout">workout</string>
+    <string name="text_gym">gym</string>
+    <string name="text_swim">swim</string>
 </resources>

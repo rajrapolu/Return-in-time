@@ -9,11 +9,22 @@
     android:paddingRight="@dimen/padding_all_sides"
     android:paddingTop="@dimen/padding_all_sides">
 
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/list_image_view"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <TextView
         android:id="@+id/detail_text_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-regular"
+        android:textColor="@color/colorTitle"
+        android:paddingLeft="56dp"
+        android:paddingStart="56dp"
         android:textSize="@dimen/text_size" />
 
     <TextView
@@ -21,6 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_below="@+id/detail_text_title"
+        android:paddingLeft="56dp"
+        android:paddingStart="56dp"
         android:fontFamily="sans-serif-regular"
         android:textSize="@dimen/second_line_text_size" />
 

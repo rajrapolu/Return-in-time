@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 
 public class BaseActivity extends AppCompatActivity implements
@@ -28,6 +29,7 @@ public class BaseActivity extends AppCompatActivity implements
     public static final String DELETE_ALL_ITEMS = "DELETE_ALL_ITEMS";
     private static final String Date_Picker = "DATE_PICKER";
 
+    //Displays date picker fragment
     @Override
     public void showDatePicker(String operation) {
         DialogFragment dateFragment = new DatePickerFragment();
@@ -37,6 +39,7 @@ public class BaseActivity extends AppCompatActivity implements
         dateFragment.show(getSupportFragmentManager(), Date_Picker);
     }
 
+    //sends date to the edit fragment
     @Override
     public void sendEditFragmentDate(String operation, int month, int day, int year) {
         EditFragment editFragment = (EditFragment) getSupportFragmentManager()
@@ -44,6 +47,7 @@ public class BaseActivity extends AppCompatActivity implements
         editFragment.updateEditText(operation, month, day, year);
     }
 
+    //sends date to the dit fragment dialog
     @Override
     public void sendDateToEditDialog(String operation, int month, int dayOfMonth, int year) {
         EditDialogFragment editDialog = (EditDialogFragment)
@@ -52,7 +56,7 @@ public class BaseActivity extends AppCompatActivity implements
         editDialog.updateEditText(operation, month, dayOfMonth, year);
     }
 
-
+    //Displays the edit dialog fragment
     @Override
     public void displayEditDialogFragment(Uri uri) {
         EditDialogFragment editDialog = new EditDialogFragment();
@@ -63,6 +67,7 @@ public class BaseActivity extends AppCompatActivity implements
         editDialog.show(getSupportFragmentManager(), EDIT_DIALOG);
     }
 
+    //removes the fragment in tablet mode
     public void deleteFragment() {
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentByTag(DETAIL_FRAGMENT);
@@ -73,6 +78,7 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    //replaces the detail fragment when we are using sw600dp layout
     @Override
     public void replaceFragment(Uri uri) {
         DetailFragment detailFragment = new DetailFragment();
@@ -83,6 +89,7 @@ public class BaseActivity extends AppCompatActivity implements
                 detailFragment, DETAIL_FRAGMENT).commit();
     }
 
+    //displays the edit fragment by replacing the detail fragment
     @Override
     public void displayEditFragment(Uri uri) {
         EditFragment editFragment = new EditFragment();
@@ -93,6 +100,7 @@ public class BaseActivity extends AppCompatActivity implements
                 editFragment, EDIT_DETAIL).commit();
     }
 
+    //displays the delete dialog for the user to acknowledge
     @Override
     public void showDeleteDialog(String itemId) {
         Bundle args = new Bundle();
@@ -103,6 +111,7 @@ public class BaseActivity extends AppCompatActivity implements
         deleteDialog.show(getSupportFragmentManager(), DELETE_DIALOG);
     }
 
+    //displays a dialog for the user when changes cannot be saved in add item activity
     @Override
     public void stayOrLeave() {
         AddItemDialog alertChangesDialog = new AddItemDialog();
@@ -110,13 +119,16 @@ public class BaseActivity extends AppCompatActivity implements
         alertChangesDialog.show(getSupportFragmentManager(), STAY_OR_LEAVE);
     }
 
+    //sends date from date picker fragment to detail fragment
     @Override
     public void sendDate(String checkedoutOrReturn, int month, int day, int year) {
         AddItemFragment addItemFragment = (AddItemFragment) getSupportFragmentManager()
                 .findFragmentByTag(ADD_BOOK_FRAGMENT_TAG);
+
         addItemFragment.updateEditText(checkedoutOrReturn, month, day, year);
     }
 
+    //displays add item fragment
     public void displayAddFragment() {
         AddItemFragment addItemFragment = new AddItemFragment();
         getSupportFragmentManager().beginTransaction()

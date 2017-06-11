@@ -111,7 +111,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (cursor.getCount() > 0) {
             if (itemId == R.id.action_edit) {
                 if (getActivity() instanceof MainActivity) {
-                    Log.i(TAG, "onOptionsItemSelected: " + uri);
                     sendData.displayEditDialogFragment(uri);
                 } else {
                     sendData.displayEditFragment(uri);
@@ -221,7 +220,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                             cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE))
                             + "\n" +
                             getString(R.string.text_share_item_type) + cursor.getString(
-                            cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
+                            cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE))
+                            + "\n" + getString(R.string.return_date_share) + cursor.getString(
+                            cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
                 }
             }
 

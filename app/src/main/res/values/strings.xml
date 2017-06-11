@@ -73,4 +73,5 @@
     <string name="text_workout">workout</string>
     <string name="text_gym">gym</string>
     <string name="text_swim">swim</string>
+    <string name="return_date_share">Return Date:</string>
 </resources>

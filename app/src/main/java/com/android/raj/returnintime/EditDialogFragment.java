@@ -26,6 +26,7 @@ import com.android.raj.returnintime.data.ReturnContract;
 import com.android.raj.returnintime.service.ItemService;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -108,18 +109,21 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
     }
 
     //Updates the edit text based on text field that is clicked
-    public void updateEditText(String operation, int month, int day, int year) {
+    public void updateEditText(String operation, int monthInYear, int day, int year) {
+        calendar = Calendar.getInstance();
+        calendar.set(year, monthInYear, day);
+        String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
+
         switch (operation) {
             case CHECKEDOUT:
-                mTextCheckedout.getEditText().setText(month + "/" + day + "/" + year);
+                mTextCheckedout.getEditText().setText(month + " " + day + ", " + year);
                 break;
             case RETURN:
-                mTextReturn.getEditText().setText(month + "/" + day + "/" + year);
+                mTextReturn.getEditText().setText(month + " " + day + ", " + year);
                 break;
             case NOTIFY:
-                mTextNotify.getEditText().setText(month + "/" + day + "/" + year);
-                calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
+                mTextNotify.getEditText().setText(month + " " + day + ", " + year);
+
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
                 break;

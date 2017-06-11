@@ -100,17 +100,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         shareIntent.setType(getString(R.string.text_share_type));
-//        shareData = getString(R.string.text_share_initial);
-//        if (cursor != null) {
-//            if (cursor.getCount() > 0) {
-//                cursor.moveToFirst();
-//                shareData = getString(R.string.text_checkout_book) + "\n"
-//                        + getString(R.string.text_share_title) + cursor.getString(
-//                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE)) +
-//                        getString(R.string.text_share_item_type) + cursor.getString(
-//                        cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
-//            }
-//        }
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareData);
         return shareIntent;
     }
@@ -122,7 +111,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (cursor.getCount() > 0) {
             if (itemId == R.id.action_edit) {
                 if (getActivity() instanceof MainActivity) {
-                    Log.i(TAG, "onOptionsItemSelected: " + uri);
                     sendData.displayEditDialogFragment(uri);
                 } else {
                     sendData.displayEditFragment(uri);
@@ -227,12 +215,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             if (cursor != null) {
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
-                    shareData = getString(R.string.text_checkout_book) + "\n"
+                    shareData = getString(R.string.text_checkout) + "\n"
                             + getString(R.string.text_share_title) + cursor.getString(
                             cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE))
                             + "\n" +
                             getString(R.string.text_share_item_type) + cursor.getString(
-                            cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE));
+                            cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE))
+                            + "\n" + getString(R.string.return_date_share) + cursor.getString(
+                            cursor.getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN));
                 }
             }
 
@@ -240,7 +230,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 mShareActionProvider.setShareIntent(createShareIntent());
             }
         }
-
     }
 
     @Override

@@ -66,7 +66,7 @@ public class AddItemFragment extends Fragment {
 
         calendar = Calendar.getInstance();
         calendar.set(year, monthInYear, day);
-        String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
+        String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
         switch (operation) {
             case CHECKEDOUT:
                 mTextCheckedout.getEditText().setText(month + " " + day + ", " + year);

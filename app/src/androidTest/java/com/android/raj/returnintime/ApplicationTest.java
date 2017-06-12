@@ -106,7 +106,7 @@ public class ApplicationTest {
         actionMenuItemView3.perform(click());
 
         ViewInteraction textInputEditText8 = onView(
-                allOf(withId(R.id.edit_checkedout), withText("Jun 11, 2017")));
+                withId(R.id.edit_checkedout));
         textInputEditText8.perform(scrollTo(), click());
 
         ViewInteraction appCompatButton6 = onView(
@@ -196,7 +196,7 @@ public class ApplicationTest {
         appCompatButton12.perform(scrollTo(), click());
 
         ViewInteraction textInputEditText19 = onView(
-                allOf(withId(R.id.edit_checkedout), withText("Jun 11, 2017")));
+                withId(R.id.edit_checkedout));
         textInputEditText19.perform(scrollTo(), click());
 
         ViewInteraction appCompatButton13 = onView(

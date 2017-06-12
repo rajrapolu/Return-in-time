@@ -33,7 +33,7 @@ public class NotificationUtils {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setGroupSummary(true)
                 .setGroup(GROUP_KEY)
-                .setSmallIcon(R.drawable.ic_books)
+                .setSmallIcon(R.drawable.ic_event_black_24dp)
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(Title)
                 .setAutoCancel(true)

@@ -2,6 +2,7 @@ package com.android.raj.returnintime;
 
 
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -83,7 +84,13 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() <= 0) {
-            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_24dp));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_24dp,
+                        null));
+            } else {
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_24dp));
+            }
+
             textView.setText(R.string.empty_list_text);
             imageView.setVisibility(View.VISIBLE);
             textView.setVisibility(View.VISIBLE);

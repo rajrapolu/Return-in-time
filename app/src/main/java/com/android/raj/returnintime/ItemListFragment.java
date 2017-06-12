@@ -83,7 +83,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() <= 0) {
-            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_books));
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_24dp));
             textView.setText(R.string.empty_list_text);
             imageView.setVisibility(View.VISIBLE);
             textView.setVisibility(View.VISIBLE);

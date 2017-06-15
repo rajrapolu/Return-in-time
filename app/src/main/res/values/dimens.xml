@@ -11,4 +11,5 @@
     <dimen name="constraint_margin_top">5dp</dimen>
     <dimen name="margin_twenty_top">20dp</dimen>
     <dimen name="margin_two_top">2dp</dimen>
+    <dimen name="margin_text_image">5dp</dimen>
 </resources>

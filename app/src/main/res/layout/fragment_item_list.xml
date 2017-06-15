@@ -18,30 +18,14 @@
             app:layoutManager="LinearLayoutManager" />
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/empty_view"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/empty_text_image"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/empty_image"
-            android:layout_width="@dimen/button_min_width"
-            android:layout_height="@dimen/button_min_width"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:contentDescription="@string/pile_of_books"
-            android:src="@drawable/ic_event_black_24dp" />
-
-        <TextView
-            android:id="@+id/empty_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:padding="@dimen/padding_all_sides" />
-
-    </LinearLayout>
+        android:contentDescription="@string/pile_of_books"
+        android:drawablePadding="@dimen/margin_text_image"
+        android:text="@string/empty_list_text"
+        android:drawableTop="@drawable/ic_event_black_24dp"/>
 
 </RelativeLayout>

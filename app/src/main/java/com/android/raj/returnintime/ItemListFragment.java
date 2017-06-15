@@ -21,6 +21,7 @@ import com.android.raj.returnintime.data.ReturnContract;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.internal.Utils;
 
 public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -29,8 +30,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     private Cursor cursor;
     private View rootView;
     private MainActivity activity;
-    @BindView(R.id.empty_image) ImageView imageView;
-    @BindView(R.id.empty_text_view) TextView textView;
+    @BindView(R.id.empty_text_image) TextView emptyView;
 
     public ItemListFragment() {
         // Required empty public constructor
@@ -48,8 +48,14 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
         activity = (MainActivity) getContext();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyler_view);
-        RecyclerView.ItemDecoration divider = new DividerRecyclerView(getResources()
-                .getDrawable(R.drawable.line_divider));
+        RecyclerView.ItemDecoration divider;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            divider = new DividerRecyclerView(getResources()
+                    .getDrawable(R.drawable.line_divider, null));
+        } else {
+            divider = new DividerRecyclerView(getResources()
+                    .getDrawable(R.drawable.line_divider));
+        }
         recyclerView.addItemDecoration(divider);
         activity.itemAdapter = new ItemAdapter(getContext());
         recyclerView.setAdapter(activity.itemAdapter);
@@ -84,19 +90,9 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() <= 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_24dp,
-                        null));
-            } else {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_event_black_24dp));
-            }
-
-            textView.setText(R.string.empty_list_text);
-            imageView.setVisibility(View.VISIBLE);
-            textView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
         } else {
-            imageView.setVisibility(View.GONE);
-            textView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
         }
         activity.itemAdapter.swapCursor(data);
     }

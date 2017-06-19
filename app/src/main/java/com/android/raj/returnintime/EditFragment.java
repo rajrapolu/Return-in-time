@@ -16,7 +16,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,22 +39,31 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class EditFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
     @BindView(R.id.title_text_input_layout)
     TextInputLayout mTextTitle;
+
     @BindView(R.id.type_text_input_layout)
     TextInputLayout mTextType;
+
     @BindView(R.id.return_to_text_input_layout)
     TextInputLayout mTextReturnTo;
+
     @BindView(R.id.checkedout_text_input_layout)
     TextInputLayout mTextCheckedout;
+
     @BindView(R.id.return_text_input_layout)
     TextInputLayout mTextReturn;
+
     @BindView(R.id.notify_text_input_layout)
     TextInputLayout mTextNotify;
+
     @BindView(R.id.add_button)
     Button mButton;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     Uri uri;
     public int NOTIFY_ID;
     String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
@@ -63,9 +71,6 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
     Calendar calendar;
     private static final int TIME_IN_HOURS = 6;
     private static final int TIME_IN_MINUTES = 30;
-    public static final String CHECKEDOUT = "CHECKEDOUT";
-    public static final String RETURN = "RETURN";
-    public static final String NOTIFY = "NOTIFY";
     Cursor cursor;
     private static final int ITEMS_LOADER = 2;
 
@@ -80,14 +85,14 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
 
         switch (operation) {
-            case CHECKEDOUT:
-                mTextCheckedout.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.CHECKEDOUT:
+                mTextCheckedout.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
-            case RETURN:
-                mTextReturn.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.RETURN:
+                mTextReturn.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
-            case NOTIFY:
-                mTextNotify.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.NOTIFY:
+                mTextNotify.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
 
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
@@ -134,13 +139,12 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
         });
 
         uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
-        Log.i("uri", "onCreateView: " + uri.toString());
 
         mTextCheckedout.getEditText().setClickable(true);
         mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDetails.showDatePicker(CHECKEDOUT);
+                sendDetails.showDatePicker(BaseActivity.CHECKEDOUT);
             }
         });
 
@@ -148,7 +152,7 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
         mTextReturn.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDetails.showDatePicker(RETURN);
+                sendDetails.showDatePicker(BaseActivity.RETURN);
             }
         });
 
@@ -156,7 +160,7 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
         mTextNotify.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDetails.showDatePicker(NOTIFY);
+                sendDetails.showDatePicker(BaseActivity.NOTIFY);
             }
         });
 

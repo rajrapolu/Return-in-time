@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 
 public class BaseActivity extends AppCompatActivity implements
@@ -28,6 +27,9 @@ public class BaseActivity extends AppCompatActivity implements
     public static final String ID_TO_SERVICE = "ID_TO_SERVICE";
     public static final String DELETE_ALL_ITEMS = "DELETE_ALL_ITEMS";
     private static final String Date_Picker = "DATE_PICKER";
+    public static final String CHECKEDOUT = "CHECKEDOUT";
+    public static final String RETURN = "RETURN";
+    public static final String NOTIFY = "NOTIFY";
 
     //Displays date picker fragment
     @Override

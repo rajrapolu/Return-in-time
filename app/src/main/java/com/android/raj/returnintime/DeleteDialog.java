@@ -83,7 +83,7 @@ public class DeleteDialog extends DialogFragment {
             String selection = ReturnContract.ItemEntry._ID + " LIKE ?";
             String[] selectionArgs = {itemId};
 
-            int rowsDeleted = 0;
+            int rowsDeleted;
 
             rowsDeleted = getContext().getContentResolver()
                     .delete(ReturnContract.ItemEntry.CONTENT_URI,

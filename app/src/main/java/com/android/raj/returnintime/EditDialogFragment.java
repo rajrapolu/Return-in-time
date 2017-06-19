@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
@@ -30,33 +29,48 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EditDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int TIME_IN_HOURS = 6;
     private static final int TIME_IN_MINUTES = 30;
     private Uri uri;
+
     @BindView(R.id.title_text_input_layout)
     TextInputLayout mTextTitle;
+
     @BindView(R.id.type_text_input_layout)
     TextInputLayout mTextType;
+
     @BindView(R.id.return_to_text_input_layout)
     TextInputLayout mTextReturnTo;
+
     @BindView(R.id.checkedout_text_input_layout)
     TextInputLayout mTextCheckedout;
+
     @BindView(R.id.return_text_input_layout)
     TextInputLayout mTextReturn;
+
     @BindView(R.id.notify_text_input_layout)
     TextInputLayout mTextNotify;
-    private Button mSaveButton, mCancelButton;
+
     private String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
     private Calendar calendar;
     public int NOTIFY_ID;
     private SendToDetailFragment sendDetails;
-    public static final String CHECKEDOUT = "CHECKEDOUT";
-    public static final String RETURN = "RETURN";
-    public static final String NOTIFY = "NOTIFY";
-    Cursor cursor;
+    private Cursor cursor;
     private static final int ITEMS_LOADER = 3;
+
+    @OnClick(R.id.button_save)
+    public void onSaveButtonClick() {
+        saveEdit();
+        getDialog().dismiss();
+    }
+
+    @OnClick(R.id.button_cancel)
+    public void onCancelButtonClick() {
+        cancelEdit();
+    }
 
     @Override
     public void onResume() {
@@ -115,15 +129,14 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
 
         switch (operation) {
-            case CHECKEDOUT:
-                mTextCheckedout.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.CHECKEDOUT:
+                mTextCheckedout.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
-            case RETURN:
-                mTextReturn.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.RETURN:
+                mTextReturn.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
-            case NOTIFY:
-                mTextNotify.getEditText().setText(month + " " + day + ", " + year);
-
+            case BaseActivity.NOTIFY:
+                mTextNotify.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
                 break;
@@ -152,29 +165,11 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
 
         uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
 
-        mSaveButton = (Button) view.findViewById(R.id.button_save);
-        mCancelButton = (Button) view.findViewById(R.id.button_cancel);
-
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveEdit();
-                getDialog().dismiss();
-            }
-        });
-
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelEdit();
-            }
-        });
-
         mTextCheckedout.getEditText().setClickable(true);
         mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDetails.showDatePicker(CHECKEDOUT);
+                sendDetails.showDatePicker(BaseActivity.CHECKEDOUT);
             }
         });
 
@@ -182,7 +177,7 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
         mTextReturn.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDetails.showDatePicker(RETURN);
+                sendDetails.showDatePicker(BaseActivity.RETURN);
             }
         });
 
@@ -190,7 +185,7 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
         mTextNotify.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDetails.showDatePicker(NOTIFY);
+                sendDetails.showDatePicker(BaseActivity.NOTIFY);
             }
         });
 

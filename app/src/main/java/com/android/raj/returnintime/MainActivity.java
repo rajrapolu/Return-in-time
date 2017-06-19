@@ -15,15 +15,25 @@ import com.android.raj.returnintime.utilities.NotificationUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInterface {
     private static final String MENU_STATE = "MENU_STATE";
     ItemAdapter itemAdapter;
     private boolean mTablet;
+
     @BindView(R.id.toolbar) Toolbar toolbar;
     MenuItem deleteAction;
+
+    @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    @OnClick(R.id.fab)
+    public void onFabClick() {
+        Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_left);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +42,6 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddItemActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_left);
-            }
-        });
 
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.detail_fragment_container);
         mTablet = (frameLayout != null);
@@ -56,11 +56,6 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
 
     public boolean isTablet() {
         return mTablet;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     //To handle the actions that need to be done when the app enters contextual mode
@@ -146,7 +141,7 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
     //Deletes all the selected items
     @Override
     public void deleteAllItems() {
-        int rowsDeleted = 0, finalRowsDeleted = 0;
+        int rowsDeleted, finalRowsDeleted = 0;
         for (String id: itemAdapter.selectedBooks) {
             String selection = ReturnContract.ItemEntry._ID + " " + getString(R.string.delete_db_selection);
             String[] selectionArgs = {id};

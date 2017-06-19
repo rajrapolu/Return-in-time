@@ -22,8 +22,10 @@ public class MainActivity extends BaseActivity implements DeleteDialog.DeleteInt
     ItemAdapter itemAdapter;
     private boolean mTablet;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    MenuItem deleteAction;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    private MenuItem deleteAction;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;

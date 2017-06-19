@@ -15,12 +15,12 @@ public class BaseActivity extends AppCompatActivity implements
     private static final String EDIT_DETAIL = "EDIT_DETAIL";
     public static final String ITEM_URI = "ITEM_URI";
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
-    public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
+    private static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public static final String ITEM_ID = "ITEM_ID";
     private static final String DELETE_DIALOG = "DELETE_DIALOG";
     private static final String STAY_OR_LEAVE = "STAY_OR_LEAVE";
     public boolean mContextual = false;
-    public static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
+    private static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
     public static final String TITLE_TO_SERVICE = "TITLE_NO_SERVICE";
     public static final String RETURN_TO_SERVICE = "RETURN_TO_SERVICE";
     public static final String TIME_TO_SERVICE = "TIME_TO_SERVICE";

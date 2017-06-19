@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
@@ -36,27 +37,26 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
     private static final int TIME_IN_MINUTES = 30;
     private Uri uri;
 
-    @BindView(R.id.title_text_input_layout)
-    TextInputLayout mTextTitle;
+    @BindView(R.id.edit_title)
+    EditText mEditTextTitle;
 
-    @BindView(R.id.type_text_input_layout)
-    TextInputLayout mTextType;
+    @BindView(R.id.edit_type)
+    EditText mEditTextType;
 
-    @BindView(R.id.return_to_text_input_layout)
-    TextInputLayout mTextReturnTo;
+    @BindView(R.id.edit_return_to)
+    EditText mEditTextReturnTo;
 
-    @BindView(R.id.checkedout_text_input_layout)
-    TextInputLayout mTextCheckedout;
+    @BindView(R.id.edit_return)
+    EditText mEditTextReturn;
 
-    @BindView(R.id.return_text_input_layout)
-    TextInputLayout mTextReturn;
+    @BindView(R.id.edit_checkedout)
+    EditText mEditTextCheckedout;
 
-    @BindView(R.id.notify_text_input_layout)
-    TextInputLayout mTextNotify;
+    @BindView(R.id.edit_notify)
+    EditText mEditTextNotify;
 
     private String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
     private Calendar calendar;
-    public int NOTIFY_ID;
     private SendToDetailFragment sendDetails;
     private Cursor cursor;
     private static final int ITEMS_LOADER = 3;
@@ -78,9 +78,11 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
 
         //This is used to define the dimensions of the dialog
         Window window = getDialog().getWindow();
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
+        if (window != null) {
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+        }
 
     }
 
@@ -108,12 +110,12 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mTextTitle.getEditText().setText("");
-        mTextType.getEditText().setText("");
-        mTextReturnTo.getEditText().setText("");
-        mTextCheckedout.getEditText().setText("");
-        mTextReturn.getEditText().setText("");
-        mTextNotify.getEditText().setText("");
+        mEditTextTitle.setText("");
+        mEditTextType.setText("");
+        mEditTextReturnTo.setText("");
+        mEditTextCheckedout.setText("");
+        mEditTextReturn.setText("");
+        mEditTextNotify.setText("");
     }
 
     public interface SendToDetailFragment {
@@ -130,13 +132,13 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
 
         switch (operation) {
             case BaseActivity.CHECKEDOUT:
-                mTextCheckedout.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
+                mEditTextCheckedout.setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
             case BaseActivity.RETURN:
-                mTextReturn.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
+                mEditTextReturn.setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
             case BaseActivity.NOTIFY:
-                mTextNotify.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
+                mEditTextNotify.setText(getResources().getString(R.string.date_text, month, day, year));
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
                 break;
@@ -165,24 +167,24 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
 
         uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
 
-        mTextCheckedout.getEditText().setClickable(true);
-        mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextCheckedout.setClickable(true);
+        mEditTextCheckedout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendDetails.showDatePicker(BaseActivity.CHECKEDOUT);
             }
         });
 
-        mTextReturn.getEditText().setClickable(true);
-        mTextReturn.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextReturn.setClickable(true);
+        mEditTextReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendDetails.showDatePicker(BaseActivity.RETURN);
             }
         });
 
-        mTextNotify.getEditText().setClickable(true);
-        mTextNotify.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextNotify.setClickable(true);
+        mEditTextNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendDetails.showDatePicker(BaseActivity.NOTIFY);
@@ -200,28 +202,29 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
 
     //called when a save button is clicked, the database values are updated in this method
     private void saveEdit() {
+        int NOTIFY_ID;
 
-        if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
-                !mTextType.getEditText().getText().toString().equals(mType) ||
-                !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
-                !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
-                !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
+        if (!mEditTextTitle.getText().toString().equals(mTitle) ||
+                !mEditTextType.getText().toString().equals(mType) ||
+                !mEditTextReturnTo.getText().toString().equals(mReturnTo) ||
+                !mEditTextCheckedout.getText().toString().equals(mCheckedout) ||
+                !mEditTextReturn.getText().toString().equals(mReturn) ||
+                !mEditTextNotify.getText().toString().equals(mNotify)) {
 
             ContentValues values = new ContentValues();
 
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
-                    mTextTitle.getEditText().getText().toString());
+                    mEditTextTitle.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
-                    mTextType.getEditText().getText().toString());
+                    mEditTextType.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
-                    mTextReturnTo.getEditText().getText().toString());
+                    mEditTextReturnTo.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
-                    mTextCheckedout.getEditText().getText().toString());
+                    mEditTextCheckedout.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
-                    mTextReturn.getEditText().getText().toString());
+                    mEditTextReturn.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY,
-                    mTextNotify.getEditText().getText().toString());
+                    mEditTextNotify.getText().toString());
 
             int rowsAffected = getContext().getContentResolver()
                     .update(uri, values, null, null);
@@ -233,17 +236,17 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
                 Toast.makeText(getContext(), R.string.text_item_update_successfull,
                         Toast.LENGTH_SHORT).show();
 
-                if (!mTextNotify.getEditText().getText().toString().isEmpty() &&
-                        !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
+                if (!mEditTextNotify.getText().toString().isEmpty() &&
+                        !mEditTextNotify.getText().toString().equals(mNotify)) {
                     NOTIFY_ID = (int) ContentUris.parseId(uri);
 
                     //starting the intent service to handle notifications on a background thread
                     Intent intent = new Intent(getContext(), ItemService.class);
                     intent.setData(uri);
                     intent.putExtra(BaseActivity.TITLE_TO_SERVICE,
-                            mTextTitle.getEditText().getText().toString());
+                            mEditTextTitle.getText().toString());
                     intent.putExtra(BaseActivity.RETURN_TO_SERVICE,
-                            mTextReturnTo.getEditText().getText().toString());
+                            mEditTextReturnTo.getText().toString());
                     intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
                     intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
                     getActivity().startService(intent);
@@ -278,12 +281,12 @@ public class EditDialogFragment extends DialogFragment implements LoaderManager.
                         .getColumnIndexOrThrow(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
 
 
-                mTextTitle.getEditText().setText(mTitle);
-                mTextType.getEditText().setText(mType);
-                mTextReturnTo.getEditText().setText(mReturnTo);
-                mTextCheckedout.getEditText().setText(mCheckedout);
-                mTextReturn.getEditText().setText(mReturn);
-                mTextNotify.getEditText().setText(mNotify);
+                mEditTextTitle.setText(mTitle);
+                mEditTextType.setText(mType);
+                mEditTextReturnTo.setText(mReturnTo);
+                mEditTextCheckedout.setText(mCheckedout);
+                mEditTextReturn.setText(mReturn);
+                mEditTextNotify.setText(mNotify);
             }
         }
     }

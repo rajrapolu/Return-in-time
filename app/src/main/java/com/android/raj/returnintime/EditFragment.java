@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
@@ -40,23 +41,23 @@ import butterknife.ButterKnife;
  */
 public class EditFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    @BindView(R.id.title_text_input_layout)
-    TextInputLayout mTextTitle;
+    @BindView(R.id.edit_title)
+    EditText mEditTextTitle;
 
-    @BindView(R.id.type_text_input_layout)
-    TextInputLayout mTextType;
+    @BindView(R.id.edit_type)
+    EditText mEditTextType;
 
-    @BindView(R.id.return_to_text_input_layout)
-    TextInputLayout mTextReturnTo;
+    @BindView(R.id.edit_return_to)
+    EditText mEditTextReturnTo;
 
-    @BindView(R.id.checkedout_text_input_layout)
-    TextInputLayout mTextCheckedout;
+    @BindView(R.id.edit_return)
+    EditText mEditTextReturn;
 
-    @BindView(R.id.return_text_input_layout)
-    TextInputLayout mTextReturn;
+    @BindView(R.id.edit_checkedout)
+    EditText mEditTextCheckedout;
 
-    @BindView(R.id.notify_text_input_layout)
-    TextInputLayout mTextNotify;
+    @BindView(R.id.edit_notify)
+    EditText mEditTextNotify;
 
     @BindView(R.id.add_button)
     Button mButton;
@@ -64,14 +65,13 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    Uri uri;
-    public int NOTIFY_ID;
-    String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
-    SendToDetailFragment sendDetails;
-    Calendar calendar;
+    private Uri uri;
+    private String mTitle, mType, mReturnTo, mCheckedout, mReturn, mNotify;
+    private SendToDetailFragment sendDetails;
+    private Calendar calendar;
     private static final int TIME_IN_HOURS = 6;
     private static final int TIME_IN_MINUTES = 30;
-    Cursor cursor;
+    private Cursor cursor;
     private static final int ITEMS_LOADER = 2;
 
     public EditFragment() {
@@ -86,13 +86,13 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
 
         switch (operation) {
             case BaseActivity.CHECKEDOUT:
-                mTextCheckedout.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
+                mEditTextCheckedout.setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
             case BaseActivity.RETURN:
-                mTextReturn.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
+                mEditTextReturn.setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
             case BaseActivity.NOTIFY:
-                mTextNotify.getEditText().setText(getResources().getString(R.string.date_text, month, day, year));
+                mEditTextNotify.setText(getResources().getString(R.string.date_text, month, day, year));
 
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
@@ -140,24 +140,25 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
 
         uri = Uri.parse(getArguments().getString(BaseActivity.ITEM_URI));
 
-        mTextCheckedout.getEditText().setClickable(true);
-        mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
+        //mEditTextCheckedout.getEditText().setClickable(true);
+        mEditTextCheckedout.setClickable(true);
+        mEditTextCheckedout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendDetails.showDatePicker(BaseActivity.CHECKEDOUT);
             }
         });
 
-        mTextReturn.getEditText().setClickable(true);
-        mTextReturn.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextReturn.setClickable(true);
+        mEditTextReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendDetails.showDatePicker(BaseActivity.RETURN);
             }
         });
 
-        mTextNotify.getEditText().setClickable(true);
-        mTextNotify.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextNotify.setClickable(true);
+        mEditTextNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendDetails.showDatePicker(BaseActivity.NOTIFY);
@@ -192,12 +193,12 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
                 mNotify = cursor.getString(cursor
                         .getColumnIndex(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY));
 
-                mTextTitle.getEditText().setText(mTitle);
-                mTextType.getEditText().setText(mType);
-                mTextReturnTo.getEditText().setText(mReturnTo);
-                mTextCheckedout.getEditText().setText(mCheckedout);
-                mTextReturn.getEditText().setText(mReturn);
-                mTextNotify.getEditText().setText(mNotify);
+                mEditTextTitle.setText(mTitle);
+                mEditTextType.setText(mType);
+                mEditTextReturnTo.setText(mReturnTo);
+                mEditTextCheckedout.setText(mCheckedout);
+                mEditTextReturn.setText(mReturn);
+                mEditTextNotify.setText(mNotify);
             }
         }
     }
@@ -222,22 +223,23 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
 
     //called when save button is clicked. The data values are updated in the database
     private void saveEdit() {
+        int NOTIFY_ID;
 
         if (changesCheck()) {
             ContentValues values = new ContentValues();
 
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE,
-                    mTextTitle.getEditText().getText().toString());
+                    mEditTextTitle.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TYPE,
-                    mTextType.getEditText().getText().toString());
+                    mEditTextType.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN_TO,
-                    mTextReturnTo.getEditText().getText().toString());
+                    mEditTextReturnTo.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_CHECKEDOUT,
-                    mTextCheckedout.getEditText().getText().toString());
+                    mEditTextCheckedout.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
-                    mTextReturn.getEditText().getText().toString());
+                    mEditTextReturn.getText().toString());
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY,
-                    mTextNotify.getEditText().getText().toString());
+                    mEditTextNotify.getText().toString());
 
             int rowsAffected = getContext().getContentResolver()
                     .update(uri, values, null, null);
@@ -249,8 +251,8 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
                 Toast.makeText(getContext(), R.string.text_item_update_successfull,
                         Toast.LENGTH_SHORT).show();
 
-                if (!mTextNotify.getEditText().getText().toString().isEmpty() &&
-                        !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
+                if (!mEditTextNotify.getText().toString().isEmpty() &&
+                        !mEditTextNotify.getText().toString().equals(mNotify)) {
                     NOTIFY_ID = (int) ContentUris.parseId(uri);
 
                     //starting the service so that the notification is handled
@@ -258,9 +260,9 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
                     Intent intent = new Intent(getContext(), ItemService.class);
                     intent.setData(uri);
                     intent.putExtra(BaseActivity.TITLE_TO_SERVICE,
-                            mTextTitle.getEditText().getText().toString());
+                            mEditTextTitle.getText().toString());
                     intent.putExtra(BaseActivity.RETURN_TO_SERVICE,
-                            mTextReturnTo.getEditText().getText().toString());
+                            mEditTextReturnTo.getText().toString());
                     intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
                     intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
                     getActivity().startService(intent);
@@ -272,12 +274,12 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
 
     //verifying if there are any changes made to the data
     private boolean changesCheck() {
-        if (!mTextTitle.getEditText().getText().toString().equals(mTitle) ||
-                !mTextType.getEditText().getText().toString().equals(mType) ||
-                !mTextReturnTo.getEditText().getText().toString().equals(mReturnTo) ||
-                !mTextCheckedout.getEditText().getText().toString().equals(mCheckedout) ||
-                !mTextReturn.getEditText().getText().toString().equals(mReturn) ||
-                !mTextNotify.getEditText().getText().toString().equals(mNotify)) {
+        if (!mEditTextTitle.getText().toString().equals(mTitle) ||
+                !mEditTextType.getText().toString().equals(mType) ||
+                !mEditTextReturnTo.getText().toString().equals(mReturnTo) ||
+                !mEditTextCheckedout.getText().toString().equals(mCheckedout) ||
+                !mEditTextReturn.getText().toString().equals(mReturn) ||
+                !mEditTextNotify.getText().toString().equals(mNotify)) {
             return true;
         }
         return false;
@@ -307,11 +309,11 @@ public class EditFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mTextTitle.getEditText().setText("");
-        mTextType.getEditText().setText("");
-        mTextReturnTo.getEditText().setText("");
-        mTextCheckedout.getEditText().setText("");
-        mTextReturn.getEditText().setText("");
-        mTextNotify.getEditText().setText("");
+        mEditTextTitle.setText("");
+        mEditTextType.setText("");
+        mEditTextReturnTo.setText("");
+        mEditTextCheckedout.setText("");
+        mEditTextReturn.setText("");
+        mEditTextNotify.setText("");
     }
 }

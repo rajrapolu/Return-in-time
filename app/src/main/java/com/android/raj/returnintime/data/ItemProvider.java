@@ -14,12 +14,12 @@ import android.widget.Toast;
 public class ItemProvider extends ContentProvider {
 
     private static final String TAG = ItemProvider.class.getSimpleName();
-    ReturnDBHelper returnDBHelper;
+    private ReturnDBHelper returnDBHelper;
 
     public static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    public static final int ITEMS = 1;
-    public static final int iTEM_ID = 2;
+    private static final int ITEMS = 1;
+    private static final int iTEM_ID = 2;
 
     static {
         sUriMatcher.addURI(ReturnContract.CONTENT_AUTHORITY, ReturnContract.PATH_ITEMS, ITEMS);

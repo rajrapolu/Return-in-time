@@ -27,7 +27,7 @@ public class NotificationUtils {
         stackBuilder.addParentStack(DetailActivity.class);
         stackBuilder.addNextIntent(intent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setGroupSummary(true)

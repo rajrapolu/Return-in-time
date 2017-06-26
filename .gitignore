@@ -7,3 +7,9 @@
 /build
 /captures
 .externalNativeBuild
+app/app-release-cancel.apk
+app/app-release-full-size.apk
+app/app-release-intermediate.apk
+app/app-release-previous.apk
+app/app-release-working.apk
+app/app-release.apk

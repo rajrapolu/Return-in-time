@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/detail_text_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-regular"
         android:textColor="@color/colorTitle"

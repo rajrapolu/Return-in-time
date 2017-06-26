@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -14,22 +13,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.raj.returnintime.data.ReturnContract;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.internal.Utils;
 
 public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int ITEMS_LOADER = 0;
-    private RecyclerView recyclerView;
-    private Cursor cursor;
-    private View rootView;
     private MainActivity activity;
+
     @BindView(R.id.empty_text_image) TextView emptyView;
 
     public ItemListFragment() {
@@ -41,8 +36,10 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        RecyclerView recyclerView;
+
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
         ButterKnife.bind(this, rootView);
         setHasOptionsMenu(true);
 

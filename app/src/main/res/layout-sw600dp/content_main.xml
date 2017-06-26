@@ -7,6 +7,7 @@
     android:orientation="horizontal"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.android.raj.returnintime.MainActivity"
+    android:baselineAligned="false"
     tools:showIn="@layout/activity_main">
 
     <fragment

@@ -12,7 +12,6 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 
 import com.android.raj.returnintime.DetailActivity;
-import com.android.raj.returnintime.MainActivity;
 import com.android.raj.returnintime.R;
 
 public class NotificationUtils {
@@ -25,10 +24,10 @@ public class NotificationUtils {
         intent.setData(uri);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(DetailActivity.class);
         stackBuilder.addNextIntent(intent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setGroupSummary(true)

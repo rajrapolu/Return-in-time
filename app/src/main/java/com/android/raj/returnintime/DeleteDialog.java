@@ -14,7 +14,7 @@ import com.android.raj.returnintime.data.ReturnContract;
 import com.android.raj.returnintime.utilities.NotificationUtils;
 
 public class DeleteDialog extends DialogFragment {
-    DeleteInterface deleteInterface;
+    private DeleteInterface deleteInterface;
 
 
     public interface DeleteInterface {
@@ -51,10 +51,15 @@ public class DeleteDialog extends DialogFragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (item.equals(BaseActivity.DELETE_ALL_ITEMS)) {
-                            deleteInterface.clearSelectedItems();
+                        if (item != null) {
+                            if (item.equals(BaseActivity.DELETE_ALL_ITEMS)) {
+                                deleteInterface.clearSelectedItems();
+                            }
+                            DeleteDialog.this.getDialog().cancel();
+                        } else {
+                            Toast.makeText(getContext(), R.string.text_no_items_selected,
+                                    Toast.LENGTH_SHORT).show();
                         }
-                        DeleteDialog.this.getDialog().cancel();
                     }
                 });
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
@@ -83,7 +88,7 @@ public class DeleteDialog extends DialogFragment {
             String selection = ReturnContract.ItemEntry._ID + " LIKE ?";
             String[] selectionArgs = {itemId};
 
-            int rowsDeleted = 0;
+            int rowsDeleted;
 
             rowsDeleted = getContext().getContentResolver()
                     .delete(ReturnContract.ItemEntry.CONTENT_URI,

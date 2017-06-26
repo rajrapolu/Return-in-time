@@ -8,8 +8,8 @@ import com.android.raj.returnintime.data.ReturnContract.ItemEntry;
 
 public class ReturnDBHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "returns.db";
-    public static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "returns.db";
+    private static final int DATABASE_VERSION = 1;
 
     public ReturnDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

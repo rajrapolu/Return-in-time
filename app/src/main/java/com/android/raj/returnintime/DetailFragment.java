@@ -1,13 +1,11 @@
 package com.android.raj.returnintime;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -16,7 +14,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,29 +32,36 @@ import butterknife.ButterKnife;
 
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = DetailFragment.class.getSimpleName();
     private static final int ITEMS_LOADER = 1;
+
     @BindView(R.id.detail_text_title)
     TextView mTitle;
+
     @BindView(R.id.detail_text_type)
     TextView mType;
+
     @BindView(R.id.detail_text_return_to_value)
     TextView mReturnToValue;
+
     @BindView(R.id.detail_text_borrowed_value)
     TextView mBorrowedValue;
+
     @BindView(R.id.detail_text_return_value)
     TextView mReturValue;
+
     @BindView(R.id.detail_text_notify_value)
     TextView mNotifyValue;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    android.support.v7.widget.ShareActionProvider mShareActionProvider;
-    Cursor cursor;
-    List<String> selectedItems = new ArrayList<>();
-    String shareData;
-    SendToDetailActivity sendData;
-    Uri uri;
-    boolean attached;
+
+    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
+    private Cursor cursor;
+    private List<String> selectedItems = new ArrayList<>();
+    private String shareData;
+    private SendToDetailActivity sendData;
+    private Uri uri;
+    public boolean attached;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -199,8 +203,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 ReturnContract.ItemEntry.COLUMN_ITEM_RETURN,
                 ReturnContract.ItemEntry.COLUMN_ITEM_NOTIFY
         };
-
-        Log.i(TAG, "onCreateLoader: " + uri);
         return new CursorLoader(getActivity(), uri,
                 projection, null, null, null);
     }
@@ -242,11 +244,4 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mReturValue.setText("");
         mNotifyValue.setText("");
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
 }

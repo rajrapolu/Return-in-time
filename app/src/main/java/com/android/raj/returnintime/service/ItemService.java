@@ -17,14 +17,16 @@ public class ItemService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
-        Uri uri = intent.getData();
+        if (intent != null) {
+            Uri uri = intent.getData();
 
-        String title = intent.getExtras().getString(BaseActivity.TITLE_TO_SERVICE);
-        String returnTo = intent.getExtras().getString(BaseActivity.RETURN_TO_SERVICE);
-        long timeInMillis = intent.getExtras().getLong(BaseActivity.TIME_TO_SERVICE);
-        int notifyId = intent.getExtras().getInt(BaseActivity.ID_TO_SERVICE);
+            String title = intent.getExtras().getString(BaseActivity.TITLE_TO_SERVICE);
+            String returnTo = intent.getExtras().getString(BaseActivity.RETURN_TO_SERVICE);
+            long timeInMillis = intent.getExtras().getLong(BaseActivity.TIME_TO_SERVICE);
+            int notifyId = intent.getExtras().getInt(BaseActivity.ID_TO_SERVICE);
 
-        NotificationUtils.SetUpNotification(getApplicationContext(),
-                uri, notifyId, title, returnTo, timeInMillis);
+            NotificationUtils.SetUpNotification(getApplicationContext(),
+                    uri, notifyId, title, returnTo, timeInMillis);
+        }
     }
 }

@@ -12,4 +12,5 @@
     <dimen name="margin_twenty_top">20dp</dimen>
     <dimen name="margin_two_top">2dp</dimen>
     <dimen name="margin_text_image">5dp</dimen>
+    <dimen name="five_six_dp">56dp</dimen>
 </resources>

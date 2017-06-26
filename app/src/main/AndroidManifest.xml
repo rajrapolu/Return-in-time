@@ -40,6 +40,8 @@
                 android:value="com.android.raj.returnintime.MainActivity"/>
         </activity>
 
+        <activity android:name=".BaseActivity"/>
+
         <service android:name=".service.ItemService"
             android:exported="false" />
 

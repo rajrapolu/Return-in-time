@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 
 public class BaseActivity extends AppCompatActivity implements
@@ -16,18 +15,21 @@ public class BaseActivity extends AppCompatActivity implements
     private static final String EDIT_DETAIL = "EDIT_DETAIL";
     public static final String ITEM_URI = "ITEM_URI";
     private static final String EDIT_DIALOG = "EDIT_DIALOG";
-    public static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
+    private static final String DETAIL_FRAGMENT = "DETAIL_FRAGMENT";
     public static final String ITEM_ID = "ITEM_ID";
     private static final String DELETE_DIALOG = "DELETE_DIALOG";
     private static final String STAY_OR_LEAVE = "STAY_OR_LEAVE";
     public boolean mContextual = false;
-    public static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
+    private static final String ADD_BOOK_FRAGMENT_TAG = "ADD_BOOK_FRAGMENT_TAG";
     public static final String TITLE_TO_SERVICE = "TITLE_NO_SERVICE";
     public static final String RETURN_TO_SERVICE = "RETURN_TO_SERVICE";
     public static final String TIME_TO_SERVICE = "TIME_TO_SERVICE";
     public static final String ID_TO_SERVICE = "ID_TO_SERVICE";
     public static final String DELETE_ALL_ITEMS = "DELETE_ALL_ITEMS";
     private static final String Date_Picker = "DATE_PICKER";
+    public static final String CHECKEDOUT = "CHECKEDOUT";
+    public static final String RETURN = "RETURN";
+    public static final String NOTIFY = "NOTIFY";
 
     //Displays date picker fragment
     @Override

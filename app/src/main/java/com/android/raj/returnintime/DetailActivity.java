@@ -17,9 +17,4 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
 }

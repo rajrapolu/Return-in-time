@@ -10,11 +10,10 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.raj.returnintime.data.ReturnContract;
@@ -26,35 +25,42 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class AddItemFragment extends Fragment {
 
-    private int NOTIFY_ID;
-    @BindView(R.id.title_text_input_layout)
-    TextInputLayout mTextTitle;
-    @BindView(R.id.type_text_input_layout)
-    TextInputLayout mTextType;
-    @BindView(R.id.return_to_text_input_layout)
-    TextInputLayout mTextReturnTo;
-    @BindView(R.id.checkedout_text_input_layout)
-    TextInputLayout mTextCheckedout;
-    @BindView(R.id.return_text_input_layout)
-    TextInputLayout mTextReturn;
-    @BindView(R.id.notify_text_input_layout)
-    TextInputLayout mTextNotify;
+    @BindView(R.id.edit_title)
+    EditText mEditTextTitle;
+
+    @BindView(R.id.edit_type)
+    EditText mEditTextType;
+
+    @BindView(R.id.edit_return_to)
+    EditText mEditTextReturnTo;
+
+    @BindView(R.id.edit_return)
+    EditText mEditTextReturn;
+
+    @BindView(R.id.edit_checkedout)
+    EditText mEditTextCheckedout;
+
+    @BindView(R.id.edit_notify)
+    EditText mEditTextNotify;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.add_button)
-    Button mAddButton;
-    public static final int TIME_IN_HOURS = 6;
-    public static final int TIME_IN_MINUTES = 30;
+
+    private static final int TIME_IN_HOURS = 6;
+    private static final int TIME_IN_MINUTES = 30;
     private AddBookInterface showPicker;
-    public static final String CHECKEDOUT = "CHECKEDOUT";
-    public static final String RETURN = "RETURN";
-    public static final String NOTIFY = "NOTIFY";
-    private Uri uri;
+
     private Calendar calendar;
+
+    @OnClick(R.id.add_button)
+    public void onAddButtonClick() {
+        addItem();
+    }
 
 
     public AddItemFragment() {
@@ -68,14 +74,14 @@ public class AddItemFragment extends Fragment {
         calendar.set(year, monthInYear, day);
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
         switch (operation) {
-            case CHECKEDOUT:
-                mTextCheckedout.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.CHECKEDOUT:
+                mEditTextCheckedout.setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
-            case RETURN:
-                mTextReturn.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.RETURN:
+                mEditTextReturn.setText(getResources().getString(R.string.date_text, month, day, year));
                 break;
-            case NOTIFY:
-                mTextNotify.getEditText().setText(month + " " + day + ", " + year);
+            case BaseActivity.NOTIFY:
+                mEditTextNotify.setText(getResources().getString(R.string.date_text, month, day, year));
 
                 calendar.set(Calendar.HOUR_OF_DAY, TIME_IN_HOURS);
                 calendar.set(Calendar.MINUTE, TIME_IN_MINUTES);
@@ -116,11 +122,11 @@ public class AddItemFragment extends Fragment {
             public void onClick(View v) {
                 //Verifying whether there is any text that is entered in the fields
                 // in that case the fragments pops up a dialog
-                if (!mTextTitle.getEditText().getText().toString().isEmpty() ||
-                        !mTextType.getEditText().getText().toString().isEmpty() ||
-                        !mTextReturnTo.getEditText().getText().toString().isEmpty() ||
-                        !mTextCheckedout.getEditText().getText().toString().isEmpty() ||
-                        !mTextReturn.getEditText().getText().toString().isEmpty()) {
+                if (!mEditTextTitle.getText().toString().isEmpty() ||
+                        !mEditTextType.getText().toString().isEmpty() ||
+                        !mEditTextReturnTo.getText().toString().isEmpty() ||
+                        !mEditTextCheckedout.getText().toString().isEmpty() ||
+                        !mEditTextReturn.getText().toString().isEmpty()) {
 
                     showPicker.stayOrLeave();
 
@@ -130,59 +136,59 @@ public class AddItemFragment extends Fragment {
             }
         });
 
-        mTextCheckedout.getEditText().setClickable(true);
-        mTextCheckedout.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextCheckedout.setClickable(true);
+        mEditTextCheckedout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPicker.showDatePicker(CHECKEDOUT);
+                showPicker.showDatePicker(BaseActivity.CHECKEDOUT);
             }
         });
 
-        mTextReturn.getEditText().setClickable(true);
-        mTextReturn.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextReturn.setClickable(true);
+        mEditTextReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPicker.showDatePicker(RETURN);
+                showPicker.showDatePicker(BaseActivity.RETURN);
             }
         });
 
-        mTextNotify.getEditText().setClickable(true);
-        mTextNotify.getEditText().setOnClickListener(new View.OnClickListener() {
+        mEditTextNotify.setClickable(true);
+        mEditTextNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPicker.showDatePicker(NOTIFY);
-            }
-        });
-
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uri = insertData();
-                if (!mTextNotify.getEditText().getText().toString().isEmpty() && uri != null) {
-
-                    //Setting the NOTIFY_ID to the id of the item
-                    NOTIFY_ID = (int) ContentUris.parseId(uri);
-
-                    //Starting the Intent service to handle notifications in the
-                    // background thread
-                    Intent intent = new Intent(getContext(), ItemService.class);
-                    intent.setData(uri);
-                    intent.putExtra(BaseActivity.TITLE_TO_SERVICE,
-                            mTextTitle.getEditText().getText().toString());
-                    intent.putExtra(BaseActivity.RETURN_TO_SERVICE,
-                            mTextReturnTo.getEditText().getText().toString());
-                    intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
-                    intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
-                    getActivity().startService(intent);
-                }
-
-                if (uri != null) {
-                    getActivity().finish();
-                }
+                showPicker.showDatePicker(BaseActivity.NOTIFY);
             }
         });
 
         return rootView;
+    }
+
+    private void addItem() {
+        int NOTIFY_ID;
+        Uri uri;
+
+        uri = insertData();
+        if (!mEditTextNotify.getText().toString().isEmpty() && uri != null) {
+
+            //Setting the NOTIFY_ID to the id of the item
+            NOTIFY_ID = (int) ContentUris.parseId(uri);
+
+            //Starting the Intent service to handle notifications in the
+            // background thread
+            Intent intent = new Intent(getContext(), ItemService.class);
+            intent.setData(uri);
+            intent.putExtra(BaseActivity.TITLE_TO_SERVICE,
+                    mEditTextTitle.getText().toString());
+            intent.putExtra(BaseActivity.RETURN_TO_SERVICE,
+                    mEditTextReturnTo.getText().toString());
+            intent.putExtra(BaseActivity.ID_TO_SERVICE, NOTIFY_ID);
+            intent.putExtra(BaseActivity.TIME_TO_SERVICE, calendar.getTimeInMillis());
+            getActivity().startService(intent);
+        }
+
+        if (uri != null) {
+            getActivity().finish();
+        }
     }
 
     //Used to insert data in to the database
@@ -192,12 +198,12 @@ public class AddItemFragment extends Fragment {
 
         if (dataAvailable()) {
 
-            mTitle = mTextTitle.getEditText().getText().toString();
-            mType = mTextType.getEditText().getText().toString();
-            mReturnTo = mTextReturnTo.getEditText().getText().toString();
-            mCheckedout = mTextCheckedout.getEditText().getText().toString();
-            mReturn = mTextReturn.getEditText().getText().toString();
-            mNotify = mTextNotify.getEditText().getText().toString();
+            mTitle = mEditTextTitle.getText().toString();
+            mType = mEditTextType.getText().toString();
+            mReturnTo = mEditTextReturnTo.getText().toString();
+            mCheckedout = mEditTextCheckedout.getText().toString();
+            mReturn = mEditTextReturn.getText().toString();
+            mNotify = mEditTextNotify.getText().toString();
 
             ContentValues values = new ContentValues();
             values.put(ReturnContract.ItemEntry.COLUMN_ITEM_TITLE, mTitle);
@@ -229,11 +235,11 @@ public class AddItemFragment extends Fragment {
 
     //Implemented to verify that all the mandatory fields are entered
     public boolean dataAvailable() {
-        if (!mTextTitle.getEditText().getText().toString().isEmpty() &&
-                !mTextType.getEditText().getText().toString().isEmpty() &&
-                !mTextReturnTo.getEditText().getText().toString().isEmpty() &&
-                !mTextCheckedout.getEditText().getText().toString().isEmpty() &&
-                !mTextReturn.getEditText().getText().toString().isEmpty()) {
+        if (!mEditTextTitle.getText().toString().isEmpty() &&
+                !mEditTextType.getText().toString().isEmpty() &&
+                !mEditTextReturnTo.getText().toString().isEmpty() &&
+                !mEditTextCheckedout.getText().toString().isEmpty() &&
+                !mEditTextReturn.getText().toString().isEmpty()) {
             return true;
         }
         return false;
